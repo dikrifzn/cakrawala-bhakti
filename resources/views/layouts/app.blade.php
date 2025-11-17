@@ -17,7 +17,7 @@
     @include('components.navbar')
 
     {{-- Content --}}
-    <main class="mt-30">
+    <main>
         @yield('content')
     </main>
 
