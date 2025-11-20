@@ -214,9 +214,6 @@
   });
 </script>
 <script>
-    document.getElementById('mobile-btn').addEventListener('click', () => {
-        document.getElementById('mobile-menu').classList.toggle('hidden');
-    });
     window.addEventListener('DOMContentLoaded', () => {
         const nav = document.getElementById('navbar');
             nav.classList.remove('bg-black');
