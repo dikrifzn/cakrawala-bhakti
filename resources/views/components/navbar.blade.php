@@ -1,5 +1,5 @@
 <nav id="navbar"
-     class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent backdrop-blur-md font-poppins font-semibold">
+     class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-black backdrop-blur-md font-poppins font-semibold ">
     <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
 
         {{-- Logo --}}
@@ -38,23 +38,3 @@
         </a>
     </div>
 </nav>
-
-<script>
-    // Mobile toggle
-    document.getElementById('mobile-btn').addEventListener('click', () => {
-        document.getElementById('mobile-menu').classList.toggle('hidden');
-    });
-
-    // Scroll behavior
-    window.addEventListener('scroll', () => {
-        const nav = document.getElementById('navbar');
-
-        if (window.scrollY > 30) {
-            nav.classList.add('bg-black');
-            nav.classList.remove('bg-transparent');
-        } else {
-            nav.classList.remove('bg-black');
-            nav.classList.add('bg-transparent');
-        }
-    });
-</script>
