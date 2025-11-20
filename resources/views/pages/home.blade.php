@@ -139,6 +139,12 @@
             </div>
         @endfor
     </div>
+    <div class="text-center mt-10">
+        <a href="{{ url('/galery') }}"
+           class="inline-block px-6 py-2 bg-yellow-400 text-black rounded-md font-semibold font-dmsans">
+           Lihat Lebih Banyak
+        </a>
+    </div>
 </section>
 
 {{-- CALL TO ACTION SECTION --}}
@@ -182,14 +188,13 @@
     </div>
 
     <div class="text-center mt-10">
-        <a href="#"
+        <a href="{{ url('/article') }}"
            class="inline-block px-6 py-2 bg-yellow-400 text-black rounded-md font-semibold font-dmsans">
            Lihat Lebih Banyak
         </a>
     </div>
 </section>
 
-{{-- SWIPER JS --}}
 <script>
   var swiper = new Swiper(".projectSwiper", {
     loop: true,
@@ -207,6 +212,28 @@
       clickable: true,
     },
   });
+</script>
+<script>
+    document.getElementById('mobile-btn').addEventListener('click', () => {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+    window.addEventListener('DOMContentLoaded', () => {
+        const nav = document.getElementById('navbar');
+            nav.classList.remove('bg-black');
+            nav.classList.add('bg-transparent');
+    });
+
+    window.addEventListener('scroll', () => {
+        const nav = document.getElementById('navbar');
+
+        if (window.scrollY > 30) {
+            nav.classList.add('bg-black');
+            nav.classList.remove('bg-transparent');
+        } else {
+            nav.classList.remove('bg-black');
+            nav.classList.add('bg-transparent');
+        }
+    });
 </script>
 
 @endsection

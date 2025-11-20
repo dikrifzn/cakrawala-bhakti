@@ -5,13 +5,18 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('pages.home');
 });
+Route::get('/galery', function () {
+    return view('pages.galery.index');
+});
+Route::get('/article', function () {
+    return view('pages.article.index');
+});
 
 // Route::prefix('shop')->group(function () {
 //     Route::get('/', [ShopController::class, 'index']);
 //     Route::get('/{slug}', [ShopController::class, 'show']);
 // });
 
-// Route::get('/gallery', [GalleryController::class, 'index']);
 
 // Route::prefix('articles')->group(function () {
 //     Route::get('/', [ArticleController::class, 'index']);
