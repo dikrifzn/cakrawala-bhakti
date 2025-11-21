@@ -11,6 +11,9 @@ Route::get('/galery', function () {
 Route::get('/article', function () {
     return view('pages.article.index');
 });
+Route::get('/article/detail', function () {
+    return view('pages.article.detail');
+});
 
 // Route::prefix('shop')->group(function () {
 //     Route::get('/', [ShopController::class, 'index']);
