@@ -14,10 +14,12 @@
             <a href="{{ url('/#service') }}" class="hover:text-yellow-400">Service</a>
             <a href="{{ url('/#publication') }}" class="hover:text-yellow-400">Publication</a>
 
-            <a href="/login"
-               class="px-4 py-2 bg-yellow-400 text-black rounded-md font-semibold hover:bg-yellow-300">
-               Masuk
-            </a>
+            <button 
+    onclick="openLoginModal()" 
+    class="px-4 py-2 bg-yellow-400 text-black rounded-md font-semibold hover:bg-yellow-300">
+    Masuk
+</button>
+
         </div>
 
         {{-- Mobile --}}
@@ -32,10 +34,12 @@
         <a href="{{ url('/#service') }}" class="block">Service</a>
         <a href="{{ url('/#publication') }}" class="block">Publication</a>
 
-        <a href="/login"
-           class="block px-4 py-2 bg-yellow-400 text-black rounded-md w-max font-semibold">
-           Masuk
-        </a>
+        <button 
+    onclick="openLoginModal()" 
+    class="px-4 py-2 bg-yellow-400 text-black rounded-md font-semibold hover:bg-yellow-300">
+    Masuk
+</button>
+
     </div>
 </nav>
 <script>
@@ -43,3 +47,6 @@
         document.getElementById('mobile-menu').classList.toggle('hidden');
     });
 </script>
+
+@include('components.login-modal')
+@include('components.register-modal')
