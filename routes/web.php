@@ -17,6 +17,9 @@ Route::get('/article', function () {
 Route::get('/article/detail', function () {
     return view('pages.article.detail');
 });
+Route::get('/booking/success', function () {
+    return view('pages.order.success');
+});
 
 // Route::prefix('shop')->group(function () {
 //     Route::get('/', [ShopController::class, 'index']);
