@@ -1,5 +1,5 @@
 <!-- Modal Register -->
-<div id="registerModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden items-center justify-center z-[80] p-4">
+<div id="registerModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden items-center justify-center z-80 p-4">
     <div class="bg-white rounded-xl w-full max-w-md md:max-w-xl p-8 relative shadow-xl">
 
         <!-- Close -->
