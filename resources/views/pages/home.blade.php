@@ -70,7 +70,7 @@
                 <li>✔ Manajemen Acara yang Profesional</li>
             </ul>
 
-            <a href="#"
+            <a href="{{ url('/about') }}"
                class="inline-block w-fit px-6 mt-8 py-2.5 bg-yellow-400 text-black font-semibold rounded-md hover:bg-yellow-500 transition">
                 About Us
             </a>
