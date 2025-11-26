@@ -133,8 +133,8 @@
                         </div>
                     @endfor
                 </div>
-                <div class="swiper-button-prev !text-black"></div>
-                <div class="swiper-button-next !text-black"></div>
+                <div class="swiper-button-prev text-black!"></div>
+                <div class="swiper-button-next text-black!"></div>
                 <div class="swiper-pagination"></div>
             </div>
         @endfor
