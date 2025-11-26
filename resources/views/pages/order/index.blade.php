@@ -1,0 +1,455 @@
+@extends('layouts.app') @section('content')
+
+<section class="py-20 flex flex-col justify-center items-center px-5">
+    <div class="w-full max-w-5xl bg-white shadow-lg rounded-2xl p-10">
+        <h1 class="text-3xl font-bold text-center mb-10">
+            Form Pemesanan Acara
+        </h1>
+        <div class="mb-10">
+            <h2 class="text-xl font-semibold mb-5">Data Diri</h2>
+
+            <div class="grid grid-cols-1 gap-5">
+                <input
+                    type="text"
+                    placeholder="Nama Lengkap"
+                    class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
+                />
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <input
+                        type="text"
+                        placeholder="Nomor Telepon"
+                        class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
+                    />
+
+                    <input
+                        type="email"
+                        placeholder="YourEmail@gmail.com"
+                        class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
+                    />
+                </div>
+            </div>
+        </div>
+        <div class="mb-10">
+            <h2 class="text-xl font-semibold mb-5">Data Kebutuhan Acara</h2>
+
+            <div class="grid grid-cols-1 gap-5">
+                <select
+                    class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
+                >
+                    <option>Wedding</option>
+                </select>
+
+                <div class="grid grid-cols-1 md:grid-cols gap-5 items-start">
+                    <div>
+                        <x-calendar
+                            label="Tanggal Acara"
+                            total-id="totalHari"
+                        />
+                    </div>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600 mb-2 inline-block"
+                        >Lokasi Acara</label
+                    >
+                    <input
+                        type="text"
+                        placeholder="Lokasi Acara"
+                        class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
+                    />
+                </div>
+                <h3 class="font-semibold mt-2">Layanan yang Dibutuhkan</h3>
+
+                <div
+                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 services-container"
+                >
+                    @php $services = [ 'MC Formal' => 350000, 'MC Nonformal' =>
+                    300000, 'Pengadaan Sound System' => 750000, 'Pengadaan
+                    Panggung' => 900000, 'Dekorasi' => 1200000, 'Photographer'
+                    => 850000, 'Videographer' => 950000, 'Tambahan +' =>
+                    'pending', ]; @endphp @foreach ($services as $name =>
+                    $price) @if($name === 'Tambahan +')
+                    <label
+                        class="add-service-btn border-dashed border-2 rounded-xl p-5 text-center cursor-pointer transition duration-200 hover:bg-yellow-50 hover:border-yellow-400 flex items-center justify-center w-full"
+                    >
+                        <span class="font-semibold text-yellow-600"
+                            >+ Tambahan</span
+                        >
+                    </label>
+                    @else
+                    <label
+                        class="service-card border rounded-xl p-5 text-center cursor-pointer transition duration-200 hover:bg-yellow-50 hover:border-yellow-400 w-full"
+                        data-price="{{ $price }}"
+                    >
+                        <input
+                            type="checkbox"
+                            name="services[]"
+                            value="{{ $name }}"
+                            data-price="{{ $price }}"
+                            class="hidden"
+                        />
+                        <div class="flex flex-col items-center">
+                            <span class="font-medium">{{ $name }}</span>
+                            <div class="text-sm mt-2 service-price">
+                                @if(is_numeric($price))
+                                {{ "Rp ".number_format($price, 0, ",", ".") }}
+                                @elseif($price === 'pending')
+                                <span class="text-yellow-600"
+                                    >Menunggu admin</span
+                                >
+                                @else Gratis @endif
+                            </div>
+                        </div>
+                    </label>
+                    @endif @endforeach
+                </div>
+                <textarea
+                    placeholder="Tulis catatan anda..."
+                    class="border rounded-lg p-3 w-full h-32 mt-4 focus:ring-2 focus:ring-yellow-400"
+                ></textarea>
+            </div>
+        </div>
+        <div class="mb-10">
+            <h2 class="text-xl font-semibold mb-5">Rincian Pemesanan</h2>
+            <div
+                x-data="orderSummary()"
+                class="bg-gray-50 border rounded-xl p-6 space-y-4"
+            >
+                <div class="flex justify-between items-center pb-3 border-b">
+                    <span class="text-gray-600">Nama Lengkap:</span>
+                    <span class="font-semibold" x-text="fullName || '-'"></span>
+                </div>
+                <div class="flex justify-between items-center pb-3 border-b">
+                    <span class="text-gray-600">Jenis Acara:</span>
+                    <span
+                        class="font-semibold"
+                        x-text="eventType || '-'"
+                    ></span>
+                </div>
+                <div class="flex justify-between items-center pb-3 border-b">
+                    <span class="text-gray-600">Tanggal Acara:</span>
+                    <span
+                        class="font-semibold"
+                        x-text="eventDate || '-'"
+                    ></span>
+                </div>
+                <div class="flex justify-between items-center pb-3 border-b">
+                    <span class="text-gray-600">Total Hari:</span>
+                    <span
+                        class="font-semibold"
+                        x-text="totalDays || '-'"
+                    ></span>
+                </div>
+                <div class="flex justify-between items-center pb-3 border-b">
+                    <span class="text-gray-600">Waktu Acara:</span>
+                    <span
+                        class="font-semibold"
+                        x-text="eventTime || '-'"
+                    ></span>
+                </div>
+                <div class="flex justify-between items-center pb-3 border-b">
+                    <span class="text-gray-600">Lokasi Acara:</span>
+                    <span
+                        class="font-semibold text-right"
+                        x-text="location || '-'"
+                    ></span>
+                </div>
+                <div class="pb-3 border-b">
+                    <span class="text-gray-600">Layanan yang Dipilih:</span>
+                    <div class="mt-2 space-y-1">
+                        <template
+                            x-for="service in selectedServices"
+                            :key="service"
+                        >
+                            <div
+                                class="text-sm text-gray-700 flex items-center"
+                            >
+                                <span
+                                    class="inline-block w-2 h-2 bg-yellow-500 rounded-full mr-2"
+                                ></span>
+                                <span x-text="service"></span>
+                            </div>
+                        </template>
+                        <div
+                            x-show="selectedServices.length === 0"
+                            class="text-sm text-gray-400"
+                        >
+                            Belum ada layanan yang dipilih
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-3 border-t">
+                    <div class="flex justify-between items-center pb-2">
+                        <span class="text-gray-600">Total Harga:</span>
+                        <span
+                            class="font-semibold"
+                            x-text="totalPrice > 0 ? formatRupiah(totalPrice) : (pendingCount > 0 ? '-' : 'Rp 0')"
+                        ></span>
+                    </div>
+
+                    <div
+                        x-show="pendingCount > 0"
+                        class="mt-2 text-sm text-yellow-600"
+                    >
+                        <span x-text="pendingCount"></span> layanan menunggu
+                        konfirmasi harga dari admin
+                    </div>
+                </div>
+                <div class="pb-3">
+                    <span class="text-gray-600">Catatan:</span>
+                    <p
+                        class="mt-2 text-sm text-gray-700"
+                        x-text="notes || 'Tidak ada catatan'"
+                    ></p>
+                </div>
+                <div class="pt-3 border-t mt-6">
+                    <div class="flex justify-between items-center pb-2">
+                        <span class="text-gray-600">Nomor Telepon:</span>
+                        <span
+                            class="font-semibold"
+                            x-text="phone || '-'"
+                        ></span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Email:</span>
+                        <span
+                            class="font-semibold text-right"
+                            x-text="email || '-'"
+                        ></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-right">
+            <button
+                class="bg-yellow-500 hover:bg-yellow-600 transition text-white py-3 px-8 rounded-xl font-semibold shadow"
+            >
+                Pesan Sekarang
+            </button>
+        </div>
+    </div>
+</section>
+
+@endsection @push('scripts')
+<script>
+    function orderSummary() {
+        return {
+            fullName: "",
+            phone: "",
+            email: "",
+            eventType: "",
+            eventDate: "",
+            totalDays: "",
+            eventTime: "",
+            location: "",
+            selectedServices: [],
+            notes: "",
+            totalPrice: 0,
+            pendingCount: 0,
+            pendingServices: [],
+            formatRupiah(value) {
+                if (!value && value !== 0) return "-";
+                const v = parseInt(value, 10) || 0;
+                return (
+                    "Rp " + v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                );
+            },
+
+            init() {
+                this.updateSummary();
+                this.setupListeners();
+            },
+
+            setupListeners() {
+                const self = this;
+                document
+                    .querySelectorAll("input[placeholder='Nama Lengkap']")
+                    .forEach((el) => {
+                        el.addEventListener("input", () => {
+                            self.fullName = el.value;
+                        });
+                    });
+                document
+                    .querySelectorAll("input[placeholder='Nomor Telepon']")
+                    .forEach((el) => {
+                        el.addEventListener("input", () => {
+                            self.phone = el.value;
+                        });
+                    });
+                document
+                    .querySelectorAll(
+                        "input[placeholder='YourEmail@gmail.com']"
+                    )
+                    .forEach((el) => {
+                        el.addEventListener("input", () => {
+                            self.email = el.value;
+                        });
+                    });
+                document.querySelectorAll("select").forEach((el) => {
+                    el.addEventListener("change", () => {
+                        self.eventType = el.value;
+                    });
+                });
+                document
+                    .querySelectorAll("input[placeholder='Lokasi Acara']")
+                    .forEach((el) => {
+                        el.addEventListener("input", () => {
+                            self.location = el.value;
+                        });
+                    });
+                document.querySelectorAll("textarea").forEach((el) => {
+                    el.addEventListener("input", () => {
+                        self.notes = el.value;
+                    });
+                });
+                document.addEventListener("services-changed", () => {
+                    self.updateSelectedServices();
+                });
+            },
+
+            updateSelectedServices() {
+                const services = [];
+                let total = 0;
+                const pending = [];
+
+                document
+                    .querySelectorAll(
+                        ".service-card input[type='checkbox']:checked"
+                    )
+                    .forEach((checkbox) => {
+                        services.push(checkbox.value);
+                        const priceAttr = checkbox.getAttribute("data-price");
+                        if (priceAttr && priceAttr !== "pending") {
+                            const p = parseInt(priceAttr, 10);
+                            if (!isNaN(p)) total += p;
+                        } else {
+                            pending.push(checkbox.value);
+                        }
+                    });
+
+                this.selectedServices = services;
+                this.totalPrice = total;
+                this.pendingCount = pending.length;
+                this.pendingServices = pending;
+            },
+
+            updateSummary() {
+                this.updateSelectedServices();
+            },
+        };
+    }
+    (function () {
+        const container = document.querySelector(".services-container");
+
+        if (container) {
+            container.addEventListener("click", (e) => {
+                const addTrigger = e.target.closest(".add-service-btn");
+                if (addTrigger) {
+                    if (window.showCustomServiceModal)
+                        window.showCustomServiceModal();
+                    return;
+                }
+
+                const card = e.target.closest(".service-card");
+                if (!card) return;
+
+                const checkbox = card.querySelector("input[type='checkbox']");
+                if (!checkbox) return;
+
+                checkbox.checked = !checkbox.checked;
+                if (checkbox.checked) {
+                    card.classList.add(
+                        "bg-yellow-500",
+                        "text-white",
+                        "border-yellow-600"
+                    );
+                } else {
+                    card.classList.remove(
+                        "bg-yellow-500",
+                        "text-white",
+                        "border-yellow-600"
+                    );
+                }
+                document.dispatchEvent(new CustomEvent("services-changed"));
+            });
+        }
+    })();
+    (function () {
+        const modalHtml = `
+        <div id="customServiceModal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
+            <div class="absolute inset-0 bg-black opacity-40"></div>
+            <div class="relative bg-white rounded-xl p-6 w-full max-w-md shadow-lg z-10 mx-auto">
+                <h3 class="text-lg font-semibold mb-3">Tambah Layanan Custom</h3>
+                <input id="modalCustomServiceInput" type="text" placeholder="Nama layanan (mis. Sewa Kursi)" class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400">
+                <p class="text-sm text-gray-500 mt-2">Harga akan ditentukan oleh admin (Menunggu admin).</p>
+                <div class="mt-4 flex justify-end gap-3">
+                    <button id="modalCancelBtn" class="px-4 py-2 rounded-lg border">Batal</button>
+                    <button id="modalAddBtn" class="px-4 py-2 rounded-lg bg-yellow-500 text-white">Tambah</button>
+                </div>
+            </div>
+        </div>`;
+
+        document.body.insertAdjacentHTML("beforeend", modalHtml);
+
+        const modal = document.getElementById("customServiceModal");
+        const input = document.getElementById("modalCustomServiceInput");
+        const cancelBtn = document.getElementById("modalCancelBtn");
+        const addBtn = document.getElementById("modalAddBtn");
+
+        function showCustomServiceModal() {
+            modal.classList.remove("hidden");
+            setTimeout(() => input.focus(), 50);
+        }
+
+        function hideCustomServiceModal() {
+            modal.classList.add("hidden");
+            input.value = "";
+        }
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) hideCustomServiceModal();
+        });
+
+        cancelBtn.addEventListener("click", hideCustomServiceModal);
+
+        addBtn.addEventListener("click", () => {
+            const name = input.value.trim();
+            if (!name) return;
+
+            const safeName = name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            const container = document.querySelector(".services-container");
+            const label = document.createElement("label");
+            label.className =
+                "service-card border rounded-xl p-5 text-center cursor-pointer transition duration-200 hover:bg-yellow-50 hover:border-yellow-400";
+            label.setAttribute("data-price", "pending");
+            label.innerHTML = `
+                <input type="checkbox" name="services[]" value="${safeName}" data-price="pending" class="hidden" checked>
+                <div class="flex flex-col items-center">
+                    <span class="font-medium">${safeName}</span>
+                    <div class="text-sm text-yellow-600 mt-2 service-price">Menunggu admin</div>
+                </div>
+            `;
+            const addBtnCard = container.querySelector(".add-service-btn");
+            if (addBtnCard) container.insertBefore(label, addBtnCard);
+            else container.appendChild(label);
+            label.classList.add(
+                "bg-yellow-500",
+                "text-white",
+                "border-yellow-600"
+            );
+            document.dispatchEvent(new CustomEvent("services-changed"));
+            hideCustomServiceModal();
+        });
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                addBtn.click();
+            }
+            if (e.key === "Escape") {
+                hideCustomServiceModal();
+            }
+        });
+
+        window.showCustomServiceModal = showCustomServiceModal;
+    })();
+</script>
+@endpush

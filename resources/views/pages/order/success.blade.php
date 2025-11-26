@@ -1,10 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="py-20 bg-[#F5C542] text-white h-[100vh] flex items-center">
+<section class="py-20 bg-[#F5C542] text-white h-screen flex items-center">
     <div class="flex flex-col items-center text-center px-6 w-full relative">
-
-        <!-- Confetti Background (menggunakan gambar upload) -->
         <img 
             src="{{ url('img/confetti.png') }}"
             alt="confetti"
@@ -12,8 +10,6 @@
                    absolute left-[64%] top-[85%] -translate-x-1/2 -translate-y-1/2
                    opacity-95 z-0 animate-[slowSpin_6s_ease-in-out_infinite]"
         >
-
-        <!-- Success icon -->
         <img 
             src="{{ url('img/success.png') }}" 
             alt="success" 
