@@ -35,6 +35,7 @@
 
             <div class="grid grid-cols-1 gap-5">
                 <select
+                    id="eventTypeSelect"
                     class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
                 >
                     <option>Wedding</option>
@@ -119,6 +120,22 @@
                     <span class="text-gray-600">Nama Lengkap:</span>
                     <span class="font-semibold" x-text="fullName || '-'"></span>
                 </div>
+                                <div class="pt-3 border-t mt-6">
+                    <div class="flex justify-between items-center pb-2">
+                        <span class="text-gray-600">Nomor Telepon:</span>
+                        <span
+                            class="font-semibold"
+                            x-text="phone || '-'"
+                        ></span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Email:</span>
+                        <span
+                            class="font-semibold text-right"
+                            x-text="email || '-'"
+                        ></span>
+                    </div>
+                </div>
                 <div class="flex justify-between items-center pb-3 border-b">
                     <span class="text-gray-600">Jenis Acara:</span>
                     <span
@@ -128,10 +145,11 @@
                 </div>
                 <div class="flex justify-between items-center pb-3 border-b">
                     <span class="text-gray-600">Tanggal Acara:</span>
-                    <span
-                        class="font-semibold"
-                        x-text="eventDate || '-'"
-                    ></span>
+                    <span class="font-semibold text-right">
+                        <span x-show="eventStartDate && eventEndDate && eventStartDate !== eventEndDate" x-text="eventStartDate + ' s/d ' + eventEndDate"></span>
+                        <span x-show="eventStartDate && eventEndDate && eventStartDate === eventEndDate" x-text="eventStartDate"></span>
+                        <span x-show="!eventStartDate || !eventEndDate">-</span>
+                    </span>
                 </div>
                 <div class="flex justify-between items-center pb-3 border-b">
                     <span class="text-gray-600">Total Hari:</span>
@@ -202,22 +220,6 @@
                         x-text="notes || 'Tidak ada catatan'"
                     ></p>
                 </div>
-                <div class="pt-3 border-t mt-6">
-                    <div class="flex justify-between items-center pb-2">
-                        <span class="text-gray-600">Nomor Telepon:</span>
-                        <span
-                            class="font-semibold"
-                            x-text="phone || '-'"
-                        ></span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-600">Email:</span>
-                        <span
-                            class="font-semibold text-right"
-                            x-text="email || '-'"
-                        ></span>
-                    </div>
-                </div>
             </div>
         </div>
         <div class="text-right">
@@ -239,6 +241,8 @@
             email: "",
             eventType: "",
             eventDate: "",
+            eventStartDate: "",
+            eventEndDate: "",
             totalDays: "",
             eventTime: "",
             location: "",
@@ -257,6 +261,10 @@
 
             init() {
                 this.updateSummary();
+                const selectEl = document.getElementById("eventTypeSelect");
+                if (selectEl && selectEl.value) {
+                    this.eventType = selectEl.value;
+                }
                 this.setupListeners();
             },
 
@@ -290,6 +298,13 @@
                         self.eventType = el.value;
                     });
                 });
+
+                const eventTypeSelect = document.getElementById("eventTypeSelect");
+                if (eventTypeSelect) {
+                    eventTypeSelect.addEventListener("change", () => {
+                        self.eventType = eventTypeSelect.value;
+                    });
+                }
                 document
                     .querySelectorAll("input[placeholder='Lokasi Acara']")
                     .forEach((el) => {
@@ -304,6 +319,44 @@
                 });
                 document.addEventListener("services-changed", () => {
                     self.updateSelectedServices();
+                });
+
+                document.addEventListener("time-changed", (e) => {
+                    if (e.detail && e.detail.start && e.detail.end) {
+                        self.eventTime = `${e.detail.start} - ${e.detail.end}`;
+                    }
+                });
+
+                setTimeout(() => {
+                    const totalDaysInputs = document.querySelectorAll('input[placeholder="Total Hari"]');
+                    totalDaysInputs.forEach(input => {
+                        if (input.value) self.totalDays = input.value;
+                        const syncTotalDays = () => {
+                            if (input.value) self.totalDays = input.value;
+                        };
+                        input.addEventListener('input', syncTotalDays);
+                        input.addEventListener('change', syncTotalDays);
+                        const observer = new MutationObserver(syncTotalDays);
+                        observer.observe(input, { attributes: true, characterData: true, subtree: true });
+                    });
+                }, 100);
+                document.addEventListener("date-changed", (e) => {
+                    if (e.detail && e.detail.startDate) {
+                        const startDate = new Date(e.detail.startDate);
+                        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                        self.eventStartDate = startDate.toLocaleDateString('id-ID', options);
+                    }
+                    if (e.detail && e.detail.endDate) {
+                        const endDate = new Date(e.detail.endDate);
+                        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                        self.eventEndDate = endDate.toLocaleDateString('id-ID', options);
+                    }
+                });
+
+                document.addEventListener("totalDays-changed", (e) => {
+                    if (e.detail && e.detail.totalDays) {
+                        self.totalDays = e.detail.totalDays;
+                    }
                 });
             },
 

@@ -33,8 +33,14 @@
                 <template x-for="day in days">
                     <div>
                         <button
-                            @click="selectDay(day)"
+                            @mousedown="startDrag(day)"
+                            @mouseenter="onDragEnter(day)"
+                            @mouseup="endDrag()"
+                            @touchstart="startDrag(day)"
+                            @touchmove.prevent="touchMove($event)"
+                            @touchend="endDrag()"
                             :disabled="day.disabled || !day.date"
+                            :data-full="day.full ? day.full.getTime() : ''"
                             :class="[
                                 'w-full py-2 rounded-lg transition text-sm',
                                 day.disabled || !day.date
@@ -94,7 +100,7 @@
                         <div class="flex flex-col gap-1">
                             <template x-for="h in getStartHourOptions()">
                                 <button
-                                    @click="startHour = h"
+                                    @click="startHour = h; notifyTimeChanged();"
                                     :class="['px-2 py-1 rounded font-semibold text-xs', startHour === h ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                                     x-text="String(h).padStart(2, '0')"
                                 ></button>
@@ -118,7 +124,7 @@
                         <div class="flex flex-col gap-1">
                             <template x-for="m in getStartMinuteOptions()">
                                 <button
-                                    @click="startMinute = m"
+                                    @click="startMinute = m; notifyTimeChanged();"
                                     :class="['px-2 py-1 rounded font-semibold text-xs', startMinute === m ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                                     x-text="String(m).padStart(2, '0')"
                                 ></button>
@@ -133,13 +139,13 @@
                     </div>
                     <div class="flex flex-col gap-1">
                         <button
-                            @click="startPeriod = 'AM'"
+                            @click="startPeriod = 'AM'; notifyTimeChanged();"
                             :class="['px-2 py-1 rounded font-semibold text-xs', startPeriod === 'AM' ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                         >
                             AM
                         </button>
                         <button
-                            @click="startPeriod = 'PM'"
+                            @click="startPeriod = 'PM'; notifyTimeChanged();"
                             :class="['px-2 py-1 rounded font-semibold text-xs', startPeriod === 'PM' ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                         >
                             PM
@@ -171,7 +177,7 @@
                         <div class="flex flex-col gap-1">
                             <template x-for="h in getEndHourOptions()">
                                 <button
-                                    @click="endHour = h"
+                                    @click="endHour = h; notifyTimeChanged();"
                                     :class="['px-2 py-1 rounded font-semibold text-xs', endHour === h ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                                     x-text="String(h).padStart(2, '0')"
                                 ></button>
@@ -195,7 +201,7 @@
                         <div class="flex flex-col gap-1">
                             <template x-for="m in getEndMinuteOptions()">
                                 <button
-                                    @click="endMinute = m"
+                                    @click="endMinute = m; notifyTimeChanged();"
                                     :class="['px-2 py-1 rounded font-semibold text-xs', endMinute === m ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                                     x-text="String(m).padStart(2, '0')"
                                 ></button>
@@ -210,13 +216,13 @@
                     </div>
                     <div class="flex flex-col gap-1">
                         <button
-                            @click="endPeriod = 'AM'"
+                            @click="endPeriod = 'AM'; notifyTimeChanged();"
                             :class="['px-2 py-1 rounded font-semibold text-xs', endPeriod === 'AM' ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                         >
                             AM
                         </button>
                         <button
-                            @click="endPeriod = 'PM'"
+                            @click="endPeriod = 'PM'; notifyTimeChanged();"
                             :class="['px-2 py-1 rounded font-semibold text-xs', endPeriod === 'PM' ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                         >
                             PM
@@ -252,6 +258,10 @@
             endHour: 15,
             endMinute: 0,
             endPeriod: "PM",
+            dragActive: false,
+            dragJustEnded: false,
+            dragStartDate: null,
+            dragCurrentDate: null,
 
             monthName() {
                 return new Date(this.year, this.month).toLocaleString("id-ID", {
@@ -260,7 +270,15 @@
             },
 
             init() {
+                const today = new Date();
+                this.startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                this.endDate = null;
+                this.totalDays = "";
                 this.generateCalendar();
+                setTimeout(() => {
+                    this.notifyTimeChanged();
+                    this.notifyDateChanged();
+                }, 50);
             },
 
             generateCalendar() {
@@ -297,6 +315,10 @@
 
                         selected = c === s || c === e;
                         inRange = c > s && c < e;
+                    } else if (this.startDate && !this.endDate) {
+                        const s = this.startDate.getTime();
+                        selected = current.getTime() === s;
+                        inRange = false;
                     }
 
                     tempDays.push({
@@ -311,34 +333,69 @@
                 this.days = tempDays;
             },
 
-            selectDay(day) {
-                if (day.disabled || !day.date) return;
+            startDrag(day) {
+                if (!day || day.disabled || !day.date) return;
+                this.dragActive = true;
+                this.dragStartDate = new Date(day.full);
+                this.startDate = new Date(day.full);
+                this.endDate = null;
+                this.totalDays = "";
+                this.generateCalendar();
+            },
 
-                if (!this.startDate) {
-                    this.startDate = new Date(this.year, this.month, day.date);
-                    this.endDate = null;
-                } else if (!this.endDate) {
-                    const newEnd = new Date(this.year, this.month, day.date);
-                    if (newEnd < this.startDate) {
-                        this.startDate = newEnd;
-                        this.endDate = null;
-                        this.totalDays = "";
-                    } else {
-                        this.endDate = newEnd;
-                        const diff =
-                            Math.ceil(
-                                (this.endDate - this.startDate) /
-                                    (1000 * 60 * 60 * 24)
-                            ) + 1;
-                        this.totalDays = diff + " hari";
+            onDragEnter(day) {
+                if (!this.dragActive) return;
+                if (!day || day.disabled || !day.date) return;
+                this.dragCurrentDate = new Date(day.full);
+                if (this.dragCurrentDate < this.dragStartDate) {
+                    this.startDate = new Date(this.dragCurrentDate);
+                    this.endDate = new Date(this.dragStartDate);
+                } else {
+                    this.startDate = new Date(this.dragStartDate);
+                    this.endDate = new Date(this.dragCurrentDate);
+                }
+                const diff = Math.ceil((this.endDate - this.startDate) / (1000 * 60 * 60 * 24)) + 1;
+                this.totalDays = diff + " hari";
+                this.generateCalendar();
+            },
+
+            endDrag() {
+                if (!this.dragActive) return;
+                this.dragActive = false;
+                this.dragJustEnded = true;
+                setTimeout(() => {
+                    this.dragJustEnded = false;
+                }, 100);
+
+                if (!this.endDate) {
+                    if (this.startDate) {
+                        this.endDate = new Date(this.startDate);
+                        this.totalDays = "1 hari";
                     }
                 } else {
-                    this.startDate = new Date(this.year, this.month, day.date);
-                    this.endDate = null;
-                    this.totalDays = "";
+                    const diff = Math.ceil((this.endDate - this.startDate) / (1000 * 60 * 60 * 24)) + 1;
+                    this.totalDays = diff + " hari";
                 }
 
                 this.generateCalendar();
+                this.notifyDateChanged();
+                this.notifyTotalDaysChanged();
+            },
+
+            touchMove(evt) {
+                if (!this.dragActive) return;
+                const touch = evt.touches && evt.touches[0];
+                if (!touch) return;
+                const el = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (!el) return;
+                const btn = el.closest('button[data-full]');
+                if (!btn) return;
+                const val = btn.getAttribute('data-full');
+                if (!val) return;
+                const t = parseInt(val, 10);
+                if (isNaN(t)) return;
+                const fakeDay = { full: new Date(t), date: new Date(t).getDate(), disabled: false };
+                this.onDragEnter(fakeDay);
             },
 
             nextMonth() {
@@ -384,18 +441,22 @@
 
             increaseStartHour() {
                 this.startHour = (this.startHour + 1) % 24;
+                this.notifyTimeChanged();
             },
 
             decreaseStartHour() {
                 this.startHour = (this.startHour - 1 + 24) % 24;
+                this.notifyTimeChanged();
             },
 
             increaseStartMinute() {
                 this.startMinute = (this.startMinute + 1) % 60;
+                this.notifyTimeChanged();
             },
 
             decreaseStartMinute() {
                 this.startMinute = (this.startMinute - 1 + 60) % 60;
+                this.notifyTimeChanged();
             },
             getEndHourOptions() {
                 const hours = [];
@@ -423,18 +484,22 @@
 
             increaseEndHour() {
                 this.endHour = (this.endHour + 1) % 24;
+                this.notifyTimeChanged();
             },
 
             decreaseEndHour() {
                 this.endHour = (this.endHour - 1 + 24) % 24;
+                this.notifyTimeChanged();
             },
 
             increaseEndMinute() {
                 this.endMinute = (this.endMinute + 1) % 60;
+                this.notifyTimeChanged();
             },
 
             decreaseEndMinute() {
                 this.endMinute = (this.endMinute - 1 + 60) % 60;
+                this.notifyTimeChanged();
             },
 
             setToday() {
@@ -444,13 +509,56 @@
                     today.getMonth(),
                     today.getDate()
                 );
-                this.endDate = new Date(
-                    today.getFullYear(),
-                    today.getMonth(),
-                    today.getDate()
-                );
-                this.totalDays = "1 hari";
+                this.endDate = null;
+                this.totalDays = "";
                 this.generateCalendar();
+                this.notifyDateChanged();
+            },
+
+            formatTimeInput(hour, minute) {
+                const pad = n => String((n || 0)).padStart(2, '0');
+                return `${pad(hour)}:${pad(minute)}`;
+            },
+
+            setStartFromTimeInput(value) {
+                if (!value) return;
+                const parts = value.split(':');
+                if (parts.length < 2) return;
+                const hh = parseInt(parts[0], 10);
+                const mm = parseInt(parts[1], 10);
+                if (!isNaN(hh)) this.startHour = hh;
+                if (!isNaN(mm)) this.startMinute = mm;
+                this.startPeriod = (this.startHour >= 12) ? 'PM' : 'AM';
+                this.notifyTimeChanged();
+            },
+
+            setEndFromTimeInput(value) {
+                if (!value) return;
+                const parts = value.split(':');
+                if (parts.length < 2) return;
+                const hh = parseInt(parts[0], 10);
+                const mm = parseInt(parts[1], 10);
+                if (!isNaN(hh)) this.endHour = hh;
+                if (!isNaN(mm)) this.endMinute = mm;
+                this.endPeriod = (this.endHour >= 12) ? 'PM' : 'AM';
+                this.notifyTimeChanged();
+            },
+
+            notifyTimeChanged() {
+                const pad = n => String((n || 0)).padStart(2, '0');
+                const start = `${pad(this.startHour)}:${pad(this.startMinute)} ${this.startPeriod}`;
+                const end = `${pad(this.endHour)}:${pad(this.endMinute)} ${this.endPeriod}`;
+                document.dispatchEvent(new CustomEvent('time-changed', { detail: { start, end } }));
+            },
+
+            notifyTotalDaysChanged() {
+                document.dispatchEvent(new CustomEvent('totalDays-changed', { detail: { totalDays: this.totalDays } }));
+            },
+
+            notifyDateChanged() {
+                const s = this.startDate ? this.startDate.toISOString() : null;
+                const e = this.endDate ? this.endDate.toISOString() : null;
+                document.dispatchEvent(new CustomEvent('date-changed', { detail: { startDate: s, endDate: e } }));
             },
         };
     }
