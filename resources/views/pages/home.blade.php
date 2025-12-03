@@ -104,7 +104,7 @@
 {{-- PROJECT GALLERY SECTION --}}
 <section id="publication" class="py-20 bg-gray-50">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 mb-10">
-        <p class="text-sm font-semibold tracking-wide mb-2 font-poppins">Recent Project Gallery</p>
+        <p class="text-sm font-semibold tracking-wide mb-2 font-poppins">Recent Projects</p>
         <h2 class="text-3xl font-bold font-poppins mb-4">Proyek Terbaru Kami</h2>
         <p class="text-gray-500 max-w-xl text-sm font-dmsans font-medium">
             Sebuah festival komunitas yang menghadirkan ratusan pengunjung dan puluhan tenant lokal. Tim Cakrawala menangani seluruh perencanaan, koordinasi, hingga produksi acara agar berjalan lancar dan berkesan.
@@ -140,7 +140,7 @@
         @endfor
     </div>
     <div class="text-center mt-10">
-        <a href="{{ url('/galery') }}"
+        <a href="{{ url('/project') }}"
            class="inline-block px-6 py-2 bg-yellow-400 text-black rounded-md font-semibold font-dmsans">
            Lihat Lebih Banyak
         </a>

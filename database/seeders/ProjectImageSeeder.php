@@ -19,7 +19,6 @@ class ProjectImageSeeder extends Seeder
         $projects = Project::all();
 
         foreach ($projects as $project) {
-            // Create 3-4 images for each project
             for ($i = 1; $i <= 4; $i++) {
                 ProjectImage::create([
                     'project_id' => $project->id,
