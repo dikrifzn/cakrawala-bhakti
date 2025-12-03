@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('services', function (Blueprint $table) {
+        Schema::create('event_types', function (Blueprint $table) {
             $table->id();
-            $table->string('service_name');
-            $table->string('short_description')->nullable();
-            $table->string('icon')->nullable();
-            $table->integer('price');
-            $table->string('banner_image')->nullable();
-            $table->integer('sort_order')->default(0);
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -28,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('services');
+        Schema::dropIfExists('event_types');
     }
 };

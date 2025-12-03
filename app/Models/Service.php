@@ -10,7 +10,15 @@ class Service extends Model
         'service_name',
         'short_description',
         'icon',
+        'price',
         'banner_image',
         'sort_order',
     ];
+
+    public function bookings()
+    {
+        return $this->belongsToMany(Booking::class, 'booking_services')
+                    ->withPivot('price', 'quantity')
+                    ->withTimestamps();
+    }
 }
