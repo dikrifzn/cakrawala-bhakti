@@ -44,8 +44,6 @@
                     <!-- Toggle Button -->
                     <button type="button" id="togglePassword"
                         class="absolute inset-y-0 right-3 flex items-center cursor-pointer">
-
-                        <!-- Eye (show) -->
                         <svg id="iconEye" xmlns="http://www.w3.org/2000/svg" 
                             class="w-5 h-5 text-gray-600 hidden"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -53,8 +51,6 @@
                             <path d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 
                                      9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z"/>
                         </svg>
-
-                        <!-- Eye Off (hide) -->
                         <svg id="iconEyeOff" xmlns="http://www.w3.org/2000/svg" 
                             class="w-5 h-5 text-gray-600"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -64,7 +60,6 @@
                                      9.543 7a10.026 10.026 0 01-4.132 
                                      5.225M1 1l22 22"/>
                         </svg>
-
                     </button>
                 </div>
             </div>
@@ -75,11 +70,9 @@
                     Sign In
                 </button>
             </form>
-
                 <p class="text-center text-sm mt-3">
                     No account? <a onclick="openRegisterModal()" class="text-yellow-600 font-semibold">Create one</a>
                 </p>
-
                 <p class="text-center text-xs mt-3">
                     By clicking "Sign in", you accept Cakrawala Bhakti’s <a href="">Terms of Service</a> and <a href="">Privacy Policy</a>.
                 </p>
@@ -90,7 +83,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Open / Close Modal
+    // Open/Close Modal
     window.openLoginModal = () => {
         const m = document.getElementById("loginModal");
         m.classList.remove("hidden");

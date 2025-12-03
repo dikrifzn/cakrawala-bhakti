@@ -24,7 +24,6 @@ class ArticleController extends Controller
     }
     public function show(Article $article)
     {
-        // $article is route-model-bound by slug (see Article::getRouteKeyName)
         $article->load('category');
 
         $relatedArticles = Cache::remember("article:{$article->slug}:related", 3600, function () use ($article) {

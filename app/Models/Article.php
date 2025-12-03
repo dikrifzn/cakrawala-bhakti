@@ -23,21 +23,16 @@ class Article extends Model
         'updated_at' => 'datetime',
     ];
 
-    /**
-     * Use slug for route model binding
-     */
     public function getRouteKeyName()
     {
         return 'slug';
     }
 
-    // Relationships
     public function category()
     {
         return $this->belongsTo(ArticleCategory::class, 'category_id');
     }
 
-    // Scopes
     public function scopePublished($query)
     {
         return $query->whereNotNull('created_at');
@@ -58,12 +53,10 @@ class Article extends Model
         return $query->orderBy('created_at', 'desc');
     }
 
-    // Mutators
     public static function boot()
     {
         parent::boot();
 
-        // Auto-generate slug from title (ensure uniqueness)
         static::creating(function ($model) {
             if (!$model->slug) {
                 $model->slug = static::generateUniqueSlug($model->title);

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('booking_id')->constrained('bookings')->cascadeOnDelete();
             $table->foreignId('service_id')->constrained('services')->cascadeOnDelete();
 
-            $table->bigInteger('price')->default(0); // harga saat booking
+            $table->bigInteger('price')->default(0);
             $table->integer('quantity')->default(1);
             $table->timestamps();
         });

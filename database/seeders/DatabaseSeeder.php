@@ -39,7 +39,6 @@ class DatabaseSeeder extends Seeder
             SiteSettingSeeder::class,
         ]);
 
-        // Ensure seeded rows have timestamps (set created_at/updated_at to now)
         $now = now();
         $tables = [
             'hero_banners',
@@ -58,7 +57,6 @@ class DatabaseSeeder extends Seeder
 
         foreach ($tables as $table) {
             if (Schema::hasTable($table)) {
-                // Update records that have null created_at or a zero/very old timestamp
                 DB::table($table)
                     ->whereNull('created_at')
                     ->orWhere('created_at', '<', '2000-01-01')

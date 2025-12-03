@@ -69,7 +69,6 @@
                     <!-- Toggle -->
                     <button type="button" id="toggleRegPassword"
                         class="absolute inset-y-0 right-3 flex items-center cursor-pointer">
-
                         <svg id="regEye" xmlns="http://www.w3.org/2000/svg" 
                             class="w-5 h-5 text-gray-600 hidden"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -77,7 +76,6 @@
                             <path d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 
                                      9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z"/>
                         </svg>
-
                         <svg id="regEyeOff" xmlns="http://www.w3.org/2000/svg" 
                             class="w-5 h-5 text-gray-600"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -108,7 +106,6 @@
                     <!-- Toggle -->
                     <button type="button" id="toggleRegPasswordConfirm"
                         class="absolute inset-y-0 right-3 flex items-center cursor-pointer">
-
                         <svg id="regEye2" xmlns="http://www.w3.org/2000/svg" 
                             class="w-5 h-5 text-gray-600 hidden"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -116,7 +113,6 @@
                             <path d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 
                                      9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z"/>
                         </svg>
-
                         <svg id="regEyeOff2" xmlns="http://www.w3.org/2000/svg" 
                             class="w-5 h-5 text-gray-600"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -163,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
         m.classList.remove("flex");
     };
 
-    // Reusable toggle function
     const setupToggle = (inputId, eyeId, eyeOffId, btnId) => {
         const input = document.getElementById(inputId);
         const eye = document.getElementById(eyeId);

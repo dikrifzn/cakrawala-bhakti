@@ -13,15 +13,13 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            // Data Diri Pemesan
+
             $table->string('customer_name');
             $table->string('customer_email')->nullable();
             $table->string('customer_phone')->nullable();
 
-            // Jenis Kebutuhan Acara
             $table->foreignId('event_type_id')->constrained('event_types')->cascadeOnDelete();
 
-            // Waktu Acara
             $table->date('start_date');
             $table->date('end_date');
             $table->time('start_time')->nullable();
@@ -29,16 +27,12 @@ return new class extends Migration
 
             $table->integer('total_days')->default(1);
 
-            // Lokasi Acara
             $table->string('location')->nullable();
 
-            // Catatan
             $table->text('notes')->nullable();
 
-            // Total Harga
             $table->bigInteger('total_price')->default(0);
 
-            // Status
             $table->enum('status', ['pending', 'approved', 'rejected', 'finished'])->default('pending');
             $table->timestamps();
         });

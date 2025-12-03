@@ -9,11 +9,14 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return view('pages.about');
 });
-Route::get('/galery', function () {
-    return view('pages.galery.index');
+Route::get('/project', function () {
+    return view('pages.project.index');
+});
+Route::get('/project/detail', function () {
+    return view('pages.project.detail');
 });
 
-// Article Routes
+// Article
 Route::get('/article', [ArticleController::class, 'index'])->name('article.index');
 Route::get('/article/search', [ArticleController::class, 'search'])->name('article.search');
 Route::get('/article/category/{slug}', [ArticleController::class, 'byCategory'])->name('article.category');
