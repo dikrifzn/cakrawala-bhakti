@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,11 +17,54 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Create test user
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        // Run all seeders
+        $this->call([
+            HeroBannerSeeder::class,
+            AboutSectionSeeder::class,
+            WhyChooseUsSeeder::class,
+            ServiceSeeder::class,
+            ArticleCategorySeeder::class,
+            ArticleSeeder::class,
+            ProjectSeeder::class,
+            ProjectImageSeeder::class,
+            EventTypeSeeder::class,
+            BookingSeeder::class,
+            LandingSectionSeeder::class,
+            SiteSettingSeeder::class,
+        ]);
+
+        // Ensure seeded rows have timestamps (set created_at/updated_at to now)
+        $now = now();
+        $tables = [
+            'hero_banners',
+            'about_sections',
+            'why_choose_us',
+            'services',
+            'article_categories',
+            'articles',
+            'projects',
+            'project_images',
+            'event_types',
+            'bookings',
+            'landing_sections',
+            'site_settings',
+        ];
+
+        foreach ($tables as $table) {
+            if (Schema::hasTable($table)) {
+                // Update records that have null created_at or a zero/very old timestamp
+                DB::table($table)
+                    ->whereNull('created_at')
+                    ->orWhere('created_at', '<', '2000-01-01')
+                    ->update(['created_at' => $now, 'updated_at' => $now]);
+            }
+        }
     }
 }
+
