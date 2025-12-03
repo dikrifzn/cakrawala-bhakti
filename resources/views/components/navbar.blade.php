@@ -4,7 +4,7 @@
 >
     <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
         <div class="flex items-center gap-2">
-            <img src="/img/logo-white.png" alt="logo" class="h-6" />
+            <a href="{{ url('/') }}"><img src="/img/logo-white.png" alt="logo" class="h-6" /></a>
         </div>
         <div class="hidden md:flex items-center gap-8 text-white text-sm">
             <a href="{{ url('/') }}" class="hover:text-yellow-400">Home</a>

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ArticleController;
 
 Route::get('/', function () {
     return view('pages.home');
@@ -11,12 +12,13 @@ Route::get('/about', function () {
 Route::get('/galery', function () {
     return view('pages.galery.index');
 });
-Route::get('/article', function () {
-    return view('pages.article.index');
-});
-Route::get('/article/detail', function () {
-    return view('pages.article.detail');
-});
+
+// Article Routes
+Route::get('/article', [ArticleController::class, 'index'])->name('article.index');
+Route::get('/article/search', [ArticleController::class, 'search'])->name('article.search');
+Route::get('/article/category/{slug}', [ArticleController::class, 'byCategory'])->name('article.category');
+Route::get('/article/{article}', [ArticleController::class, 'show'])->name('article.show');
+
 Route::get('/booking', function () {
     return view('pages.order.index');
 });

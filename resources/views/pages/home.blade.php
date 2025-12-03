@@ -17,7 +17,7 @@
             Event Organizer Profesional untuk Corporate, Wedding, dan Community Event.
         </p>
 
-        <a href="#"
+        <a href="{{ url('/booking') }}"
            class="inline-block mt-6 px-6 py-3 bg-yellow-400 text-black font-semibold rounded-md font-dmsans hover:bg-yellow-500 transition">
            Let’s Collaborate
         </a>
@@ -167,7 +167,7 @@
 <section class="py-20">
     <div class="text-start mb-10 max-w-6xl mx-auto px-4 sm:px-6">
         <p class="text-sm font-semibold tracking-wide mb-2 font-poppins">Our Articles</p>
-        <h2 class="text-3xl font-bold font-poppins">Latest Blog & Articles</h2>
+        <h2 class="text-3xl font-bold font-poppins">Latest Articles</h2>
         <p class="max-w-xl text-gray-500 text-sm font-dmsans font-medium mt-2">
             Sebuah festival komunitas yang menghadirkan ratusan pengunjung dan puluhan tenant lokal. Tim Cakrawala menangani seluruh perencanaan, koordinasi, hingga produksi acara agar berjalan lancar dan berkesan.
         </p>
@@ -178,7 +178,7 @@
             <div class="bg-white shadow-sm rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
                 <div class="bg-gray-300 h-48 mb-4 rounded-md"></div>
                 <p class="text-gray-400 text-sm font-poppins">October 13, 2025</p>
-                <h4 class="font-semibold mt-2 font-poppins">Latest Blog & Articles</h4>
+                <h4 class="font-semibold mt-2 font-poppins">Latest Articles</h4>
                 <p class="text-gray-500 text-sm mt-2 font-dmsans">
                     EO Jakarta kini menjadi kebutuhan utama bagi perusahaan...
                 </p>
