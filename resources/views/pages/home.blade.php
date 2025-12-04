@@ -112,32 +112,41 @@
     </div>
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-10">
-        @for ($p = 1; $p <= 2; $p++)
-            <h4 class="font-semibold mb-3 font-poppins">Acara Super Festival di Kuningan</h4>
+        @forelse($projects as $project)
+            <h4 class="font-semibold mb-3 font-poppins">
+                <a href="{{ route('project.show', $project) }}" class="hover:text-yellow-500">{{ $project->project_title }}</a>
+            </h4>
             <div class="swiper projectSwiper">
                 <div class="swiper-wrapper">
-                    @for ($i = 0; $i < 2; $i++)
-                        <div class="swiper-slide">
-                            <div class="grid grid-cols-6 gap-3">
-                                <div class="col-span-2 bg-gray-300 h-40 rounded-md"></div>
-                                <div class="col-span-1 bg-gray-300 h-20 rounded-md"></div>
-                                <div class="col-span-3 bg-gray-300 h-48 rounded-md"></div>
-                                <div class="col-span-2 bg-gray-300 h-28 rounded-md"></div>
-                                <div class="col-span-1 bg-gray-300 h-28 rounded-md"></div>
-                                <div class="col-span-1 bg-gray-300 h-40 rounded-md"></div>
-                                <div class="col-span-2 bg-gray-300 h-32 rounded-md"></div>
-                                <div class="col-span-2 bg-gray-300 h-32 rounded-md"></div>
-                                <div class="col-span-2 bg-gray-300 h-32 rounded-md"></div>
-                                <div class="col-span-2 bg-gray-300 h-32 rounded-md"></div>
-                            </div>
+                    <div class="swiper-slide">
+                        <div class="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-3">
+                            @if($project->images->count())
+                                @foreach($project->images as $key => $image)
+                                    <div class="mb-3 break-inside-avoid">
+                                        @if($key == 0)
+                                            <a href="{{ route('project.show', $project) }}">
+                                                <img src="{{ asset('img/' . $image->image) }}" loading="lazy" class="w-full rounded-lg shadow-sm object-cover h-40" alt="{{ $project->project_title }}">
+                                            </a>
+                                        @else
+                                            <img src="{{ asset('img/' . $image->image) }}" loading="lazy" class="w-full rounded-lg shadow-sm object-cover h-40" alt="{{ $project->project_title }}">
+                                        @endif
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="mb-3">
+                                    <img src="{{ asset('img/' . ($project->cover_image ?? 'placeholder.jpg')) }}" loading="lazy" class="w-full rounded-lg shadow-sm object-cover h-40" alt="{{ $project->project_title }}">
+                                </div>
+                            @endif
                         </div>
-                    @endfor
+                    </div>
                 </div>
                 <div class="swiper-button-prev text-black!"></div>
                 <div class="swiper-button-next text-black!"></div>
                 <div class="swiper-pagination"></div>
             </div>
-        @endfor
+        @empty
+            <p class="text-gray-500">Belum ada proyek untuk ditampilkan.</p>
+        @endforelse
     </div>
     <div class="text-center mt-10">
         <a href="{{ url('/project') }}"
@@ -174,17 +183,24 @@
     </div>
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        @for ($i = 0; $i < 3; $i++)
+        @forelse($articles as $article)
             <div class="bg-white shadow-sm rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
                 <div class="bg-gray-300 h-48 mb-4 rounded-md"></div>
-                <p class="text-gray-400 text-sm font-poppins">October 13, 2025</p>
-                <h4 class="font-semibold mt-2 font-poppins">Latest Articles</h4>
+                                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xs bg-yellow-200 text-black px-2 py-1 rounded">
+                            {{ $article->category->name ?? 'Uncategorized' }}
+                        </span>
+                    </div>
+                <p class="text-gray-400 text-sm font-poppins">{{ $article->created_at->format('F d, Y') }}</p>
+                <h4 class="font-semibold mt-2 font-poppins">{{ $article->title }}</h4>
                 <p class="text-gray-500 text-sm mt-2 font-dmsans">
-                    EO Jakarta kini menjadi kebutuhan utama bagi perusahaan...
+                    {{ Str::limit($article->content, 100) }}
                 </p>
-                <a href="#" class="text-yellow-500 mt-3 inline-block font-dmsans">Read More →</a>
+                <a href="{{ route('article.show', $article) }}" class="text-yellow-500 mt-3 inline-block font-dmsans">Read More →</a>
             </div>
-        @endfor
+        @empty
+            <p class="text-gray-500 col-span-full">Belum ada artikel untuk ditampilkan.</p>
+        @endforelse
     </div>
 
     <div class="text-center mt-10">
