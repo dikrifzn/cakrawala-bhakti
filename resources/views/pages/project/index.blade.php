@@ -19,6 +19,7 @@
             <h4 class="font-semibold mb-4 font-poppins">
                 <a href="{{ route('project.show', $project) }}" class="hover:text-yellow-500">{{ $project->project_title }}</a>
             </h4>
+
             <div class="swiper projectSwiper">
                 <div class="swiper-wrapper">
 

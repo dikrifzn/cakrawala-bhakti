@@ -18,8 +18,7 @@
             <p><strong>Lokasi:</strong> {{ $project->location ?? 'N/A' }}</p>
             <p><strong>Tanggal:</strong> {{ $project->date ? $project->date->format('F d, Y') : 'N/A' }}</p>
         </div>
-    </div>
-    
+    </div>    
     @if($project->description)
         <div class="max-w-6xl mx-auto px-4 sm:px-6 mb-12 prose prose-lg">
             {!! $project->description !!}
