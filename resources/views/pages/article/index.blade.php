@@ -53,11 +53,12 @@
     <!-- Articles Grid -->
     <div class="max-w-6xl mx-auto px-4 sm:px-6 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse($articles as $article)
-            <a href="{{ route('article.show', $article->slug) }}" 
-               class="bg-white shadow-sm rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <div class="aspect-video bg-gray-300 overflow-hidden">
+        <a href="{{ route('article.show', $article->slug) }}">
+            <div class="bg-white shadow-sm rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
+                <div class="bg-gray-300 h-48 mb-4 rounded-md overflow-hidden">
                     @if($article->thumbnail)
                         <img src="{{ asset('storage/' . $article->thumbnail) }}" 
+                             loading="lazy"
                              alt="{{ $article->title }}" 
                              class="w-full h-full object-cover">
                     @else
@@ -66,23 +67,18 @@
                         </div>
                     @endif
                 </div>
-                <div class="p-4">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="text-xs bg-yellow-200 text-black px-2 py-1 rounded">
-                            {{ $article->category->name ?? 'Uncategorized' }}
-                        </span>
-                    </div>
-                    <p class="text-gray-400 text-sm font-poppins">
-                        {{ $article->created_at->format('F d, Y') }}
-                    </p>
-                    <h4 class="font-semibold mt-2 font-poppins line-clamp-2">
-                        {{ $article->title }}
-                    </h4>
-                    <p class="text-gray-500 text-sm mt-2 font-dmsans line-clamp-2">
-                        {{ strip_tags($article->content) }}
-                    </p>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xs bg-yellow-200 text-black px-2 py-1 rounded">
+                        {{ $article->category->name ?? 'Uncategorized' }}
+                    </span>
                 </div>
-            </a>
+                <p class="text-gray-400 text-sm font-poppins">{{ $article->created_at->format('F d, Y') }}</p>
+                <h4 class="font-semibold mt-2 font-poppins line-clamp-2">{{ $article->title }}</h4>
+                <p class="text-gray-500 text-sm mt-2 font-dmsans line-clamp-2">
+                    {{ strip_tags($article->content) }}
+                </p>
+            </div>
+        </a>
         @empty
             <div class="col-span-full text-center py-12">
                 <p class="text-gray-500 text-lg">Tidak ada artikel yang ditemukan.</p>
@@ -93,7 +89,7 @@
     <!-- Pagination -->
     @if($articles->hasPages())
         <div class="max-w-6xl mx-auto px-4 sm:px-6 mt-12">
-            {{ $articles->links() }}
+            {{ $articles->onEachSide(1)->links('components.pagination') }}
         </div>
     @endif
 </section>

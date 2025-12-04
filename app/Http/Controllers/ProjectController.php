@@ -8,11 +8,17 @@ use Illuminate\Http\Request;
 class ProjectController extends Controller
 {
     /**
-     * Display a listing of projects with images.
+     * Display a listing of projects with pagination.
      */
     public function index()
     {
-        $projects = Project::with('images')->orderByDesc('date')->get();
+        $projects = Project::select('id', 'project_title', 'date')
+            ->with(['images' => function ($query) {
+                $query->select('id', 'project_id', 'image');
+            }])
+            ->orderByDesc('date')
+            ->paginate(6);
+        
         return view('pages.project.index', compact('projects'));
     }
 

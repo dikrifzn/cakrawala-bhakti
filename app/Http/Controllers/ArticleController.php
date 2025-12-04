@@ -11,11 +11,16 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = Article::with('category')
+        $articles = Article::select('id', 'title', 'slug', 'thumbnail', 'created_at', 'category_id')
+            ->with(['category' => function ($query) {
+                $query->select('id', 'name');
+            }])
             ->latest()
             ->paginate(12);
 
-        $categories = ArticleCategory::withCount('articles')->get();
+        $categories = ArticleCategory::select('id', 'name', 'slug')
+            ->withCount('articles')
+            ->get();
 
         return view('pages.article.index', [
             'articles' => $articles,
@@ -43,12 +48,17 @@ class ArticleController extends Controller
     {
         $category = ArticleCategory::bySlug($categorySlug)->firstOrFail();
 
-        $articles = Article::with('category')
+        $articles = Article::select('id', 'title', 'slug', 'thumbnail', 'created_at', 'category_id')
+            ->with(['category' => function ($query) {
+                $query->select('id', 'name');
+            }])
             ->byCategory($category->id)
             ->latest()
             ->paginate(12);
 
-        $categories = ArticleCategory::withCount('articles')->get();
+        $categories = ArticleCategory::select('id', 'name', 'slug')
+            ->withCount('articles')
+            ->get();
 
         return view('pages.article.index', [
             'articles' => $articles,
@@ -60,13 +70,18 @@ class ArticleController extends Controller
     {
         $query = $request->get('q', '');
 
-        $articles = Article::with('category')
+        $articles = Article::select('id', 'title', 'slug', 'thumbnail', 'created_at', 'category_id')
+            ->with(['category' => function ($query) {
+                $query->select('id', 'name');
+            }])
             ->where('title', 'like', '%' . $query . '%')
             ->orWhere('content', 'like', '%' . $query . '%')
             ->latest()
             ->paginate(12);
 
-        $categories = ArticleCategory::withCount('articles')->get();
+        $categories = ArticleCategory::select('id', 'name', 'slug')
+            ->withCount('articles')
+            ->get();
 
         return view('pages.article.index', [
             'articles' => $articles,
