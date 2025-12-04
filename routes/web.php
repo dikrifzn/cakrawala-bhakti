@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ProjectController;
 
 Route::get('/', function () {
     return view('pages.home');
@@ -9,12 +10,10 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return view('pages.about');
 });
-Route::get('/project', function () {
-    return view('pages.project.index');
-});
-Route::get('/project/detail', function () {
-    return view('pages.project.detail');
-});
+
+// Projects
+Route::get('/project', [ProjectController::class, 'index'])->name('project.index');
+Route::get('/project/{project}', [ProjectController::class, 'show'])->name('project.show');
 
 // Article
 Route::get('/article', [ArticleController::class, 'index'])->name('article.index');
