@@ -13,9 +13,9 @@
     </div>
     <div id="gallery" class="max-w-6xl mx-auto px-4 sm:px-6 columns-2 sm:columns-3 md:columns-4 gap-4">
 
-        @for ($i = 1; $i <= 30; $i++)
+        @forelse($project->images as $image)
             @php
-                $full = "https://picsum.photos/id/" . rand(10,999) . "/1600/1000";
+                $full = asset('img/' . $image->image);
                 $thumb = $full;
             @endphp
 
@@ -29,9 +29,12 @@
                 <img 
                     src="{{ $thumb }}" 
                     class="w-full rounded-xl transition duration-300 group-hover:scale-110"
+                    alt="{{ $project->project_title }}"
                 >
             </a>
-        @endfor
+        @empty
+            <div class="col-span-full text-center py-10 text-gray-500">Belum ada gambar untuk project ini.</div>
+        @endforelse
 
     </div>
 </section>
