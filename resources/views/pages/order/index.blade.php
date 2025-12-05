@@ -2,6 +2,8 @@
 
 <section class="py-20 flex flex-col justify-center items-center px-5">
     <div class="w-full max-w-5xl bg-white shadow-lg rounded-2xl p-10">
+        <form method="POST" action="{{ route('booking.store') }}">
+            @csrf
         <h1 class="text-3xl font-bold text-center mb-10">
             Form Pemesanan Acara
         </h1>
@@ -11,6 +13,7 @@
             <div class="grid grid-cols-1 gap-5">
                 <input
                     type="text"
+                    name="customer_name"
                     placeholder="Nama Lengkap"
                     class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
                 />
@@ -18,12 +21,14 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <input
                         type="text"
+                        name="customer_phone"
                         placeholder="Nomor Telepon"
                         class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
                     />
 
                     <input
                         type="email"
+                        name="customer_email"
                         placeholder="YourEmail@gmail.com"
                         class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
                     />
@@ -36,9 +41,14 @@
             <div class="grid grid-cols-1 gap-5">
                 <select
                     id="eventTypeSelect"
+                    name="event_type_id"
                     class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
+                    required
                 >
-                    <option>Wedding</option>
+                    <option value="">Pilih Jenis Acara</option>
+                    @foreach(App\Models\EventType::all() as $type)
+                        <option value="{{ $type->id }}">{{ $type->name }}</option>
+                    @endforeach
                 </select>
 
                 <div class="grid grid-cols-1 md:grid-cols gap-5 items-start">
@@ -55,6 +65,7 @@
                     >
                     <input
                         type="text"
+                        name="location"
                         placeholder="Lokasi Acara"
                         class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
                     />
@@ -64,45 +75,42 @@
                 <div
                     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 services-container"
                 >
-                    @php $services = [ 'MC Formal' => 350000, 'MC Nonformal' =>
-                    300000, 'Pengadaan Sound System' => 750000, 'Pengadaan
-                    Panggung' => 900000, 'Dekorasi' => 1200000, 'Photographer'
-                    => 850000, 'Videographer' => 950000, 'Tambahan +' =>
-                    'pending', ]; @endphp @foreach ($services as $name =>
-                    $price) @if($name === 'Tambahan +')
-                    <label
-                        class="add-service-btn border-dashed border-2 rounded-xl p-5 text-center cursor-pointer transition duration-200 hover:bg-yellow-50 hover:border-yellow-400 flex items-center justify-center w-full"
-                    >
-                        <span class="font-semibold text-yellow-600"
-                            >+ Tambahan</span
-                        >
-                    </label>
-                    @else
-                    <label
-                        class="service-card border rounded-xl p-5 text-center cursor-pointer transition duration-200 hover:bg-yellow-50 hover:border-yellow-400 w-full"
-                        data-price="{{ $price }}"
-                    >
-                        <input
-                            type="checkbox"
-                            name="services[]"
-                            value="{{ $name }}"
-                            data-price="{{ $price }}"
-                            class="hidden"
-                        />
-                        <div class="flex flex-col items-center">
-                            <span class="font-medium">{{ $name }}</span>
-                            <div class="text-sm mt-2 service-price">
-                                @if(is_numeric($price))
-                                {{ "Rp ".number_format($price, 0, ",", ".") }}
-                                @elseif($price === 'pending')
-                                <span class="text-yellow-600"
-                                    >Menunggu admin</span
-                                >
-                                @else Gratis @endif
-                            </div>
-                        </div>
-                    </label>
-                    @endif @endforeach
+                    @php $services = [ 'MC Formal' => 350000, 'MC Nonformal' => 300000, 'Pengadaan Sound System' => 750000, 'Pengadaan Panggung' => 900000, 'Dekorasi' => 1200000, 'Photographer' => 850000, 'Videographer' => 950000, 'Tambahan +' => 'pending', ]; @endphp
+                    @foreach ($services as $name => $price)
+                        @if($name === 'Tambahan +')
+                            <label
+                                class="add-service-btn border-dashed border-2 rounded-xl p-5 text-center cursor-pointer transition duration-200 hover:bg-yellow-50 hover:border-yellow-400 flex items-center justify-center w-full"
+                            >
+                                <span class="font-semibold text-yellow-600">+ Tambahan</span>
+                            </label>
+                        @else
+                            @php $priceValue = is_numeric($price) ? $price : 0; @endphp
+                            <label
+                                class="service-card border rounded-xl p-5 text-center cursor-pointer transition duration-200 hover:bg-yellow-50 hover:border-yellow-400 w-full"
+                                data-price="{{ $priceValue }}"
+                            >
+                                <input
+                                    type="checkbox"
+                                    name="services[]"
+                                    value="{{ $name }}|{{ $priceValue }}"
+                                    data-price="{{ $priceValue }}"
+                                    class="hidden"
+                                />
+                                <div class="flex flex-col items-center">
+                                    <span class="font-medium">{{ $name }}</span>
+                                    <div class="text-sm mt-2 service-price">
+                                        @if(is_numeric($price))
+                                            {{ "Rp ".number_format($price, 0, ",", ".") }}
+                                        @elseif($price === 'pending')
+                                            <span class="text-yellow-600">Menunggu admin</span>
+                                        @else
+                                            Gratis
+                                        @endif
+                                    </div>
+                                </div>
+                            </label>
+                        @endif
+                    @endforeach
                 </div>
                 <textarea
                     placeholder="Tulis catatan anda..."
@@ -112,10 +120,16 @@
         </div>
         <div class="mb-10">
             <h2 class="text-xl font-semibold mb-5">Rincian Pemesanan</h2>
-            <div
+                <div
                 x-data="orderSummary()"
                 class="bg-gray-50 border rounded-xl p-6 space-y-4"
             >
+                    {{-- Hidden inputs populated by JS --}}
+                    <input type="hidden" name="start_date" id="input_start_date">
+                    <input type="hidden" name="end_date" id="input_end_date">
+                    <input type="hidden" name="start_time" id="input_start_time">
+                    <input type="hidden" name="end_time" id="input_end_time">
+                    <input type="hidden" name="total_days" id="input_total_days">
                 <div class="flex justify-between items-center pb-3 border-b">
                     <span class="text-gray-600">Nama Lengkap:</span>
                     <span class="font-semibold" x-text="fullName || '-'"></span>
@@ -222,13 +236,15 @@
                 </div>
             </div>
         </div>
-        <div class="text-right">
-            <button
-                class="bg-yellow-500 hover:bg-yellow-600 transition text-white py-3 px-8 rounded-xl font-semibold shadow"
-            >
-                Pesan Sekarang
-            </button>
-        </div>
+            <div class="text-right">
+                <button
+                    type="submit"
+                    class="bg-yellow-500 hover:bg-yellow-600 transition text-white py-3 px-8 rounded-xl font-semibold shadow"
+                >
+                    Pesan Sekarang
+                </button>
+            </div>
+        </form>
     </div>
 </section>
 
@@ -324,6 +340,10 @@
                 document.addEventListener("time-changed", (e) => {
                     if (e.detail && e.detail.start && e.detail.end) {
                         self.eventTime = `${e.detail.start} - ${e.detail.end}`;
+                        const elStart = document.getElementById('input_start_time');
+                        const elEnd = document.getElementById('input_end_time');
+                        if (elStart) elStart.value = e.detail.start;
+                        if (elEnd) elEnd.value = e.detail.end;
                     }
                 });
 
@@ -345,17 +365,25 @@
                         const startDate = new Date(e.detail.startDate);
                         const options = { year: 'numeric', month: 'long', day: 'numeric' };
                         self.eventStartDate = startDate.toLocaleDateString('id-ID', options);
+                        const iso = e.detail.startDate;
+                        const el = document.getElementById('input_start_date');
+                        if (el) el.value = iso;
                     }
                     if (e.detail && e.detail.endDate) {
                         const endDate = new Date(e.detail.endDate);
                         const options = { year: 'numeric', month: 'long', day: 'numeric' };
                         self.eventEndDate = endDate.toLocaleDateString('id-ID', options);
+                        const iso = e.detail.endDate;
+                        const el2 = document.getElementById('input_end_date');
+                        if (el2) el2.value = iso;
                     }
                 });
 
                 document.addEventListener("totalDays-changed", (e) => {
                     if (e.detail && e.detail.totalDays) {
                         self.totalDays = e.detail.totalDays;
+                        const el = document.getElementById('input_total_days');
+                        if (el) el.value = e.detail.totalDays;
                     }
                 });
             },

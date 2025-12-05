@@ -57,7 +57,7 @@
             <div class="bg-white shadow-sm rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
                 <div class="bg-gray-300 h-48 mb-4 rounded-md overflow-hidden">
                     @if($article->thumbnail)
-                        <img src="{{ asset('storage/' . $article->thumbnail) }}" 
+                        <img src="{{ $article->thumbnail ? asset('storage/'.$article->thumbnail) : asset('img/default-thumbnail.png') }}"
                              loading="lazy"
                              alt="{{ $article->title }}" 
                              class="w-full h-full object-cover">

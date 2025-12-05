@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('landing_sections', function (Blueprint $table) {
+        Schema::create('call_to_actions', function (Blueprint $table) {
             $table->id();
-            $table->string('section_key')->unique();
-            $table->string('title')->nullable();
+            $table->string('title');
+            $table->string('highlight_text')->nullable();
             $table->text('subtitle')->nullable();
-            $table->longText('content')->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->integer('sort_order')->default(0);
+            $table->string('background_image')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('landing_sections');
+        Schema::dropIfExists('call_to_actions');
     }
 };

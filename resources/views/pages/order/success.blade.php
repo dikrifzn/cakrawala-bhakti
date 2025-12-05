@@ -26,7 +26,7 @@
 
         <p class="mt-2 font-dmsans text-white z-10">
             Kami akan segera menghubungi email konfirmasi ke 
-            <span class="font-semibold">example@gmail.com</span>
+            <span class="font-semibold">{{ session('booking')->customer_email ?? 'example@gmail.com' }}</span>
         </p>
 
     </div>
