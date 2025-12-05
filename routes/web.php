@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\BookingController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', function () {
@@ -23,6 +24,7 @@ Route::get('/article/{article}', [ArticleController::class, 'show'])->name('arti
 Route::get('/booking', function () {
     return view('pages.order.index');
 });
+Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
 Route::get('/booking/success', function () {
     return view('pages.order.success');
 });

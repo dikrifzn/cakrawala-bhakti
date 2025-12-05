@@ -17,14 +17,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create test user
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-
         // Run all seeders
         $this->call([
+            UserSeeder::class,
             HeroBannerSeeder::class,
             AboutSectionSeeder::class,
             WhyChooseUsSeeder::class,
@@ -35,7 +30,6 @@ class DatabaseSeeder extends Seeder
             ProjectImageSeeder::class,
             EventTypeSeeder::class,
             BookingSeeder::class,
-            LandingSectionSeeder::class,
             SiteSettingSeeder::class,
         ]);
 

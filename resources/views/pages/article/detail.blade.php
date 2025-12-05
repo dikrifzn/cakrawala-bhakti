@@ -23,6 +23,7 @@
 
         @if($article->thumbnail)
             <img src="{{ asset('storage/' . $article->thumbnail) }}" 
+                 onerror="this.src='{{ asset('img/placeholder.jpg') }}'"
                  loading="lazy"
                  alt="{{ $article->title }}" 
                  class="w-full h-96 object-cover rounded-lg" />
@@ -49,6 +50,7 @@
                         <div class="bg-gray-300 h-48 mb-4 rounded-md overflow-hidden">
                             @if($relatedArticle->thumbnail)
                                 <img src="{{ asset('storage/' . $relatedArticle->thumbnail) }}" 
+                                     onerror="this.src='{{ asset('img/placeholder.jpg') }}'"
                                      loading="lazy"
                                      alt="{{ $relatedArticle->title }}" 
                                      class="w-full h-full object-cover">

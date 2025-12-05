@@ -14,8 +14,14 @@
             <a href="{{ url('/#service') }}" class="hover:text-yellow-400"
                 >Service</a
             >
-            <a href="{{ url('/#publication') }}" class="hover:text-yellow-400"
-                >Publication</a
+            <a href="{{ url('/project') }}" class="hover:text-yellow-400"
+                >Project</a
+            >
+            <a href="{{ url('/article') }}" class="hover:text-yellow-400"
+                >Article</a
+            >
+            <a href="{{ url('/booking') }}" class="hover:text-yellow-400"
+                >Booking</a
             >
 
             <button
@@ -39,7 +45,9 @@
         <a href="{{ url('/') }}" class="block">Home</a>
         <a href="{{ url('/#about') }}" class="block">About</a>
         <a href="{{ url('/#service') }}" class="block">Service</a>
-        <a href="{{ url('/#publication') }}" class="block">Publication</a>
+        <a href="{{ url('/project') }}" class="block">Project</a>
+        <a href="{{ url('/article') }}" class="block">Article</a>
+        <a href="{{ url('/booking') }}" class="block">Booking</a>
 
         <button
             onclick="openLoginModal()"

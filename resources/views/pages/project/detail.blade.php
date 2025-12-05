@@ -28,14 +28,15 @@
     <div id="gallery" class="max-w-6xl mx-auto px-4 sm:px-6 columns-2 sm:columns-3 md:columns-4 gap-4">
         @forelse($project->images as $image)
             <a 
-                href="{{ asset('img/' . $image->image) }}"
+                href="{{ asset('storage/' . $image->image) }}"
                 data-pswp-width="1600"
                 data-pswp-height="1000"
                 data-cropped="true"
                 class="block mb-4 break-inside-avoid overflow-hidden rounded-xl group"
             >
                 <img 
-                    src="{{ asset('img/' . $image->image) }}"
+                    src="{{ asset('storage/' . $image->image) }}"
+                    onerror="this.src='{{ asset('img/placeholder.jpg') }}'"
                     loading="lazy"
                     class="w-full rounded-xl transition duration-300 group-hover:scale-110"
                     alt="{{ $project->project_title }}"
