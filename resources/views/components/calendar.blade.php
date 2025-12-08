@@ -5,6 +5,7 @@
             <div class="flex justify-between items-center mb-4">
                 <button
                     @click="prevMonth()"
+                    type="button"
                     class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
                 >
                     &lt;
@@ -15,6 +16,7 @@
                 ></h2>
                 <button
                     @click="nextMonth()"
+                    type="button"
                     class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
                 >
                     &gt;
@@ -39,6 +41,7 @@
                             @touchstart="startDrag(day)"
                             @touchmove.prevent="touchMove($event)"
                             @touchend="endDrag()"
+                            type="button"
                             :disabled="day.disabled || !day.date"
                             :data-full="day.full ? day.full.getTime() : ''"
                             :class="[
@@ -93,6 +96,7 @@
                     <div class="flex flex-col items-center">
                         <button
                             @click="increaseStartHour()"
+                            type="button"
                             class="text-yellow-500 font-bold mb-1"
                         >
                             ↑
@@ -101,6 +105,7 @@
                             <template x-for="h in getStartHourOptions()">
                                 <button
                                     @click="startHour = h; notifyTimeChanged();"
+                                    type="button"
                                     :class="['px-2 py-1 rounded font-semibold text-xs', startHour === h ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                                     x-text="String(h).padStart(2, '0')"
                                 ></button>
@@ -108,6 +113,7 @@
                         </div>
                         <button
                             @click="decreaseStartHour()"
+                            type="button"
                             class="text-yellow-500 font-bold mt-1"
                         >
                             ↓
@@ -117,6 +123,7 @@
                     <div class="flex flex-col items-center">
                         <button
                             @click="increaseStartMinute()"
+                            type="button"
                             class="text-yellow-500 font-bold mb-1"
                         >
                             ↑
@@ -125,6 +132,7 @@
                             <template x-for="m in getStartMinuteOptions()">
                                 <button
                                     @click="startMinute = m; notifyTimeChanged();"
+                                    type="button"
                                     :class="['px-2 py-1 rounded font-semibold text-xs', startMinute === m ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                                     x-text="String(m).padStart(2, '0')"
                                 ></button>
@@ -132,6 +140,7 @@
                         </div>
                         <button
                             @click="decreaseStartMinute()"
+                            type="button"
                             class="text-yellow-500 font-bold mt-1"
                         >
                             ↓
@@ -140,12 +149,14 @@
                     <div class="flex flex-col gap-1">
                         <button
                             @click="startPeriod = 'AM'; notifyTimeChanged();"
+                            type="button"
                             :class="['px-2 py-1 rounded font-semibold text-xs', startPeriod === 'AM' ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                         >
                             AM
                         </button>
                         <button
                             @click="startPeriod = 'PM'; notifyTimeChanged();"
+                            type="button"
                             :class="['px-2 py-1 rounded font-semibold text-xs', startPeriod === 'PM' ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                         >
                             PM
@@ -170,6 +181,7 @@
                     <div class="flex flex-col items-center">
                         <button
                             @click="increaseEndHour()"
+                            type="button"
                             class="text-yellow-500 font-bold mb-1"
                         >
                             ↑
@@ -178,6 +190,7 @@
                             <template x-for="h in getEndHourOptions()">
                                 <button
                                     @click="endHour = h; notifyTimeChanged();"
+                                    type="button"
                                     :class="['px-2 py-1 rounded font-semibold text-xs', endHour === h ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                                     x-text="String(h).padStart(2, '0')"
                                 ></button>
@@ -185,6 +198,7 @@
                         </div>
                         <button
                             @click="decreaseEndHour()"
+                            type="button"
                             class="text-yellow-500 font-bold mt-1"
                         >
                             ↓
@@ -194,6 +208,7 @@
                     <div class="flex flex-col items-center">
                         <button
                             @click="increaseEndMinute()"
+                            type="button"
                             class="text-yellow-500 font-bold mb-1"
                         >
                             ↑
@@ -202,6 +217,7 @@
                             <template x-for="m in getEndMinuteOptions()">
                                 <button
                                     @click="endMinute = m; notifyTimeChanged();"
+                                    type="button"
                                     :class="['px-2 py-1 rounded font-semibold text-xs', endMinute === m ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                                     x-text="String(m).padStart(2, '0')"
                                 ></button>
@@ -209,6 +225,7 @@
                         </div>
                         <button
                             @click="decreaseEndMinute()"
+                            type="button"
                             class="text-yellow-500 font-bold mt-1"
                         >
                             ↓
@@ -217,12 +234,14 @@
                     <div class="flex flex-col gap-1">
                         <button
                             @click="endPeriod = 'AM'; notifyTimeChanged();"
+                            type="button"
                             :class="['px-2 py-1 rounded font-semibold text-xs', endPeriod === 'AM' ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                         >
                             AM
                         </button>
                         <button
                             @click="endPeriod = 'PM'; notifyTimeChanged();"
+                            type="button"
                             :class="['px-2 py-1 rounded font-semibold text-xs', endPeriod === 'PM' ? 'bg-yellow-400 text-black' : 'bg-gray-200 text-gray-700']"
                         >
                             PM
@@ -233,6 +252,7 @@
             <div class="text-center">
                 <button
                     @click="setToday()"
+                    type="button"
                     class="text-yellow-500 hover:text-yellow-600 font-semibold text-sm"
                 >
                     Today
