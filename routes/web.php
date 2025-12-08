@@ -28,3 +28,6 @@ Route::post('/booking', [BookingController::class, 'store'])->name('booking.stor
 Route::get('/booking/success', function () {
     return view('pages.order.success');
 });
+Route::get('/emailnotification', function () { 
+    return view('emails.booking.created');
+});

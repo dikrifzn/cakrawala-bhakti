@@ -2,9 +2,7 @@
 
 namespace App\Filament\Resources\HeroBanners;
 
-use App\Filament\Resources\HeroBanners\Pages\CreateHeroBanner;
 use App\Filament\Resources\HeroBanners\Pages\EditHeroBanner;
-use App\Filament\Resources\HeroBanners\Pages\ListHeroBanners;
 use App\Filament\Resources\HeroBanners\Schemas\HeroBannerForm;
 use App\Filament\Resources\HeroBanners\Tables\HeroBannersTable;
 use App\Models\HeroBanner;
@@ -44,9 +42,7 @@ class HeroBannerResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListHeroBanners::route('/'),
-            'create' => CreateHeroBanner::route('/create'),
-            'edit' => EditHeroBanner::route('/{record}/edit'),
+            'index' => EditHeroBanner::route('/'),
         ];
     }
 }

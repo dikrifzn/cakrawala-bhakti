@@ -2,15 +2,14 @@
 
 namespace App\Filament\Resources\Bookings\Pages;
 
-use App\Filament\Resources\Bookings\BookingResource;
+use App\Filament\Resources\Bookings\BookingReportResource;
 use App\Models\Booking;
-use Filament\Actions\CreateAction;
-use Filament\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Actions\Action;
 
-class ListBookings extends ListRecords
+class ListBookingReport extends ListRecords
 {
-    protected static string $resource = BookingResource::class;
+    protected static string $resource = BookingReportResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -59,7 +58,6 @@ class ListBookings extends ListRecords
                         ]
                     );
                 }),
-            CreateAction::make(),
         ];
     }
 }

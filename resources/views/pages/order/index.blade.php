@@ -189,17 +189,13 @@
                 <div class="pb-3 border-b">
                     <span class="text-gray-600">Layanan yang Dipilih:</span>
                     <div class="mt-2 space-y-1">
-                        <template
-                            x-for="service in selectedServices"
-                            :key="service"
-                        >
-                            <div
-                                class="text-sm text-gray-700 flex items-center"
-                            >
-                                <span
-                                    class="inline-block w-2 h-2 bg-yellow-500 rounded-full mr-2"
-                                ></span>
-                                <span x-text="service"></span>
+                        <template x-for="service in selectedServices" :key="service.name">
+                            <div class="text-sm text-gray-700 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <span class="inline-block w-2 h-2 bg-yellow-500 rounded-full mr-2"></span>
+                                    <span x-text="service.name"></span>
+                                </div>
+                                <span class="font-semibold text-right" x-text="service.pending ? 'Menunggu admin' : formatRupiah(service.price)"></span>
                             </div>
                         </template>
                         <div
@@ -239,7 +235,7 @@
             <div class="text-right">
                 <button
                     type="submit"
-                    class="bg-yellow-500 hover:bg-yellow-600 transition text-white py-3 px-8 rounded-xl font-semibold shadow"
+                    class="bg-yellow-500 hover:bg-yellow-600 transition text-white py-3 px-8 rounded-xl font-semibold shadow cursor-pointer"
                 >
                     Pesan Sekarang
                 </button>
@@ -398,14 +394,27 @@
                         ".service-card input[type='checkbox']:checked"
                     )
                     .forEach((checkbox) => {
-                        services.push(checkbox.value);
+                        const rawValue = checkbox.value || "";
+                        const [namePart, pricePart] = rawValue.split("|");
                         const priceAttr = checkbox.getAttribute("data-price");
-                        if (priceAttr && priceAttr !== "pending") {
-                            const p = parseInt(priceAttr, 10);
-                            if (!isNaN(p)) total += p;
+                        const isPending = priceAttr === "pending" || pricePart === undefined || pricePart === "";
+
+                        let price = 0;
+                        if (!isPending) {
+                            const parsed = parseInt(pricePart || priceAttr || "0", 10);
+                            if (!isNaN(parsed)) {
+                                price = parsed;
+                                total += parsed;
+                            }
                         } else {
-                            pending.push(checkbox.value);
+                            pending.push(namePart);
                         }
+
+                        services.push({
+                            name: namePart,
+                            price,
+                            pending: isPending,
+                        });
                     });
 
                 this.selectedServices = services;

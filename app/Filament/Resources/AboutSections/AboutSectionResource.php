@@ -2,9 +2,7 @@
 
 namespace App\Filament\Resources\AboutSections;
 
-use App\Filament\Resources\AboutSections\Pages\CreateAboutSection;
 use App\Filament\Resources\AboutSections\Pages\EditAboutSection;
-use App\Filament\Resources\AboutSections\Pages\ListAboutSections;
 use App\Filament\Resources\AboutSections\Schemas\AboutSectionForm;
 use App\Filament\Resources\AboutSections\Tables\AboutSectionsTable;
 use App\Models\AboutSection;
@@ -44,9 +42,7 @@ class AboutSectionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListAboutSections::route('/'),
-            'create' => CreateAboutSection::route('/create'),
-            'edit' => EditAboutSection::route('/{record}/edit'),
+            'index' => EditAboutSection::route('/'),
         ];
     }
 }
