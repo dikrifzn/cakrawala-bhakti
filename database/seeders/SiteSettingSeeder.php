@@ -24,6 +24,8 @@ class SiteSettingSeeder extends Seeder
             'address' => 'Jl. Sudirman No. 123, Jakarta Pusat',
             'phone' => '(021) 1234-5678',
             'email' => 'info@cakrawalabhakti.com',
+            'admin_email' => 'dikrifauz@gmail.com',
+            'manager_email' => null,
             'instagram' => 'https://instagram.com/cakrawalabhakti',
             'facebook' => 'https://facebook.com/cakrawalabhakti',
             'tiktok' => 'https://tiktok.com/@cakrawalabhakti',

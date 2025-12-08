@@ -13,6 +13,8 @@ class SiteSetting extends Model
         'address',
         'phone',
         'email',
+        'admin_email',
+        'manager_email',
         'instagram',
         'facebook',
         'tiktok',

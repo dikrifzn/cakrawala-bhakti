@@ -2,9 +2,7 @@
 
 namespace App\Filament\Resources\SiteSettings;
 
-use App\Filament\Resources\SiteSettings\Pages\CreateSiteSetting;
 use App\Filament\Resources\SiteSettings\Pages\EditSiteSetting;
-use App\Filament\Resources\SiteSettings\Pages\ListSiteSettings;
 use App\Filament\Resources\SiteSettings\Schemas\SiteSettingForm;
 use App\Filament\Resources\SiteSettings\Tables\SiteSettingsTable;
 use App\Models\SiteSetting;
@@ -44,9 +42,7 @@ class SiteSettingResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListSiteSettings::route('/'),
-            'create' => CreateSiteSetting::route('/create'),
-            'edit' => EditSiteSetting::route('/{record}/edit'),
+            'index' => EditSiteSetting::route('/'),
         ];
     }
 }

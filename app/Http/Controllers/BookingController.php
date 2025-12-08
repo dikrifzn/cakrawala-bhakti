@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\Service;
 use App\Models\BookingService;
+use App\Models\SiteSetting;
+use App\Notifications\BookingCreatedNotification;
+use Illuminate\Support\Facades\Notification;
 
 class BookingController extends Controller
 {
@@ -116,6 +119,25 @@ class BookingController extends Controller
 
         $booking->total_price = $total;
         $booking->save();
+
+        // Send notification to customer
+        Notification::route('mail', $booking->customer_email)
+            ->notify(new BookingCreatedNotification($booking));
+
+        // Get email settings from database
+        $settings = SiteSetting::first();
+        
+        // Send notification to admin email
+        if ($settings && $settings->admin_email) {
+            Notification::route('mail', $settings->admin_email)
+                ->notify(new BookingCreatedNotification($booking));
+        }
+
+        // Send notification to manager email if exists
+        if ($settings && $settings->manager_email) {
+            Notification::route('mail', $settings->manager_email)
+                ->notify(new BookingCreatedNotification($booking));
+        }
 
         return redirect('/booking/success')->with('booking', $booking);
     }

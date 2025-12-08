@@ -3,17 +3,31 @@
 namespace App\Filament\Resources\HeroBanners\Pages;
 
 use App\Filament\Resources\HeroBanners\HeroBannerResource;
-use Filament\Actions\DeleteAction;
+use App\Models\HeroBanner;
 use Filament\Resources\Pages\EditRecord;
 
 class EditHeroBanner extends EditRecord
 {
     protected static string $resource = HeroBannerResource::class;
 
+    protected static ?string $title = 'Hero Banner';
+
+    public function mount(int|string|null $record = null): void
+    {
+        $this->record = HeroBanner::firstOrCreate([]);
+        
+        $this->fillForm();
+
+        $this->previousUrl = static::getResource()::getUrl('index');
+    }
+
     protected function getHeaderActions(): array
     {
-        return [
-            DeleteAction::make(),
-        ];
+        return [];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
     }
 }

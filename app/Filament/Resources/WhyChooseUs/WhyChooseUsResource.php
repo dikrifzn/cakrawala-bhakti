@@ -2,9 +2,7 @@
 
 namespace App\Filament\Resources\WhyChooseUs;
 
-use App\Filament\Resources\WhyChooseUs\Pages\CreateWhyChooseUs;
 use App\Filament\Resources\WhyChooseUs\Pages\EditWhyChooseUs;
-use App\Filament\Resources\WhyChooseUs\Pages\ListWhyChooseUs;
 use App\Filament\Resources\WhyChooseUs\Schemas\WhyChooseUsForm;
 use App\Filament\Resources\WhyChooseUs\Tables\WhyChooseUsTable;
 use App\Models\WhyChooseUs;
@@ -44,9 +42,7 @@ class WhyChooseUsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListWhyChooseUs::route('/'),
-            'create' => CreateWhyChooseUs::route('/create'),
-            'edit' => EditWhyChooseUs::route('/{record}/edit'),
+            'index' => EditWhyChooseUs::route('/'),
         ];
     }
 }
