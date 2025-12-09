@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 class Booking extends Model
 {
     protected $fillable = [
+        'user_id',
         'customer_name',
         'customer_email',
         'customer_phone',
@@ -25,6 +26,11 @@ class Booking extends Model
         'total_price',
         'status',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function eventType(): BelongsTo
     {

@@ -4,8 +4,10 @@ namespace App\Filament\Resources\Bookings\Pages;
 
 use App\Filament\Resources\Bookings\BookingResource;
 use App\Models\BookingService;
+use App\Notifications\BookingStatusUpdatedNotification;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Notification;
 
 class EditBooking extends EditRecord
 {
@@ -27,6 +29,8 @@ class EditBooking extends EditRecord
 
     protected function afterSave(): void
     {
+        $statusChanged = $this->record->wasChanged('status');
+
         $selectedServices = $this->form->getRawState()['selectedServices'] ?? [];
         
         // Delete existing booking services
@@ -43,6 +47,12 @@ class EditBooking extends EditRecord
                     'quantity' => 1,
                 ]);
             }
+        }
+
+        // Notify customer when status updated by admin/manager
+        if ($statusChanged && $this->record->customer_email) {
+            Notification::route('mail', $this->record->customer_email)
+                ->notify(new BookingStatusUpdatedNotification($this->record));
         }
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Article;
+use App\Models\EventType;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -27,6 +28,8 @@ class HomeController extends Controller
             ->limit(3)
             ->get();
 
-        return view('pages.home', compact('projects', 'articles'));
+        $events = EventType::select('id', 'name')->get();
+
+        return view('pages.home', compact('projects', 'articles', 'events'));
     }
 }
