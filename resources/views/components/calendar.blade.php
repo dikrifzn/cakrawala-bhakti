@@ -282,11 +282,21 @@
             dragJustEnded: false,
             dragStartDate: null,
             dragCurrentDate: null,
+            minDaysOffset: 14,
 
             monthName() {
                 return new Date(this.year, this.month).toLocaleString("id-ID", {
                     month: "long",
                 });
+            },
+
+            updateMinDaysOffset(days) {
+                this.minDaysOffset = days;
+                this.startDate = null;
+                this.endDate = null;
+                this.totalDays = "";
+                this.generateCalendar();
+                this.notifyDateChanged();
             },
 
             init() {
@@ -316,14 +326,15 @@
                 for (let d = 1; d <= totalDays; d++) {
                     const current = new Date(this.year, this.month, d);
                     const today = new Date();
+                    
+                    // Calculate minimum date based on offset
+                    const minDate = new Date(
+                        today.getFullYear(),
+                        today.getMonth(),
+                        today.getDate() + this.minDaysOffset
+                    );
 
-                    const disabled =
-                        current <
-                        new Date(
-                            today.getFullYear(),
-                            today.getMonth(),
-                            today.getDate()
-                        );
+                    const disabled = current < minDate;
 
                     let selected = false;
                     let inRange = false;

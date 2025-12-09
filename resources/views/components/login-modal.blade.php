@@ -89,21 +89,20 @@
 </div>
 
 <script>
+// Open/Close Modal - Define outside DOMContentLoaded for immediate access
+window.openLoginModal = () => {
+    const m = document.getElementById("loginModal");
+    m.classList.remove("hidden");
+    m.classList.add("flex");
+    closeRegisterModal()
+};
+window.closeLoginModal = () => {
+    const m = document.getElementById("loginModal");
+    m.classList.add("hidden");
+    m.classList.remove("flex");
+};
+
 document.addEventListener('DOMContentLoaded', () => {
-
-    // Open/Close Modal
-    window.openLoginModal = () => {
-        const m = document.getElementById("loginModal");
-        m.classList.remove("hidden");
-        m.classList.add("flex");
-        closeRegisterModal()
-    };
-    window.closeLoginModal = () => {
-        const m = document.getElementById("loginModal");
-        m.classList.add("hidden");
-        m.classList.remove("flex");
-    };
-
     // Password Toggle
     const passInput = document.getElementById("passwordInput");
     const toggleBtn  = document.getElementById("togglePassword");

@@ -155,20 +155,20 @@
 </div>
 
 <script>
+// Open/Close Modal - Define outside DOMContentLoaded for immediate access
+window.openRegisterModal = () => {
+    const m = document.getElementById("registerModal");
+    m.classList.remove("hidden");
+    m.classList.add("flex");
+    closeLoginModal();
+};
+window.closeRegisterModal = () => {
+    const m = document.getElementById("registerModal");
+    m.classList.add("hidden");
+    m.classList.remove("flex");
+};
+
 document.addEventListener('DOMContentLoaded', () => {
-
-    window.openRegisterModal = () => {
-        const m = document.getElementById("registerModal");
-        m.classList.remove("hidden");
-        m.classList.add("flex");
-        closeLoginModal();
-    };
-    window.closeRegisterModal = () => {
-        const m = document.getElementById("registerModal");
-        m.classList.add("hidden");
-        m.classList.remove("flex");
-    };
-
     const setupToggle = (inputId, eyeId, eyeOffId, btnId) => {
         const input = document.getElementById(inputId);
         const eye = document.getElementById(eyeId);

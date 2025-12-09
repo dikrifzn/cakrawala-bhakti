@@ -20,9 +20,17 @@
             <a href="{{ url('/article') }}" class="hover:text-yellow-400"
                 >Article</a
             >
-            <a href="{{ url('/booking') }}" class="hover:text-yellow-400"
-                >Booking</a
-            >
+<a 
+    @auth
+        href="{{ url('/booking') }}"
+    @else
+        href="javascript:void(0)" 
+        onclick="openLoginModal()"
+    @endauth
+    class="block"
+>
+    Booking
+</a>
 
             @auth
                 <div class="flex items-center gap-3">
@@ -59,7 +67,18 @@
         <a href="{{ url('/#service') }}" class="block">Service</a>
         <a href="{{ url('/project') }}" class="block">Project</a>
         <a href="{{ url('/article') }}" class="block">Article</a>
-        <a href="{{ url('/booking') }}" class="block">Booking</a>
+<a 
+    @auth
+        href="{{ url('/booking') }}"
+    @else
+        href="javascript:void(0)" 
+        onclick="openLoginModal()"
+    @endauth
+    class="block"
+>
+    Booking
+</a>
+
 
         @auth
             <div class="border-t border-gray-700 pt-4">
