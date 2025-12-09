@@ -5,6 +5,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\AuthController;
 
 // Auth Routes
@@ -32,6 +33,22 @@ Route::post('/booking', [BookingController::class, 'store'])->name('booking.stor
 Route::get('/booking/success', function () {
     return view('pages.order.success');
 });
-Route::get('/emailnotification', function () { 
-    return view('emails.booking.created');
+
+// Email preview routes (for testing only - remove in production)
+Route::get('/emailnotification', function () {
+    $booking = \App\Models\Booking::with(['eventType', 'services'])->first();
+    return view('emails.booking.created', ['booking' => $booking]);
+});
+
+Route::get('/emailnotification/status', function () {
+    $booking = \App\Models\Booking::with(['eventType', 'services'])->first();
+    return view('emails.booking.status-updated', ['booking' => $booking]);
+});
+
+// Profile Routes (Protected by auth middleware)
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/bookings', [ProfileController::class, 'bookings'])->name('profile.bookings');
+    Route::get('/profile/bookings/{id}', [ProfileController::class, 'showBooking'])->name('profile.booking-detail');
 });

@@ -34,8 +34,8 @@ class BookingCreatedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Konfirmasi Booking #' . $this->booking->id)
-            ->markdown('emails.booking.created', [
+            ->subject('Konfirmasi Booking #' . str_pad($this->booking->id, 6, '0', STR_PAD_LEFT) . ' - Cakrawala Bhakti')
+            ->view('emails.booking.created', [
                 'booking' => $this->booking,
             ]);
     }

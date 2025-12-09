@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Builder;
 
 class Service extends Model
 {
@@ -28,5 +29,18 @@ class Service extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Scope to get services created by admin or legacy services
+     */
+    public function scopeAdminServices(Builder $query): Builder
+    {
+        return $query->where(function ($q) {
+            $q->whereHas('creator', function ($subQuery) {
+                $subQuery->where('role', 'admin');
+            })
+            ->orWhereNull('created_by');
+        });
     }
 }

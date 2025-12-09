@@ -18,6 +18,7 @@ class ProjectImageForm
                 FileUpload::make('image')
                     ->disk('public')
                     ->image()
+                    ->directory('project')
                     ->required(),
                 TextInput::make('sort_order')
                     ->required()

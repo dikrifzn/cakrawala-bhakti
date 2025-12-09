@@ -10,6 +10,7 @@ use Filament\Resources\Pages\ListRecords;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ListBookings extends ListRecords
 {
@@ -33,8 +34,15 @@ class ListBookings extends ListRecords
                         ->get();
 
                     $pdf = Pdf::loadView('reports.bookings-pdf', compact('bookings'));
-                    
-                    return $pdf->download('laporan_booking_' . now()->format('Y-m-d_H-i-s') . '.pdf');
+
+                    $filename = 'laporan_booking_' . now()->format('Y-m-d_H-i-s') . '.pdf';
+
+                    return new StreamedResponse(function () use ($pdf) {
+                        echo $pdf->output();
+                    }, 200, [
+                        'Content-Type' => 'application/pdf',
+                        'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                    ]);
                 }),
             Action::make('export')
                 ->label('Export Excel')
@@ -48,26 +56,29 @@ class ListBookings extends ListRecords
                     $csvContent = "ID,Nama Pelanggan,Email,Telepon,Tipe Event,Tanggal Mulai,Tanggal Selesai,Jam Mulai,Jam Selesai,Jumlah Hari,Lokasi,Catatan,Total Harga,Status,Tanggal Dibuat\n";
 
                     foreach ($bookings as $booking) {
-                        $csvContent .= implode(',', [
-                            $booking->id,
-                            '"' . str_replace('"', '""', $booking->customer_name) . '"',
-                            '"' . $booking->customer_email . '"',
-                            '"' . $booking->customer_phone . '"',
-                            '"' . ($booking->eventType?->name ?? '-') . '"',
-                            $booking->start_date,
-                            $booking->end_date,
-                            $booking->start_time,
-                            $booking->end_time,
-                            $booking->total_days,
-                            '"' . str_replace('"', '""', $booking->location) . '"',
-                            '"' . str_replace('"', '""', $booking->notes ?? '') . '"',
-                            'Rp ' . number_format($booking->total_price, 0, ',', '.'),
-                            $booking->status,
-                            $booking->created_at->format('Y-m-d H:i:s'),
-                        ]) . "\n";
+                            $csvContent .= implode(',', [
+                                $booking->id,
+                                '"' . str_replace('"', '""', $booking->customer_name) . '"',
+                                '"' . ($booking->customer_email ?? '') . '"',
+                                '"' . ($booking->customer_phone ?? '') . '"',
+                                '"' . str_replace('"', '""', $booking->eventType?->name ?? '-') . '"',
+                                $booking->start_date,
+                                $booking->end_date,
+                                $booking->start_time,
+                                $booking->end_time,
+                                $booking->total_days,
+                                '"' . str_replace('"', '""', $booking->location ?? '') . '"',
+                                '"' . str_replace('"', '""', $booking->notes ?? '') . '"',
+                                'Rp ' . number_format($booking->total_price, 0, ',', '.'),
+                                $booking->status,
+                                $booking->created_at->format('Y-m-d H:i:s'),
+                            ]) . "\n";
                     }
 
                     $filename = 'laporan_booking_' . now()->format('Y-m-d_H-i-s') . '.csv';
+
+                    // Ensure UTF-8 content to avoid JSON encoding issues on Livewire responses
+                    $csvContent = mb_convert_encoding($csvContent, 'UTF-8', 'UTF-8');
 
                     return response()->streamDownload(
                         function () use ($csvContent) {

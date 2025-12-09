@@ -83,6 +83,7 @@ class BookingController extends Controller
         }
 
         $booking = Booking::create([
+            'user_id' => Auth::id(),
             'customer_name' => $data['customer_name'],
             'customer_email' => $data['customer_email'],
             'customer_phone' => $data['customer_phone'] ?? null,

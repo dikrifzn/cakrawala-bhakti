@@ -18,7 +18,10 @@ class ProjectImagesTable
                 TextColumn::make('project_id')
                     ->numeric()
                     ->sortable(),
-                ImageColumn::make('image'),
+                ImageColumn::make('image')
+                    ->getStateUsing(fn($record) => asset('storage/' . $record->image))
+                    ->square()
+                    ->label('Image'),
                 TextColumn::make('sort_order')
                     ->numeric()
                     ->sortable(),
