@@ -36,7 +36,6 @@
             >
                 <img 
                     src="{{ asset('storage/' . $image->image) }}"
-                    onerror="this.src='{{ asset('img/placeholder.jpg') }}'"
                     loading="lazy"
                     class="w-full rounded-xl transition duration-300 group-hover:scale-110"
                     alt="{{ $project->project_title }}"

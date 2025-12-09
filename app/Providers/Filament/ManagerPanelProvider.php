@@ -2,6 +2,10 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\EnsureManagerRole;
+use App\Http\Middleware\RestrictManagerLogin;
+use App\Filament\Widgets\Manager\BookingStatusChart;
+use App\Filament\Resources\Bookings\BookingResource;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -10,44 +14,38 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Http\Middleware\EnsureAdminRole;
-use App\Http\Middleware\RestrictAdminLogin;
-use Filament\Navigation\NavigationGroup;
 
-class AdminPanelProvider extends PanelProvider
+class ManagerPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->default()
-            ->brandName('Cakrawala Bhakti')
-            ->id('admin')
-            ->path('admin')
+            ->id('manager')
+            ->path('manager')
             ->login()
+            ->brandName('Manager Panel')
             ->colors([
                 'primary' => Color::Amber,
             ])
             ->navigationGroups([
-                NavigationGroup::make()->label('Booking'),
-                NavigationGroup::make()->label('Publikasi'),
-                NavigationGroup::make()->label('Pengaturan Website'),
+                \Filament\Navigation\NavigationGroup::make()->label('Booking'),
+                \Filament\Navigation\NavigationGroup::make()->label('Laporan'),
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
+            ->resources([
+                BookingResource::class,
+            ])
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
+            ->discoverWidgets(in: app_path('Filament/Widgets/Manager'), for: 'App\\Filament\\Widgets\\Manager')
             ->widgets([
-                //
+                BookingStatusChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -59,11 +57,11 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                RestrictAdminLogin::class,
+                RestrictManagerLogin::class,
             ])
             ->authMiddleware([
                 Authenticate::class,
-                EnsureAdminRole::class,
+                EnsureManagerRole::class,
             ]);
     }
 }

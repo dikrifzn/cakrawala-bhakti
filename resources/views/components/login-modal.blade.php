@@ -13,7 +13,15 @@
 
         <h2 class="text-center text-2xl font-semibold mb-6">Welcome back.</h2>
 
-        <form action="/login" method="POST" class="space-y-4">
+        @if ($errors->any())
+            <div class="mb-4 p-3 bg-red-50 border border-red-300 rounded-md">
+                @foreach ($errors->all() as $error)
+                    <p class="text-red-600 text-sm">{{ $error }}</p>
+                @endforeach
+            </div>
+        @endif
+
+        <form action="{{ route('login') }}" method="POST" class="space-y-4">
             @csrf
 
             <div>
@@ -21,9 +29,9 @@
                 <input 
                     type="text" 
                     name="email"
+                    value="{{ old('email') }}"
                     autocomplete="email"
-                    class="w-full mt-1 border border-black rounded-md px-3 py-2 
-                           focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400"
+                          class="w-full mt-1 border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 @error('email') border-red-500 @enderror"
                     placeholder="yourmail@gmail.com"
                 >
             </div>

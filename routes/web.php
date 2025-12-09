@@ -5,6 +5,12 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\Auth\AuthController;
+
+// Auth Routes
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', function () {
@@ -21,9 +27,7 @@ Route::get('/article/search', [ArticleController::class, 'search'])->name('artic
 Route::get('/article/category/{slug}', [ArticleController::class, 'byCategory'])->name('article.category');
 Route::get('/article/{article}', [ArticleController::class, 'show'])->name('article.show');
 
-Route::get('/booking', function () {
-    return view('pages.order.index');
-});
+Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
 Route::get('/booking/success', function () {
     return view('pages.order.success');
