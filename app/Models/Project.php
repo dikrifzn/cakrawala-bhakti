@@ -15,6 +15,10 @@ class Project extends Model
         'cover_image',
     ];
 
+    protected $casts = [
+        'date' => 'date',
+    ];
+
     public function images()
     {
         return $this->hasMany(ProjectImage::class);

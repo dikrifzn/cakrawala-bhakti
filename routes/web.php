@@ -27,8 +27,8 @@ Route::get('/article/search', [ArticleController::class, 'search'])->name('artic
 Route::get('/article/category/{slug}', [ArticleController::class, 'byCategory'])->name('article.category');
 Route::get('/article/{article}', [ArticleController::class, 'show'])->name('article.show');
 
-Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');
-Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+Route::get('/booking', [BookingController::class, 'index'])->name('booking.index')->middleware('auth');
+Route::post('/booking', [BookingController::class, 'store'])->name('booking.store')->middleware('auth');
 Route::get('/booking/success', function () {
     return view('pages.order.success');
 });

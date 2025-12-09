@@ -33,6 +33,7 @@ class BookingController extends Controller
             'customer_name' => 'required|string|max:255',
             'customer_email' => 'required|email|max:255',
             'customer_phone' => 'nullable|string|max:50',
+            'event_name' => 'required|string|max:255',
             'event_type_id' => 'required|integer|exists:event_types,id',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',

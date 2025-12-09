@@ -1,5 +1,5 @@
-@extends('layouts.app') @section('content')
-
+@extends('layouts.app') 
+@section('content')
 <section class="py-20 flex flex-col justify-center items-center px-5">
     <div class="w-full max-w-5xl bg-white shadow-lg rounded-2xl p-10">
         <form method="POST" action="{{ route('booking.store') }}">
@@ -39,6 +39,14 @@
             <h2 class="text-xl font-semibold mb-5">Data Kebutuhan Acara</h2>
 
             <div class="grid grid-cols-1 gap-5">
+                <input
+                    type="text"
+                    name="event_name"
+                    placeholder="Nama Acara (contoh: Pernikahan Budi & Ani)"
+                    class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
+                    required
+                />
+                
                 <select
                     id="eventTypeSelect"
                     name="event_type_id"
@@ -541,6 +549,31 @@
         });
 
         window.showCustomServiceModal = showCustomServiceModal;
+    })();
+
+    // Event Type Calendar Logic
+    (function() {
+        const eventTypeSelect = document.getElementById('eventTypeSelect');
+        const eventTypeData = @json(App\Models\EventType::all()->pluck('name', 'id'));
+        
+        eventTypeSelect.addEventListener('change', function() {
+            const selectedId = this.value;
+            const selectedName = eventTypeData[selectedId];
+            
+            // Get calendar Alpine component
+            const calendarEl = document.querySelector('[x-data]');
+            if (calendarEl && calendarEl._x_dataStack) {
+                const calendarData = calendarEl._x_dataStack[0];
+                
+                // Tentukan offset berdasarkan jenis acara
+                // Jika "Pengadaan Barang", gunakan 7 hari
+                // Jika jenis acara lainnya (event organizer), gunakan 14 hari
+                const minDays = (selectedName === 'Pengadaan Barang') ? 7 : 14;
+                
+                // Update calendar dengan offset baru
+                calendarData.updateMinDaysOffset(minDays);
+            }
+        });
     })();
 </script>
 @endpush
