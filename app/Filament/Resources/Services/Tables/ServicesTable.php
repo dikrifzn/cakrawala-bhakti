@@ -28,6 +28,10 @@ class ServicesTable
                 TextColumn::make('sort_order')
                     ->numeric()
                     ->sortable(),
+                TextColumn::make('creator.name')
+                    ->label('Dibuat oleh')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

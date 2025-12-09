@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\Bookings\Schemas;
 
+use App\Models\Service;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Schemas\Schema;
 
 class BookingForm
@@ -38,6 +40,10 @@ class BookingForm
                     ->numeric()
                     ->default(1),
                 TextInput::make('location'),
+                CheckboxList::make('selectedServices')
+                    ->label('Services')
+                    ->options(Service::pluck('service_name', 'id'))
+                    ->columnSpanFull(),
                 Textarea::make('notes')
                     ->columnSpanFull(),
                 TextInput::make('total_price')

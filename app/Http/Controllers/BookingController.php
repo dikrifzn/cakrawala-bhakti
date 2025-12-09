@@ -7,11 +7,26 @@ use App\Models\Booking;
 use App\Models\Service;
 use App\Models\BookingService;
 use App\Models\SiteSetting;
+use App\Models\User;
 use App\Notifications\BookingCreatedNotification;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
+    public function index()
+    {
+        // Ambil services yang dibuat oleh admin atau services lama (created_by = null)
+        $adminServices = Service::where(function ($query) {
+            $query->whereHas('creator', function ($q) {
+                $q->where('role', 'admin');
+            })
+            ->orWhereNull('created_by');
+        })->get();
+        
+        return view('pages.order.index', ['adminServices' => $adminServices]);
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -103,6 +118,7 @@ class BookingController extends Controller
                     'service_name' => $name,
                     'short_description' => 'Custom service (created at booking)',
                     'price' => $price ?? 0,
+                    'created_by' => Auth::id(),
                 ]);
             }
 

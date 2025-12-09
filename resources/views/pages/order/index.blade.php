@@ -75,42 +75,41 @@
                 <div
                     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 services-container"
                 >
-                    @php $services = [ 'MC Formal' => 350000, 'MC Nonformal' => 300000, 'Pengadaan Sound System' => 750000, 'Pengadaan Panggung' => 900000, 'Dekorasi' => 1200000, 'Photographer' => 850000, 'Videographer' => 950000, 'Tambahan +' => 'pending', ]; @endphp
-                    @foreach ($services as $name => $price)
-                        @if($name === 'Tambahan +')
-                            <label
-                                class="add-service-btn border-dashed border-2 rounded-xl p-5 text-center cursor-pointer transition duration-200 hover:bg-yellow-50 hover:border-yellow-400 flex items-center justify-center w-full"
-                            >
-                                <span class="font-semibold text-yellow-600">+ Tambahan</span>
-                            </label>
-                        @else
-                            @php $priceValue = is_numeric($price) ? $price : 0; @endphp
-                            <label
-                                class="service-card border rounded-xl p-5 text-center cursor-pointer transition duration-200 hover:bg-yellow-50 hover:border-yellow-400 w-full"
+                    @forelse ($adminServices as $service)
+                        @php $priceValue = $service->price ?? 0; @endphp
+                        <label
+                            class="service-card border rounded-xl p-5 text-center cursor-pointer transition duration-200 hover:bg-yellow-50 hover:border-yellow-400 w-full"
+                            data-price="{{ $priceValue }}"
+                        >
+                            <input
+                                type="checkbox"
+                                name="services[]"
+                                value="{{ $service->service_name }}|{{ $priceValue }}"
                                 data-price="{{ $priceValue }}"
-                            >
-                                <input
-                                    type="checkbox"
-                                    name="services[]"
-                                    value="{{ $name }}|{{ $priceValue }}"
-                                    data-price="{{ $priceValue }}"
-                                    class="hidden"
-                                />
-                                <div class="flex flex-col items-center">
-                                    <span class="font-medium">{{ $name }}</span>
-                                    <div class="text-sm mt-2 service-price">
-                                        @if(is_numeric($price))
-                                            {{ "Rp ".number_format($price, 0, ",", ".") }}
-                                        @elseif($price === 'pending')
-                                            <span class="text-yellow-600">Menunggu admin</span>
-                                        @else
-                                            Gratis
-                                        @endif
-                                    </div>
+                                class="hidden"
+                            />
+                            <div class="flex flex-col items-center">
+                                <span class="font-medium">{{ $service->service_name }}</span>
+                                <div class="text-sm mt-2 service-price">
+                                    @if($service->price && $service->price > 0)
+                                        {{ "Rp ".number_format($service->price, 0, ",", ".") }}
+                                    @else
+                                        <span class="text-yellow-600">Menunggu admin</span>
+                                    @endif
                                 </div>
-                            </label>
-                        @endif
-                    @endforeach
+                            </div>
+                        </label>
+                    @empty
+                        <div class="col-span-full text-center text-gray-500 py-4">
+                            Tidak ada layanan tersedia
+                        </div>
+                    @endforelse
+                    
+                    <label
+                        class="add-service-btn border-dashed border-2 rounded-xl p-5 text-center cursor-pointer transition duration-200 hover:bg-yellow-50 hover:border-yellow-400 flex items-center justify-center w-full"
+                    >
+                        <span class="font-semibold text-yellow-600">+ Tambahan</span>
+                    </label>
                 </div>
                 <textarea
                     placeholder="Tulis catatan anda..."
@@ -501,7 +500,7 @@
 
         cancelBtn.addEventListener("click", hideCustomServiceModal);
 
-        addBtn.addEventListener("click", () => {
+        addBtn.addEventListener("click", async () => {
             const name = input.value.trim();
             if (!name) return;
 
@@ -511,11 +510,13 @@
             label.className =
                 "service-card border rounded-xl p-5 text-center cursor-pointer transition duration-200 hover:bg-yellow-50 hover:border-yellow-400";
             label.setAttribute("data-price", "pending");
+            label.setAttribute("data-custom", "true");
             label.innerHTML = `
-                <input type="checkbox" name="services[]" value="${safeName}" data-price="pending" class="hidden" checked>
+                <input type="checkbox" name="services[]" value="${safeName}" data-price="pending" data-custom="true" class="hidden" checked>
                 <div class="flex flex-col items-center">
                     <span class="font-medium">${safeName}</span>
                     <div class="text-sm text-yellow-600 mt-2 service-price">Menunggu admin</div>
+                    <div class="text-xs text-gray-500 mt-1 font-italic">Layanan temporary</div>
                 </div>
             `;
             const addBtnCard = container.querySelector(".add-service-btn");

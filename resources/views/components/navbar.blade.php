@@ -24,12 +24,24 @@
                 >Booking</a
             >
 
-            <button
-                onclick="openLoginModal()"
-                class="px-4 py-2 bg-yellow-400 text-black rounded-md font-semibold hover:bg-yellow-300"
-            >
-                Masuk
-            </button>
+            @auth
+                <div class="flex items-center gap-3">
+                    <span class="text-yellow-400">{{ Auth::user()->name }}</span>
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button type="submit" class="px-3 py-2 bg-red-500 text-white rounded-md text-xs hover:bg-red-600">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            @else
+                <button
+                    onclick="openLoginModal()"
+                    class="px-4 py-2 bg-yellow-400 text-black rounded-md font-semibold hover:bg-yellow-300"
+                >
+                    Masuk
+                </button>
+            @endauth
         </div>
         {{-- Mobile --}}
         <button id="mobile-btn" class="md:hidden text-white text-2xl">
@@ -49,12 +61,24 @@
         <a href="{{ url('/article') }}" class="block">Article</a>
         <a href="{{ url('/booking') }}" class="block">Booking</a>
 
-        <button
-            onclick="openLoginModal()"
-            class="px-4 py-2 bg-yellow-400 text-black rounded-md font-semibold hover:bg-yellow-300"
-        >
-            Masuk
-        </button>
+        @auth
+            <div class="border-t border-gray-700 pt-4">
+                <p class="text-yellow-400 font-semibold mb-3">{{ Auth::user()->name }}</p>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="w-full px-3 py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600">
+                        Logout
+                    </button>
+                </form>
+            </div>
+        @else
+            <button
+                onclick="openLoginModal()"
+                class="w-full px-4 py-2 bg-yellow-400 text-black rounded-md font-semibold hover:bg-yellow-300"
+            >
+                Masuk
+            </button>
+        @endauth
     </div>
 </nav>
 <script>

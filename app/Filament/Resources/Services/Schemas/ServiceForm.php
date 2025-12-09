@@ -3,8 +3,10 @@
 namespace App\Filament\Resources\Services\Schemas;
 
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use App\Models\User;
 
 class ServiceForm
 {
@@ -26,6 +28,11 @@ class ServiceForm
                     ->required()
                     ->numeric()
                     ->default(0),
+                Select::make('created_by')
+                    ->label('Dibuat oleh')
+                    ->options(User::pluck('name', 'id'))
+                    ->disabled()
+                    ->visible(fn () => false),
             ]);
     }
 }
