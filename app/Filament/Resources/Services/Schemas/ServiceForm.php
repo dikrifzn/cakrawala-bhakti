@@ -21,7 +21,7 @@ class ServiceForm
                 TextInput::make('price')
                     ->required()
                     ->numeric()
-                    ->prefix('$'),
+                    ->prefix('Rp'),
                 FileUpload::make('banner_image')
                     ->image(),
                 TextInput::make('sort_order')

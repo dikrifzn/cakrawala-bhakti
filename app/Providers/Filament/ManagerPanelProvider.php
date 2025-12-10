@@ -4,7 +4,10 @@ namespace App\Providers\Filament;
 
 use App\Http\Middleware\EnsureManagerRole;
 use App\Http\Middleware\RestrictManagerLogin;
-use App\Filament\Widgets\Manager\BookingStatusChart;
+use App\Filament\Widgets\BookingStatsWidget;
+use App\Filament\Widgets\BookingChartWidget;
+use App\Filament\Widgets\LatestBookingsWidget;
+use App\Filament\Widgets\ContentStatsWidget;
 use App\Filament\Resources\Bookings\BookingResource;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -29,7 +32,7 @@ class ManagerPanelProvider extends PanelProvider
             ->id('manager')
             ->path('manager')
             ->login()
-            ->brandName('Manager Panel')
+            ->brandName('Manager Panel - Cakrawala Bhakti')
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -43,9 +46,12 @@ class ManagerPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets/Manager'), for: 'App\\Filament\\Widgets\\Manager')
+            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                BookingStatusChart::class,
+                BookingStatsWidget::class,
+                BookingChartWidget::class,
+                LatestBookingsWidget::class,
+                ContentStatsWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

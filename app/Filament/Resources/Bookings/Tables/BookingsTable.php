@@ -6,7 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
@@ -19,36 +19,51 @@ class BookingsTable
         return $table
             ->columns([
                 TextColumn::make('customer_name')
+                    ->label('Pemesan')
                     ->searchable(),
                 TextColumn::make('customer_email')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('customer_phone')
+                    ->label('Telepon')
                     ->searchable(),
-                TextColumn::make('event_type_id')
-                    ->numeric()
+                TextColumn::make('eventType.name')
+                    ->label('Jenis Acara')
+                    ->badge()
                     ->sortable(),
                 TextColumn::make('start_date')
-                    ->date()
+                    ->label('Mulai')
+                    ->date('d M Y')
                     ->sortable(),
                 TextColumn::make('end_date')
-                    ->date()
-                    ->sortable(),
-                TextColumn::make('start_time')
-                    ->time()
-                    ->sortable(),
-                TextColumn::make('end_time')
-                    ->time()
+                    ->label('Selesai')
+                    ->date('d M Y')
                     ->sortable(),
                 TextColumn::make('total_days')
+                    ->label('Hari')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('location')
+                    ->label('Lokasi')
+                    ->limit(40)
                     ->searchable(),
                 TextColumn::make('serviceNames')
-                    ->label('Services'),
-                TextColumn::make('total_price')
+                    ->label('Services')
+                    ->wrap()
+                    ->limit(40),
+                IconColumn::make('include_permit')
+                    ->label('Perizinan')
+                    ->boolean()
+                    ->tooltip(fn ($state) => $state ? 'Include perizinan' : 'Tanpa perizinan'),
+                TextColumn::make('permit_price')
+                    ->label('Harga Perizinan')
+                    ->money('IDR', locale: 'id')
                     ->sortable()
-                    ->prefix('Rp '),
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('total_price')
+                    ->label('Total')
+                    ->money('IDR', locale: 'id')
+                    ->sortable(),
                 TextColumn::make('status')
                     ->badge()
                     ->formatStateUsing(fn (string $state) => match ($state) {
@@ -65,13 +80,9 @@ class BookingsTable
                         'info'    => 'finished',
                     ]),
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Dibuat')
+                    ->since()
+                    ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('status')
@@ -82,6 +93,9 @@ class BookingsTable
                         'rejected' => 'Rejected',
                         'finished' => 'Finished',
                     ]),
+                SelectFilter::make('event_type_id')
+                    ->label('Jenis Acara')
+                    ->relationship('eventType', 'name'),
                 Filter::make('created_at')
                     ->label('Tanggal Dibuat')
                     ->form([

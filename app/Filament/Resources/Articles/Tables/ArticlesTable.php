@@ -26,8 +26,9 @@ class ArticlesTable
                             : asset('img/default-thumbnail.png')
                     )
                     ->searchable(),
-                TextColumn::make('category_id')
-                    ->numeric()
+                TextColumn::make('category.name')
+                    ->label('Kategori')
+                    ->badge()
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
