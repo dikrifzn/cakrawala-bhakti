@@ -111,6 +111,18 @@
                                         Rp {{ number_format($booking->total_price, 0, ',', '.') }}
                                     </td>
                                 </tr>
+                                @if($booking->include_permit)
+                                    <tr>
+                                        <td style="padding:8px 0; font-size:14px; color:#6b7280;">Perizinan:</td>
+                                        <td style="padding:8px 0; font-size:14px; color:#111827; font-weight:600; text-align:right;">
+                                            @if($booking->permit_price > 0)
+                                                Rp {{ number_format($booking->permit_price, 0, ',', '.') }}
+                                            @else
+                                                <span style="color:#d97706;">Menunggu Admin</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endif
                             </table>
                         </div>
                     </td>

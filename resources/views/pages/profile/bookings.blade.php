@@ -95,10 +95,23 @@
                                         <div class="flex flex-wrap gap-2">
                                             @foreach($booking->services as $service)
                                                 <span class="inline-block px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
-                                                    {{ $service->name }}
+                                                    {{ $service->service_name }}
                                                 </span>
                                             @endforeach
                                         </div>
+                                    </div>
+                                @endif
+
+                                @if($booking->include_permit)
+                                    <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                        <p class="text-xs font-semibold text-blue-700">Perizinan</p>
+                                        <p class="text-sm text-blue-700 mt-1">
+                                            @if($booking->permit_price > 0)
+                                                Rp {{ number_format($booking->permit_price, 0, ',', '.') }}
+                                            @else
+                                                Menunggu admin
+                                            @endif
+                                        </p>
                                     </div>
                                 @endif
 

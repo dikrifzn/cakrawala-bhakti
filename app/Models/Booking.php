@@ -25,6 +25,8 @@ class Booking extends Model
         'notes',
         'total_price',
         'status',
+        'include_permit',
+        'permit_price',
     ];
 
     public function user(): BelongsTo

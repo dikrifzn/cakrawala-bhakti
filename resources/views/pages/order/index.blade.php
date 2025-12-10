@@ -126,6 +126,22 @@
             </div>
         </div>
         <div class="mb-10">
+            <h2 class="text-xl font-semibold mb-5">Perizinan</h2>
+            <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-yellow-50 transition">
+                <input 
+                    type="checkbox" 
+                    name="include_permit" 
+                    id="permitCheckbox"
+                    value="1"
+                    class="w-5 h-5 text-yellow-500 rounded focus:ring-2 focus:ring-yellow-400"
+                />
+                <span class="ml-3 text-gray-700">
+                    <span class="font-medium">Include Perizinan</span>
+                    <p class="text-sm text-gray-500">Harga akan ditentukan oleh admin (Menunggu admin)</p>
+                </span>
+            </label>
+        </div>
+        <div class="mb-10">
             <h2 class="text-xl font-semibold mb-5">Rincian Pemesanan</h2>
                 <div
                 x-data="orderSummary()"
@@ -161,7 +177,7 @@
                     <span class="text-gray-600">Jenis Acara:</span>
                     <span
                         class="font-semibold"
-                        x-text="eventType || '-'"
+                        x-text="eventTypeName || '-'"
                     ></span>
                 </div>
                 <div class="flex justify-between items-center pb-3 border-b">
@@ -237,6 +253,20 @@
                         x-text="notes || 'Tidak ada catatan'"
                     ></p>
                 </div>
+                <div class="pb-3 border-t pt-3">
+                    <span class="text-gray-600">Perizinan:</span>
+                    <div class="mt-2">
+                        <label class="flex items-center cursor-pointer">
+                            <input 
+                                type="checkbox" 
+                                id="permitCheckboxSummary"
+                                class="w-4 h-4 text-yellow-500 rounded focus:ring-2 focus:ring-yellow-400"
+                                @change="updatePermit"
+                            />
+                            <span class="ml-2 text-sm text-gray-700" x-text="permitIncluded ? 'Include Perizinan - Menunggu admin' : 'Tidak ada perizinan'"></span>
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
             <div class="text-right">
@@ -253,12 +283,18 @@
 
 @endsection @push('scripts')
 <script>
+    // Define event type data globally FIRST
+    const eventTypeDataMap = @json(App\Models\EventType::all()->pluck('name', 'id'));
+    window.eventTypeDataGlobal = eventTypeDataMap;
+
     function orderSummary() {
         return {
             fullName: "",
             phone: "",
             email: "",
             eventType: "",
+            eventTypeName: "",
+            eventTypeData: eventTypeDataMap,
             eventDate: "",
             eventStartDate: "",
             eventEndDate: "",
@@ -270,6 +306,7 @@
             totalPrice: 0,
             pendingCount: 0,
             pendingServices: [],
+            permitIncluded: false,
             formatRupiah(value) {
                 if (!value && value !== 0) return "-";
                 const v = parseInt(value, 10) || 0;
@@ -278,11 +315,23 @@
                 );
             },
 
+            updatePermit() {
+                const checkbox = document.getElementById('permitCheckbox');
+                const checkboxSummary = document.getElementById('permitCheckboxSummary');
+                if (checkbox) {
+                    this.permitIncluded = checkbox.checked;
+                    if (checkboxSummary && checkboxSummary.checked !== checkbox.checked) {
+                        checkboxSummary.checked = checkbox.checked;
+                    }
+                }
+            },
+
             init() {
                 this.updateSummary();
                 const selectEl = document.getElementById("eventTypeSelect");
                 if (selectEl && selectEl.value) {
                     this.eventType = selectEl.value;
+                    this.eventTypeName = this.eventTypeData[selectEl.value] || '';
                 }
                 this.setupListeners();
             },
@@ -315,6 +364,10 @@
                 document.querySelectorAll("select").forEach((el) => {
                     el.addEventListener("change", () => {
                         self.eventType = el.value;
+                        // Update event type name jika ini adalah eventTypeSelect
+                        if (el.id === "eventTypeSelect") {
+                            self.eventTypeName = self.eventTypeData[el.value] || '';
+                        }
                     });
                 });
 
@@ -322,6 +375,7 @@
                 if (eventTypeSelect) {
                     eventTypeSelect.addEventListener("change", () => {
                         self.eventType = eventTypeSelect.value;
+                        self.eventTypeName = self.eventTypeData[eventTypeSelect.value] || '';
                     });
                 }
                 document
@@ -336,6 +390,19 @@
                         self.notes = el.value;
                     });
                 });
+                document.getElementById("permitCheckbox")?.addEventListener("change", () => {
+                    self.updatePermit();
+                });
+                const permitCheckboxSummary = document.getElementById("permitCheckboxSummary");
+                if (permitCheckboxSummary) {
+                    permitCheckboxSummary.addEventListener("change", () => {
+                        const mainCheckbox = document.getElementById("permitCheckbox");
+                        if (mainCheckbox) {
+                            mainCheckbox.checked = permitCheckboxSummary.checked;
+                        }
+                        self.updatePermit();
+                    });
+                }
                 document.addEventListener("services-changed", () => {
                     self.updateSelectedServices();
                 });
@@ -554,26 +621,27 @@
     // Event Type Calendar Logic
     (function() {
         const eventTypeSelect = document.getElementById('eventTypeSelect');
-        const eventTypeData = @json(App\Models\EventType::all()->pluck('name', 'id'));
         
-        eventTypeSelect.addEventListener('change', function() {
-            const selectedId = this.value;
-            const selectedName = eventTypeData[selectedId];
-            
-            // Get calendar Alpine component
-            const calendarEl = document.querySelector('[x-data]');
-            if (calendarEl && calendarEl._x_dataStack) {
-                const calendarData = calendarEl._x_dataStack[0];
+        if (eventTypeSelect) {
+            eventTypeSelect.addEventListener('change', function() {
+                const selectedId = this.value;
+                const selectedName = eventTypeDataMap[selectedId];
                 
-                // Tentukan offset berdasarkan jenis acara
-                // Jika "Pengadaan Barang", gunakan 7 hari
-                // Jika jenis acara lainnya (event organizer), gunakan 14 hari
-                const minDays = (selectedName === 'Pengadaan Barang') ? 7 : 14;
-                
-                // Update calendar dengan offset baru
-                calendarData.updateMinDaysOffset(minDays);
-            }
-        });
+                // Get calendar Alpine component
+                const calendarEl = document.querySelector('[x-data]');
+                if (calendarEl && calendarEl._x_dataStack) {
+                    const calendarData = calendarEl._x_dataStack[0];
+                    
+                    // Tentukan offset berdasarkan jenis acara
+                    // Jika "Pengadaan Barang", gunakan 7 hari
+                    // Jika jenis acara lainnya (event organizer), gunakan 14 hari
+                    const minDays = (selectedName === 'Pengadaan Barang') ? 7 : 14;
+                    
+                    // Update calendar dengan offset baru
+                    calendarData.updateMinDaysOffset(minDays);
+                }
+            });
+        }
     })();
 </script>
 @endpush

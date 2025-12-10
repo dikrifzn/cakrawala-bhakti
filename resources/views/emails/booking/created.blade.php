@@ -151,7 +151,7 @@
                                     @endphp
                                     <tr style="border-bottom:1px solid #e5e7eb;">
                                         <td style="padding:14px; font-size:14px; color:#374151;">
-                                            <strong>{{ $service->name }}</strong>
+                                            <strong>{{ $service->service_name }}</strong>
                                         </td>
                                         <td style="padding:14px; font-size:14px; color:#6b7280; text-align:center;">{{ $quantity }}</td>
                                         <td style="padding:14px; font-size:14px; color:#6b7280; text-align:right;">Rp {{ number_format($price, 0, ',', '.') }}</td>
@@ -170,6 +170,31 @@
                         </table>
                     </td>
                 </tr>
+
+                @if($booking->include_permit)
+                <!-- Permit Section -->
+                <tr>
+                    <td style="padding:0 30px 30px 30px;">
+                        <div style="background:#dbeafe; border-radius:8px; padding:20px; border-left:4px solid #3b82f6;">
+                            <h2 style="margin:0 0 15px 0; font-size:18px; font-weight:700; color:#1e40af;">
+                                🏛️ Perizinan
+                            </h2>
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td style="padding:8px 0; font-size:14px; color:#1e40af;">Status:</td>
+                                    <td style="padding:8px 0; font-size:14px; color:#1e3a8a; font-weight:600; text-align:right;">
+                                        @if($booking->permit_price > 0)
+                                            Rp {{ number_format($booking->permit_price, 0, ',', '.') }}
+                                        @else
+                                            <span style="color:#d97706; font-weight:700;">Menunggu Admin</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                @endif
 
                 @if($booking->notes)
                 <!-- Notes Section -->
