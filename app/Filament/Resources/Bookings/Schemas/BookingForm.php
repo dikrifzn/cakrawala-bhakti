@@ -10,7 +10,6 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Get;
 use Filament\Schemas\Schema;
 
 class BookingForm
@@ -56,7 +55,7 @@ class BookingForm
                     ->numeric()
                     ->default(0)
                     ->prefix('Rp')
-                    ->visible(fn (Get $get) => (bool) $get('include_permit')),
+                    ->visible(fn ($get) => (bool) $get('include_permit')),
                 TextInput::make('total_price')
                     ->required()
                     ->numeric()

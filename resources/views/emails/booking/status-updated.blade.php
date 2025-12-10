@@ -79,24 +79,54 @@
                 <tr>
                     <td style="padding:0 30px 30px 30px;">
                         <div style="background:#f9fafb; border-radius:8px; padding:20px;">
-                            <h3 style="margin:0 0 15px 0; font-size:18px; font-weight:700; color:#1f2937;">📋 Ringkasan Pesanan</h3>
+                            <h3 style="margin:0 0 15px 0; font-size:18px; font-weight:700; color:#1f2937;">📋 Rincian Pesanan</h3>
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
-                                    <td style="padding:8px 0; font-size:14px; color:#6b7280;">Jenis Acara:</td>
+                                    <td style="padding:8px 0; font-size:14px; color:#6b7280;">Nama Pemesan:</td>
                                     <td style="padding:8px 0; font-size:14px; color:#111827; font-weight:600; text-align:right;">
+                                        {{ $booking->customer_name ?? '-' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:8px 0; font-size:14px; color:#6b7280;">Email:</td>
+                                    <td style="padding:8px 0; font-size:14px; color:#111827; font-weight:600; text-align:right;">
+                                        {{ $booking->customer_email ?? '-' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:8px 0; font-size:14px; color:#6b7280;">Telepon:</td>
+                                    <td style="padding:8px 0; font-size:14px; color:#111827; font-weight:600; text-align:right;">
+                                        {{ $booking->customer_phone ?? '-' }}
+                                    </td>
+                                </tr>
+                                <tr style="border-top:1px solid #e5e7eb;">
+                                    <td style="padding:12px 0 8px 0; font-size:14px; color:#6b7280;">Jenis Acara:</td>
+                                    <td style="padding:12px 0 8px 0; font-size:14px; color:#111827; font-weight:600; text-align:right;">
                                         {{ $booking->eventType->name ?? '-' }}
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="padding:8px 0; font-size:14px; color:#6b7280;">Nama Acara:</td>
+                                    <td style="padding:8px 0; font-size:14px; color:#6b7280;">Tanggal Mulai:</td>
                                     <td style="padding:8px 0; font-size:14px; color:#111827; font-weight:600; text-align:right;">
-                                        {{ $booking->event_name ?? '-' }}
+                                        {{ \Carbon\Carbon::parse($booking->start_date)->format('d M Y') }}
+                                        @if($booking->start_time)
+                                            - {{ \Carbon\Carbon::parse($booking->start_time)->format('H:i') }}
+                                        @endif
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="padding:8px 0; font-size:14px; color:#6b7280;">Tanggal:</td>
+                                    <td style="padding:8px 0; font-size:14px; color:#6b7280;">Tanggal Selesai:</td>
                                     <td style="padding:8px 0; font-size:14px; color:#111827; font-weight:600; text-align:right;">
-                                        {{ \Carbon\Carbon::parse($booking->start_date)->format('d M Y') }}
+                                        {{ \Carbon\Carbon::parse($booking->end_date)->format('d M Y') }}
+                                        @if($booking->end_time)
+                                            - {{ \Carbon\Carbon::parse($booking->end_time)->format('H:i') }}
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:8px 0; font-size:14px; color:#6b7280;">Durasi:</td>
+                                    <td style="padding:8px 0; font-size:14px; color:#111827; font-weight:600; text-align:right;">
+                                        {{ $booking->total_days ?? 1 }} Hari
                                     </td>
                                 </tr>
                                 <tr>
@@ -105,24 +135,82 @@
                                         {{ $booking->location ?? '-' }}
                                     </td>
                                 </tr>
-                                <tr style="border-top:2px solid #e5e7eb;">
-                                    <td style="padding:12px 0 0 0; font-size:15px; color:#92400e; font-weight:700;">Total Harga:</td>
-                                    <td style="padding:12px 0 0 0; font-size:16px; color:#b45309; font-weight:700; text-align:right;">
-                                        Rp {{ number_format($booking->total_price, 0, ',', '.') }}
+                                @if($booking->notes)
+                                <tr>
+                                    <td colspan="2" style="padding:8px 0; font-size:14px; color:#6b7280;">
+                                        <strong>Catatan:</strong><br>
+                                        <span style="color:#111827;">{{ $booking->notes }}</span>
                                     </td>
                                 </tr>
+                                @endif
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+                <!-- Services -->
+                @if($booking->services && $booking->services->count() > 0)
+                <tr>
+                    <td style="padding:0 30px 30px 30px;">
+                        <div style="background:#fef9e7; border-radius:8px; padding:20px; border-left:4px solid #f59e0b;">
+                            <h3 style="margin:0 0 15px 0; font-size:18px; font-weight:700; color:#92400e;">🎯 Layanan yang Dipilih</h3>
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                @foreach($booking->services as $service)
+                                <tr>
+                                    <td style="padding:8px 0; font-size:14px; color:#78350f;">
+                                        <strong>{{ $service->service_name }}</strong>
+                                    </td>
+                                    <td style="padding:8px 0; font-size:14px; color:#92400e; font-weight:600; text-align:right;">
+                                        Rp {{ number_format($service->price, 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                                @if($service->description)
+                                <tr>
+                                    <td colspan="2" style="padding:0 0 12px 0; font-size:13px; color:#a16207;">
+                                        {{ $service->description }}
+                                    </td>
+                                </tr>
+                                @endif
+                                @endforeach
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                @endif
+
+                <!-- Pricing Breakdown -->
+                <tr>
+                    <td style="padding:0 30px 30px 30px;">
+                        <div style="background:#ecfdf5; border-radius:8px; padding:20px; border-left:4px solid #10b981;">
+                            <h3 style="margin:0 0 15px 0; font-size:18px; font-weight:700; color:#065f46;">💰 Rincian Biaya</h3>
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                @if($booking->services && $booking->services->count() > 0)
+                                    @php $subtotal = $booking->services->sum('price'); @endphp
+                                    <tr>
+                                        <td style="padding:8px 0; font-size:14px; color:#047857;">Subtotal Layanan:</td>
+                                        <td style="padding:8px 0; font-size:14px; color:#065f46; font-weight:600; text-align:right;">
+                                            Rp {{ number_format($subtotal, 0, ',', '.') }}
+                                        </td>
+                                    </tr>
+                                @endif
                                 @if($booking->include_permit)
                                     <tr>
-                                        <td style="padding:8px 0; font-size:14px; color:#6b7280;">Perizinan:</td>
-                                        <td style="padding:8px 0; font-size:14px; color:#111827; font-weight:600; text-align:right;">
+                                        <td style="padding:8px 0; font-size:14px; color:#047857;">Biaya Perizinan:</td>
+                                        <td style="padding:8px 0; font-size:14px; color:#065f46; font-weight:600; text-align:right;">
                                             @if($booking->permit_price > 0)
                                                 Rp {{ number_format($booking->permit_price, 0, ',', '.') }}
                                             @else
-                                                <span style="color:#d97706;">Menunggu Admin</span>
+                                                <span style="color:#d97706; font-size:12px;">Menunggu Konfirmasi</span>
                                             @endif
                                         </td>
                                     </tr>
                                 @endif
+                                <tr style="border-top:2px solid #10b981;">
+                                    <td style="padding:12px 0 0 0; font-size:16px; color:#065f46; font-weight:700;">TOTAL PEMBAYARAN:</td>
+                                    <td style="padding:12px 0 0 0; font-size:18px; color:#047857; font-weight:700; text-align:right;">
+                                        Rp {{ number_format($booking->total_price, 0, ',', '.') }}
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                     </td>

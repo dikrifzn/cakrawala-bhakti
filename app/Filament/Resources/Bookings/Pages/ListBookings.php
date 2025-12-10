@@ -29,7 +29,9 @@ class ListBookings extends ListRecords
                 ->icon('heroicon-o-document')
                 ->color('danger')
                 ->action(function () {
-                    $bookings = Booking::with('eventType', 'services')
+                    // Get filtered table query
+                    $query = $this->getFilteredTableQuery();
+                    $bookings = $query->with('eventType', 'services')
                         ->orderBy('created_at', 'desc')
                         ->get();
 
@@ -48,7 +50,9 @@ class ListBookings extends ListRecords
                 ->label('Export Excel')
                 ->icon('heroicon-o-arrow-down-tray')
                 ->action(function () {
-                    $bookings = Booking::with('eventType', 'services')
+                    // Get filtered table query
+                    $query = $this->getFilteredTableQuery();
+                    $bookings = $query->with('eventType', 'services')
                         ->orderBy('created_at', 'desc')
                         ->get();
 
