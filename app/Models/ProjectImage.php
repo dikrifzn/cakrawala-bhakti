@@ -12,6 +12,10 @@ class ProjectImage extends Model
         'sort_order',
     ];
 
+    protected $casts = [
+        'image' => 'json',
+    ];
+
     public function project()
     {
         return $this->belongsTo(Project::class);

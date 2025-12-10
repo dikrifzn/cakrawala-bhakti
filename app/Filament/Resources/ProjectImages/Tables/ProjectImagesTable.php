@@ -15,13 +15,15 @@ class ProjectImagesTable
     {
         return $table
             ->columns([
-                TextColumn::make('project_id')
-                    ->numeric()
-                    ->sortable(),
-                ImageColumn::make('image')
-                    ->getStateUsing(fn($record) => asset('storage/' . $record->image))
-                    ->square()
-                    ->label('Image'),
+                TextColumn::make('project.project_title')
+                    ->label('Project')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('image_count')
+                    ->label('Images')
+                    ->getStateUsing(fn($record) => is_array($record->image) ? count($record->image) : 1)
+                    ->badge()
+                    ->color('info'),
                 TextColumn::make('sort_order')
                     ->numeric()
                     ->sortable(),

@@ -35,7 +35,7 @@
             @auth
                 <div class="relative group">
                     <button class="flex items-center gap-3 hover:opacity-90 transition cursor-pointer">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-500 flex items-center justify-center text-white font-bold shadow-md">
+                        <div class="w-10 h-10 rounded-full bg-linear-to-br from-yellow-400 to-yellow-500 flex items-center justify-center text-white font-bold shadow-md">
                             {{ substr(Auth::user()->name, 0, 1) }}
                         </div>
                         <div class="hidden md:block text-left">
@@ -115,7 +115,7 @@
         @auth
             <div class="border-t border-gray-700 pt-4">
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
+                    <div class="w-12 h-12 rounded-full bg-linear-to-br from-yellow-400 to-yellow-500 flex items-center justify-center text-white font-bold text-lg shadow-md">
                         {{ substr(Auth::user()->name, 0, 1) }}
                     </div>
                     <div>
