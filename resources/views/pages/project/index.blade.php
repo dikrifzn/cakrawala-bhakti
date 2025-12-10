@@ -26,22 +26,27 @@
                     <div class="swiper-slide">
                         <div class="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-3">
                             @if($project->images->count())
-                                @foreach($project->images as $key => $image)
-                                    <div class="mb-3 break-inside-avoid">
-                                        @if($key == 0)
-                                            <a href="{{ route('project.show', $project) }}">
-                                                <img src="{{ asset('storage/' . $image->image) }}"
+                                @foreach($project->images as $imageRecord)
+                                    @php
+                                        $images = is_array($imageRecord->image) ? $imageRecord->image : [$imageRecord->image];
+                                    @endphp
+                                    @foreach($images as $key => $imagePath)
+                                        <div class="mb-3 break-inside-avoid">
+                                            @if($key == 0)
+                                                <a href="{{ route('project.show', $project) }}">
+                                                    <img src="{{ asset('storage/' . $imagePath) }}"
+                                                         loading="lazy" 
+                                                         class="w-full rounded-lg shadow-sm object-cover h-40" 
+                                                         alt="{{ $project->project_title }}">
+                                                </a>
+                                            @else
+                                                <img src="{{ asset('storage/' . $imagePath) }}" 
                                                      loading="lazy" 
                                                      class="w-full rounded-lg shadow-sm object-cover h-40" 
                                                      alt="{{ $project->project_title }}">
-                                            </a>
-                                        @else
-                                            <img src="{{ asset('storage/' . $image->image) }}" 
-                                                 loading="lazy" 
-                                                 class="w-full rounded-lg shadow-sm object-cover h-40" 
-                                                 alt="{{ $project->project_title }}">
-                                        @endif
-                                    </div>
+                                            @endif
+                                        </div>
+                                    @endforeach
                                 @endforeach
                             @else
                                 <div class="mb-3">

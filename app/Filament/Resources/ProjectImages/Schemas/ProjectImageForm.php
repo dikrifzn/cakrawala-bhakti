@@ -4,7 +4,9 @@ namespace App\Filament\Resources\ProjectImages\Schemas;
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
 use Filament\Schemas\Schema;
+use App\Models\Project;
 
 class ProjectImageForm
 {
@@ -12,13 +14,16 @@ class ProjectImageForm
     {
         return $schema
             ->components([
-                TextInput::make('project_id')
+                Select::make('project_id')
+                    ->relationship('project', 'project_title')
                     ->required()
-                    ->numeric(),
+                    ->searchable(),
                 FileUpload::make('image')
                     ->disk('public')
                     ->image()
                     ->directory('project')
+                    ->multiple()
+                    ->reorderable()
                     ->required(),
                 TextInput::make('sort_order')
                     ->required()

@@ -26,21 +26,26 @@
     @endif
 
     <div id="gallery" class="max-w-6xl mx-auto px-4 sm:px-6 columns-2 sm:columns-3 md:columns-4 gap-4">
-        @forelse($project->images as $image)
-            <a 
-                href="{{ asset('storage/' . $image->image) }}"
-                data-pswp-width="1600"
-                data-pswp-height="1000"
-                data-cropped="true"
-                class="block mb-4 break-inside-avoid overflow-hidden rounded-xl group"
-            >
-                <img 
-                    src="{{ asset('storage/' . $image->image) }}"
-                    loading="lazy"
-                    class="w-full rounded-xl transition duration-300 group-hover:scale-110"
-                    alt="{{ $project->project_title }}"
+        @forelse($project->images as $imageRecord)
+            @php
+                $images = is_array($imageRecord->image) ? $imageRecord->image : [$imageRecord->image];
+            @endphp
+            @foreach($images as $imagePath)
+                <a 
+                    href="{{ asset('storage/' . $imagePath) }}"
+                    data-pswp-width="1600"
+                    data-pswp-height="1000"
+                    data-cropped="true"
+                    class="block mb-4 break-inside-avoid overflow-hidden rounded-xl group"
                 >
-            </a>
+                    <img 
+                        src="{{ asset('storage/' . $imagePath) }}"
+                        loading="lazy"
+                        class="w-full rounded-xl transition duration-300 group-hover:scale-110"
+                        alt="{{ $project->project_title }}"
+                    >
+                </a>
+            @endforeach
         @empty
             <p class="text-gray-500">Tidak ada gambar untuk proyek ini.</p>
         @endforelse
