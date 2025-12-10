@@ -44,9 +44,7 @@ class CallToActionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListCallToActions::route('/'),
-            'create' => CreateCallToAction::route('/create'),
-            'edit' => EditCallToAction::route('/{record}/edit'),
+            'index' => EditCallToAction::route('/'),
         ];
     }
 }

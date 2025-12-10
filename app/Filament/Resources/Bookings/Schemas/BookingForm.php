@@ -10,6 +10,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Get;
 use Filament\Schemas\Schema;
 
 class BookingForm
@@ -41,10 +42,11 @@ class BookingForm
                     ->numeric()
                     ->default(1),
                 TextInput::make('location'),
-                CheckboxList::make('selectedServices')
+                CheckboxList::make('services')
                     ->label('Services')
-                    ->options(Service::pluck('service_name', 'id'))
-                    ->columnSpanFull(),
+                    ->relationship('services', 'service_name')
+                    ->columns(2)
+                    ->helperText('Pilih layanan; harga mengikuti master layanan'),
                 Textarea::make('notes')
                     ->columnSpanFull(),
                 Checkbox::make('include_permit')
@@ -54,7 +56,7 @@ class BookingForm
                     ->numeric()
                     ->default(0)
                     ->prefix('Rp')
-                    ->visible(fn ($record) => $record && $record->include_permit),
+                    ->visible(fn (Get $get) => (bool) $get('include_permit')),
                 TextInput::make('total_price')
                     ->required()
                     ->numeric()
