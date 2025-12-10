@@ -112,7 +112,7 @@
                                             $subtotal = $price * $quantity;
                                         @endphp
                                         <tr>
-                                            <td class="px-4 py-3 text-gray-900">{{ $service->name }}</td>
+                                            <td class="px-4 py-3 text-gray-900">{{ $service->service_name }}</td>
                                             <td class="px-4 py-3 text-gray-900">Rp {{ number_format($price, 0, ',', '.') }}</td>
                                             <td class="px-4 py-3 text-gray-900">{{ $quantity }}</td>
                                             <td class="px-4 py-3 text-right font-semibold text-gray-900">Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
@@ -125,6 +125,27 @@
                         <p class="text-gray-600">Tidak ada layanan yang dipilih</p>
                     @endif
                 </div>
+
+                {{-- Permit Information --}}
+                @if($booking->include_permit)
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">Informasi Perizinan</h2>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center pb-3 border-b">
+                                <span class="text-gray-600">Perizinan</span>
+                                <span class="font-semibold text-gray-900">Include</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Harga Perizinan</span>
+                                @if($booking->permit_price > 0)
+                                    <span class="font-semibold text-gray-900">Rp {{ number_format($booking->permit_price, 0, ',', '.') }}</span>
+                                @else
+                                    <span class="text-yellow-600">Menunggu admin</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
                 {{-- Notes --}}
                 @if($booking->notes)
@@ -154,6 +175,16 @@
                             <span class="text-gray-600">Subtotal Layanan</span>
                             <span class="font-semibold text-gray-900">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                         </div>
+                        @if($booking->include_permit)
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Perizinan</span>
+                                @if($booking->permit_price > 0)
+                                    <span class="font-semibold text-gray-900">Rp {{ number_format($booking->permit_price, 0, ',', '.') }}</span>
+                                @else
+                                    <span class="text-yellow-600 text-sm">Menunggu admin</span>
+                                @endif
+                            </div>
+                        @endif
                     </div>
 
                     <div class="py-4 border-b">

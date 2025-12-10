@@ -9,6 +9,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Checkbox;
 use Filament\Schemas\Schema;
 
 class BookingForm
@@ -46,6 +47,14 @@ class BookingForm
                     ->columnSpanFull(),
                 Textarea::make('notes')
                     ->columnSpanFull(),
+                Checkbox::make('include_permit')
+                    ->label('Include Perizinan'),
+                TextInput::make('permit_price')
+                    ->label('Permit Price')
+                    ->numeric()
+                    ->default(0)
+                    ->prefix('Rp')
+                    ->visible(fn ($record) => $record && $record->include_permit),
                 TextInput::make('total_price')
                     ->required()
                     ->numeric()

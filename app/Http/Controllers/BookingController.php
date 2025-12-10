@@ -42,6 +42,7 @@ class BookingController extends Controller
             'total_days' => 'nullable|string',
             'location' => 'nullable|string|max:500',
             'notes' => 'nullable|string',
+            'include_permit' => 'nullable|boolean',
             'services' => 'nullable|array',
             'services.*' => 'nullable|string',
         ]);
@@ -95,6 +96,8 @@ class BookingController extends Controller
             'total_days' => $totalDays,
             'location' => $data['location'] ?? null,
             'notes' => $data['notes'] ?? null,
+            'include_permit' => $data['include_permit'] ?? false,
+            'permit_price' => 0, // Will be set by admin
             'total_price' => 0,
             'status' => 'pending',
         ]);
