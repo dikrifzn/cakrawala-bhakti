@@ -71,7 +71,21 @@ class ProfileController extends Controller
             abort(403, 'Unauthorized access');
         }
 
-        $booking->load(['eventType', 'services', 'bookingServices.service']);
+        // Load relationships with filtered services
+        $booking->load([
+            'eventType', 
+            'services' => function($query) {
+                // Only show services created by admin or current user
+                $query->where(function($q) {
+                    $q->whereHas('creator', function($subQuery) {
+                        $subQuery->where('role', 'admin');
+                    })
+                    ->orWhere('created_by', Auth::id())
+                    ->orWhereNull('created_by');
+                });
+            },
+            'bookingServices.service'
+        ]);
 
         return view('pages.profile.booking-detail', compact('booking'));
     }

@@ -10,6 +10,9 @@ class EditArticleCategory extends EditRecord
 {
     protected static string $resource = ArticleCategoryResource::class;
 
+    protected static ?string $title = 'Ubah Kategori Artikel';
+    protected ?string $heading = 'Ubah Kategori Artikel';
+
     protected function getHeaderActions(): array
     {
         return [

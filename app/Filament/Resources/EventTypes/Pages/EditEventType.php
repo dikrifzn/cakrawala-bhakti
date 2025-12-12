@@ -10,6 +10,9 @@ class EditEventType extends EditRecord
 {
     protected static string $resource = EventTypeResource::class;
 
+    protected static ?string $title = 'Ubah Jenis Acara';
+    protected ?string $heading = 'Ubah Jenis Acara';
+
     protected function getHeaderActions(): array
     {
         return [

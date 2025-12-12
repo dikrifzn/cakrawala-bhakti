@@ -10,6 +10,9 @@ class ListEventTypes extends ListRecords
 {
     protected static string $resource = EventTypeResource::class;
 
+    protected static ?string $title = 'Jenis Acara';
+    protected ?string $heading = 'Jenis Acara';
+
     protected function getHeaderActions(): array
     {
         return [

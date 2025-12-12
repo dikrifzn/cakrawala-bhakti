@@ -10,7 +10,8 @@ class EditWhyChooseUs extends EditRecord
 {
     protected static string $resource = WhyChooseUsResource::class;
 
-    protected static ?string $title = 'Why Choose Us';
+    protected static ?string $title = 'Bagian Alasan Memilih Kami';
+    protected ?string $heading = 'Bagian Alasan Memilih Kami';
 
     public function mount(int|string|null $record = null): void
     {

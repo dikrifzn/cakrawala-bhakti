@@ -3,12 +3,16 @@
 namespace App\Filament\Resources\WhyChooseUs;
 
 use App\Filament\Resources\WhyChooseUs\Pages\EditWhyChooseUs;
-use App\Filament\Resources\WhyChooseUs\Schemas\WhyChooseUsForm;
-use App\Filament\Resources\WhyChooseUs\Tables\WhyChooseUsTable;
 use App\Models\WhyChooseUs;
 use BackedEnum;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use UnitEnum;
 
@@ -25,12 +29,56 @@ class WhyChooseUsResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return WhyChooseUsForm::configure($schema);
+        return $schema
+            ->components([
+                TextInput::make('title')
+                    ->required(),
+                Textarea::make('description')
+                    ->columnSpanFull(),
+                TextInput::make('icon'),
+                TextInput::make('sort_order')
+                    ->required()
+                    ->numeric()
+                    ->default(0),
+            ]);
     }
 
     public static function table(Table $table): Table
     {
-        return WhyChooseUsTable::configure($table);
+        return $table
+            ->columns([
+                TextColumn::make('title')
+                    ->label('Judul')
+                    ->searchable(),
+                TextColumn::make('icon')
+                    ->label('Ikon')
+                    ->searchable(),
+                TextColumn::make('sort_order')
+                    ->label('Urutan')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('created_at')
+                                        ->label('Dibuat pada')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')
+                                        ->label('Diubah pada')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                //
+            ])
+            ->recordActions([
+                EditAction::make(),
+            ])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 
     public static function getRelations(): array

@@ -10,7 +10,8 @@ class EditAboutSection extends EditRecord
 {
     protected static string $resource = AboutSectionResource::class;
 
-    protected static ?string $title = 'About Section';
+    protected static ?string $title = 'Bagian Tentang';
+    protected ?string $heading = 'Bagian Tentang';
 
     public function mount(int|string|null $record = null): void
     {

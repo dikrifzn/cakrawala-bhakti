@@ -10,7 +10,8 @@ class EditSiteSetting extends EditRecord
 {
     protected static string $resource = SiteSettingResource::class;
 
-    protected static ?string $title = 'Site Settings';
+    protected static ?string $title = 'Pengaturan Situs';
+    protected ?string $heading = 'Pengaturan Situs';
 
     public function mount(int|string|null $record = null): void
     {

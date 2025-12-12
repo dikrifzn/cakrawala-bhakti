@@ -10,6 +10,9 @@ class CreateService extends CreateRecord
 {
     protected static string $resource = ServiceResource::class;
 
+    protected static ?string $title = 'Tambah Layanan';
+    protected ?string $heading = 'Tambah Layanan';
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['created_by'] = Auth::id();

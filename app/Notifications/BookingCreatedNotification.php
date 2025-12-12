@@ -25,7 +25,7 @@ class BookingCreatedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -41,14 +41,35 @@ class BookingCreatedNotification extends Notification
     }
 
     /**
+     * Get the database representation of the notification.
+     *
+     * @return array<string, mixed>
+     */
+    public function toDatabase(object $notifiable): array
+    {
+        return [
+            'format' => 'filament',
+            'booking_id' => $this->booking->id,
+            'customer_name' => $this->booking->customer_name,
+            'event_type' => $this->booking->eventType?->name,
+            'message' => 'Pemesanan baru dari ' . $this->booking->customer_name,
+            'actions' => [
+                [
+                    'name' => 'view',
+                    'label' => 'Lihat Detail',
+                    'url' => route('filament.admin.resources.bookings.edit', ['record' => $this->booking->id]),
+                ],
+            ],
+        ];
+    }
+
+    /**
      * Get the array representation of the notification.
      *
      * @return array<string, mixed>
      */
     public function toArray(object $notifiable): array
     {
-        return [
-            //
-        ];
+        return $this->toDatabase($notifiable);
     }
 }

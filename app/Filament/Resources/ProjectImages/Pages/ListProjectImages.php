@@ -10,6 +10,9 @@ class ListProjectImages extends ListRecords
 {
     protected static string $resource = ProjectImageResource::class;
 
+    protected static ?string $title = 'Gambar Proyek';
+    protected ?string $heading = 'Gambar Proyek';
+
     protected function getHeaderActions(): array
     {
         return [

@@ -10,6 +10,9 @@ class ListBookingServices extends ListRecords
 {
     protected static string $resource = BookingServiceResource::class;
 
+    protected static ?string $title = 'Layanan Pemesanan';
+    protected ?string $heading = 'Layanan Pemesanan';
+
     protected function getHeaderActions(): array
     {
         return [
