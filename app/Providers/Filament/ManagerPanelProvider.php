@@ -33,9 +33,13 @@ class ManagerPanelProvider extends PanelProvider
             ->path('manager')
             ->login()
             ->brandName('Manager Panel - Cakrawala Bhakti')
+            ->favicon(asset('img/single-logo.png'))
+            ->breadcrumbs(false)
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->sidebarCollapsibleOnDesktop()
+            ->databaseNotifications()
             ->navigationGroups([
                 \Filament\Navigation\NavigationGroup::make()->label('Booking'),
                 \Filament\Navigation\NavigationGroup::make()->label('Laporan'),

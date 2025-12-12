@@ -63,7 +63,7 @@
                                 Pesanan Saya
                             </div>
                         </a>
-                        <form method="POST" action="{{ route('logout') }}" class="w-full">
+                        <form method="POST" action="{{ route('customer.logout') }}" class="w-full">
                             @csrf
                             <button type="submit" class="w-full text-left px-4 py-3 text-red-500 hover:bg-gray-100 rounded-b-lg font-semibold flex items-center gap-2 cursor-pointer">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,7 +137,7 @@
                         Pesanan Saya
                     </a>
                 </div>
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ route('customer.logout') }}">
                     @csrf
                     <button type="submit" class="w-full px-3 py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 font-semibold flex items-center gap-2 justify-center">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

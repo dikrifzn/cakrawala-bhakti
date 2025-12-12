@@ -10,7 +10,8 @@ class EditHeroBanner extends EditRecord
 {
     protected static string $resource = HeroBannerResource::class;
 
-    protected static ?string $title = 'Hero Banner';
+    protected static ?string $title = 'Bagian Hero';
+    protected ?string $heading = 'Bagian Hero';
 
     public function mount(int|string|null $record = null): void
     {

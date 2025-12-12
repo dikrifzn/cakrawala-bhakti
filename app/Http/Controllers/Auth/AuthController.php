@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\UserRegisteredNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 
 class AuthController extends Controller
 {
@@ -42,6 +44,10 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']),
             'role' => 'user',
         ]);
+
+        // Notify admins about new user registration
+        $admins = User::where('role', 'admin')->get();
+        Notification::send($admins, new UserRegisteredNotification($user));
 
         Auth::login($user);
 

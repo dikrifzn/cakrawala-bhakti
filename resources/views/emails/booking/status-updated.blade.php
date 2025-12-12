@@ -156,12 +156,20 @@
                             <h3 style="margin:0 0 15px 0; font-size:18px; font-weight:700; color:#92400e;">🎯 Layanan yang Dipilih</h3>
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 @foreach($booking->services as $service)
+                                @php
+                                    $servicePrice = $service->pivot->price ?? $service->price ?? 0;
+                                    $serviceQty = $service->pivot->quantity ?? 1;
+                                    $serviceSubtotal = $servicePrice * $serviceQty;
+                                @endphp
                                 <tr>
                                     <td style="padding:8px 0; font-size:14px; color:#78350f;">
                                         <strong>{{ $service->service_name }}</strong>
+                                        @if($serviceQty > 1)
+                                            <span style="color:#92400e; font-weight:600;"> (x{{ $serviceQty }})</span>
+                                        @endif
                                     </td>
                                     <td style="padding:8px 0; font-size:14px; color:#92400e; font-weight:600; text-align:right;">
-                                        Rp {{ number_format($service->price, 0, ',', '.') }}
+                                        Rp {{ number_format($serviceSubtotal, 0, ',', '.') }}
                                     </td>
                                 </tr>
                                 @if($service->description)
@@ -185,7 +193,13 @@
                             <h3 style="margin:0 0 15px 0; font-size:18px; font-weight:700; color:#065f46;">💰 Rincian Biaya</h3>
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 @if($booking->services && $booking->services->count() > 0)
-                                    @php $subtotal = $booking->services->sum('price'); @endphp
+                                    @php
+                                        $subtotal = $booking->services->sum(function ($service) {
+                                            $qty = $service->pivot->quantity ?? 1;
+                                            $price = $service->pivot->price ?? $service->price ?? 0;
+                                            return $qty * $price;
+                                        });
+                                    @endphp
                                     <tr>
                                         <td style="padding:8px 0; font-size:14px; color:#047857;">Subtotal Layanan:</td>
                                         <td style="padding:8px 0; font-size:14px; color:#065f46; font-weight:600; text-align:right;">

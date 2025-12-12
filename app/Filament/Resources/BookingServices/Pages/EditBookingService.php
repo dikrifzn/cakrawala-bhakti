@@ -10,6 +10,9 @@ class EditBookingService extends EditRecord
 {
     protected static string $resource = BookingServiceResource::class;
 
+    protected static ?string $title = 'Ubah Layanan Pemesanan';
+    protected ?string $heading = 'Ubah Layanan Pemesanan';
+
     protected function getHeaderActions(): array
     {
         return [

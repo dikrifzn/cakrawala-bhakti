@@ -10,6 +10,9 @@ class ListArticleCategories extends ListRecords
 {
     protected static string $resource = ArticleCategoryResource::class;
 
+    protected static ?string $title = 'Kategori Artikel';
+    protected ?string $heading = 'Kategori Artikel';
+
     protected function getHeaderActions(): array
     {
         return [

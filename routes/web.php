@@ -11,7 +11,7 @@ use App\Http\Controllers\Auth\AuthController;
 // Auth Routes
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+Route::post('/customer/logout', [AuthController::class, 'logout'])->name('customer.logout')->middleware('auth');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', function () {

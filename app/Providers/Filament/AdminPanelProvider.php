@@ -12,6 +12,10 @@ use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
+use App\Filament\Widgets\BookingStatsWidget;
+use App\Filament\Widgets\BookingChartWidget;
+use App\Filament\Widgets\LatestBookingsWidget;
+use App\Filament\Widgets\ContentStatsWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -28,13 +32,17 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->brandName('Cakrawala Bhakti')
+            ->brandName('Admin - Cakrawala Bhakti')
+            ->favicon(asset('img/single-logo.png'))
             ->id('admin')
             ->path('admin')
             ->login()
+            ->breadcrumbs(false)
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->sidebarCollapsibleOnDesktop()
+            ->databaseNotifications()
             ->navigationGroups([
                 NavigationGroup::make()->label('Booking'),
                 NavigationGroup::make()->label('Publikasi'),
@@ -47,7 +55,11 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                //
+                AccountWidget::class,
+                BookingStatsWidget::class,
+                BookingChartWidget::class,
+                LatestBookingsWidget::class,
+                ContentStatsWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

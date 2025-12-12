@@ -145,6 +145,10 @@ class BookingController extends Controller
         Notification::route('mail', $booking->customer_email)
             ->notify(new BookingCreatedNotification($booking));
 
+        // Notify all admins and managers in database (Filament panel notifications)
+        $adminUsers = \App\Models\User::whereIn('role', ['admin', 'manager'])->get();
+        Notification::send($adminUsers, new BookingCreatedNotification($booking));
+
         // Get email settings from database
         $settings = SiteSetting::first();
         

@@ -10,6 +10,9 @@ class ListArticles extends ListRecords
 {
     protected static string $resource = ArticleResource::class;
 
+    protected static ?string $title = 'Artikel';
+    protected ?string $heading = 'Artikel';
+
     protected function getHeaderActions(): array
     {
         return [

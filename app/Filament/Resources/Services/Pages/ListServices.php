@@ -10,6 +10,9 @@ class ListServices extends ListRecords
 {
     protected static string $resource = ServiceResource::class;
 
+    protected static ?string $title = 'Layanan';
+    protected ?string $heading = 'Layanan';
+
     protected function getHeaderActions(): array
     {
         return [

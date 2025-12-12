@@ -9,7 +9,8 @@ class EditCallToAction extends EditRecord
 {
     protected static string $resource = CallToActionResource::class;
 
-    protected static ?string $title = 'Call To Action';
+    protected static ?string $title = 'Bagian CTA';
+    protected ?string $heading = 'Bagian CTA';
 
     public function mount(int|string|null $record = null): void
     {
