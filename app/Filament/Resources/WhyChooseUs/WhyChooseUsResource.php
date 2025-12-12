@@ -18,7 +18,8 @@ class WhyChooseUsResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-star';
 
-    protected static ?string $recordTitleAttribute = 'Why Choose Us Section';
+    protected static ?string $recordTitleAttribute = 'title';
+    protected static ?string $navigationLabel = 'Bagian Alasan Memilih Kami';
     protected static string | UnitEnum | null $navigationGroup = 'Pengaturan Website';
     protected static ?int $navigationSort = 3;
 

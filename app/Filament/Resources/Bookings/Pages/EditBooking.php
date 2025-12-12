@@ -13,6 +13,9 @@ class EditBooking extends EditRecord
 {
     protected static string $resource = BookingResource::class;
 
+    protected static ?string $title = 'Ubah Pemesanan';
+    protected ?string $heading = 'Ubah Pemesanan';
+
     protected function mutateFormDataBeforeFill(array $data): array
     {
         // Populate selectedServices from bookingServices

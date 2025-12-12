@@ -18,7 +18,8 @@ class SiteSettingResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cog';
 
-    protected static ?string $recordTitleAttribute = 'Site Setting';
+    protected static ?string $recordTitleAttribute = 'site_name';
+    protected static ?string $navigationLabel = 'Pengaturan Situs';
     protected static string | UnitEnum | null $navigationGroup = 'Pengaturan Website';
     protected static ?int $navigationSort = 6;
 

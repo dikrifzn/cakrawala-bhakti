@@ -10,6 +10,9 @@ class CreateBooking extends CreateRecord
 {
     protected static string $resource = BookingResource::class;
 
+    protected static ?string $title = 'Tambah Pemesanan';
+    protected ?string $heading = 'Tambah Pemesanan';
+
     protected function mutateFormDataBeforeSave(array $data): array
     {
         // Remove selectedServices from data to save

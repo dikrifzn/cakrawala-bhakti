@@ -20,8 +20,9 @@ class BookingServiceResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-clipboard-document-list';
 
-    protected static ?string $recordTitleAttribute = 'Booking Service';
-    protected static string | UnitEnum | null $navigationGroup = 'Booking';
+    protected static ?string $recordTitleAttribute = 'id';
+    protected static ?string $navigationLabel = 'Layanan Pemesanan';
+    protected static string | UnitEnum | null $navigationGroup = 'Pemesanan';
     protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema

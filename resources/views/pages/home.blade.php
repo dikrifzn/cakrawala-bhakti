@@ -3,18 +3,27 @@
 @section('content')
 
 {{-- HERO SECTION --}}
-<section class="relative w-full h-[90vh] bg-cover bg-center" style="background-image: url('/img/hero-bg.jpg')">
+<section class="relative w-full h-[90vh] bg-cover bg-center" style="background-image: url('{{ asset('storage/' . $heroBanner->background_image) }}')">
     <div class="absolute inset-0 bg-black/70"></div>
 
     <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-48 text-white">
         <h1 class="text-4xl md:text-5xl font-bold leading-snug font-outfit">
-            Kami Mewujudkan <br>
-            <span class="text-yellow-400">Acara Anda</span> Jadi Momen <br>
-            Tak Terlupakan
+            @if($heroBanner)
+                @php
+                    $title = $heroBanner->title;
+                    $highlighted = $heroBanner->highlight_text;
+                    if($highlighted) {
+                        $title = str_replace($highlighted, '<span class="text-yellow-400">' . $highlighted . '</span>', $title);
+                    }
+                @endphp
+                {!! $title !!}
+            @else
+                Kami Mewujudkan <br><span class="text-yellow-400">Acara Anda</span> Jadi Momen <br>Tak Terlupakan
+            @endif
         </h1>
 
         <p class="mt-4 text-gray-200 max-w-xl font-dmsans">
-            Event Organizer Profesional untuk Corporate, Wedding, dan Community Event.
+            {{ $heroBanner?->subtitle ?? 'Event Organizer Profesional untuk Corporate, Wedding, dan Community Event.' }}
         </p>
 <a 
     @auth
@@ -25,7 +34,7 @@
     @endauth
     class="inline-block mt-6 px-6 py-3 bg-yellow-400 text-black font-semibold rounded-md font-dmsans hover:bg-yellow-500 transition"
 >
-    Let’s Collaborate
+    {{ $heroBanner?->button_text ?? "Let's Collaborate" }}
 </a>
 
     </div>

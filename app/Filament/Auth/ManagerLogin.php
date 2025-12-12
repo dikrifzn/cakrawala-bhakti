@@ -13,7 +13,7 @@ class ManagerLogin
     {
         $user = \App\Models\User::where('email', $email)->first();
         
-        if ($user && !in_array($user->role, ['manager', 'admin'], true)) {
+        if ($user && !in_array($user->role, ['manager'], true)) {
             throw ValidationException::withMessages([
                 'email' => 'Akses ditolak. Panel manager hanya untuk manager dan admin. Silakan gunakan panel yang sesuai dengan role Anda.',
             ]);

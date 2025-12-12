@@ -20,7 +20,8 @@ class ProjectResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $recordTitleAttribute = 'Project';
+    protected static ?string $recordTitleAttribute = 'project_title';
+    protected static ?string $navigationLabel = 'Proyek';
     protected static string | UnitEnum | null $navigationGroup = 'Publikasi';
     protected static ?int $navigationSort = 1;
 

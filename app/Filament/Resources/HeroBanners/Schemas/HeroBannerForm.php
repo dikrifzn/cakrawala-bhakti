@@ -5,6 +5,7 @@ namespace App\Filament\Resources\HeroBanners\Schemas;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\RichEditor;
 use Filament\Schemas\Schema;
 
 class HeroBannerForm
@@ -13,8 +14,9 @@ class HeroBannerForm
     {
         return $schema
             ->components([
-                TextInput::make('title')
-                    ->required(),
+                RichEditor::make('title')
+                    ->required()
+                    ->columnSpanFull(),
                 TextInput::make('highlight_text'),
                 Textarea::make('subtitle')
                     ->columnSpanFull(),
@@ -23,7 +25,9 @@ class HeroBannerForm
                 TextInput::make('button_text'),
                 TextInput::make('button_link'),
                 FileUpload::make('background_image')
-                    ->image(),
+                    ->image()
+                    ->disk('public')
+                    ->directory('hero-banners')
             ]);
     }
 }

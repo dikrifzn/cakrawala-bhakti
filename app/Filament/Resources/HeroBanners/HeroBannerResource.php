@@ -18,9 +18,22 @@ class HeroBannerResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-photo';
 
-    protected static ?string $recordTitleAttribute = 'Hero Section';
+    protected static ?string $recordTitleAttribute = 'title';
+    protected static ?string $navigationLabel = 'Bagian Hero';
     protected static string | UnitEnum | null $navigationGroup = 'Pengaturan Website';
     protected static ?int $navigationSort = 2;
+
+    public static function canCreate(): bool
+    {
+        // Singleton: tidak boleh membuat record baru via UI
+        return false;
+    }
+
+    public static function canDelete($record): bool
+    {
+        // Singleton: tidak boleh menghapus record
+        return false;
+    }
 
     public static function form(Schema $schema): Schema
     {
