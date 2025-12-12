@@ -20,7 +20,8 @@ class ProjectImageResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-photo';
 
-    protected static ?string $recordTitleAttribute = 'Project Image';
+    protected static ?string $recordTitleAttribute = 'id';
+    protected static ?string $navigationLabel = 'Gambar Proyek';
     protected static string | UnitEnum | null $navigationGroup = 'Publikasi';
     protected static ?int $navigationSort = 2;
 

@@ -20,7 +20,8 @@ class ArticleCategoryResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-tag';
 
-    protected static ?string $recordTitleAttribute = 'Article Category';
+    protected static ?string $recordTitleAttribute = 'name';
+    protected static ?string $navigationLabel = 'Kategori Artikel';
     protected static string | UnitEnum | null $navigationGroup = 'Publikasi';
     protected static ?int $navigationSort = 4;
 

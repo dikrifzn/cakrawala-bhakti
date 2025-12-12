@@ -20,7 +20,8 @@ class ArticleResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $recordTitleAttribute = 'Article';
+    protected static ?string $recordTitleAttribute = 'title';
+    protected static ?string $navigationLabel = 'Artikel';
     protected static string | UnitEnum | null $navigationGroup = 'Publikasi';
     protected static ?int $navigationSort = 3;
 

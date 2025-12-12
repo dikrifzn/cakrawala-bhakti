@@ -20,8 +20,10 @@ class BookingResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-calendar';
 
-    protected static ?string $recordTitleAttribute = 'Booking';
+    protected static ?string $recordTitleAttribute = 'event_name';
+    protected static ?string $navigationLabel = 'Pemesanan';
     protected static string | UnitEnum | null $navigationGroup = 'Booking';
+    protected ?string $heading = 'Custom Page Heading';
     protected static ?int $navigationSort = 1;
 
     public static function getNavigationBadge(): ?string

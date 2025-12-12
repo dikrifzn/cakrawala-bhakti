@@ -20,8 +20,9 @@ class EventTypeResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-tag';
 
-    protected static ?string $recordTitleAttribute = 'Event Type';
-    protected static string | UnitEnum | null $navigationGroup = 'Booking';
+    protected static ?string $recordTitleAttribute = 'name';
+    protected static ?string $navigationLabel = 'Jenis Acara';
+    protected static string | UnitEnum | null $navigationGroup = 'Pemesanan';
     protected static ?int $navigationSort = 2;
 
     public static function form(Schema $schema): Schema

@@ -14,7 +14,21 @@ class EditHeroBanner extends EditRecord
 
     public function mount(int|string|null $record = null): void
     {
-        $this->record = HeroBanner::firstOrCreate([]);
+        // Always edit the latest (or only) HeroBanner record; never create multiples.
+        $existing = HeroBanner::query()->latest('id')->first();
+
+        if (! $existing) {
+            $existing = HeroBanner::create([
+                'title' => '',
+                'highlight_text' => '',
+                'subtitle' => '',
+                'button_text' => '',
+                'button_link' => '',
+                'background_image' => null,
+            ]);
+        }
+
+        $this->record = $existing;
         
         $this->fillForm();
 

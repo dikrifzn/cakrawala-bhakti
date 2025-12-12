@@ -16,6 +16,9 @@ class ListBookings extends ListRecords
 {
     protected static string $resource = BookingResource::class;
 
+    protected static ?string $title = 'Pemesanan';
+    protected ?string $heading = 'Pemesanan';
+
     protected function getTableQuery(): Builder|Relation|null
     {
         return parent::getTableQuery()?->with(['bookingServices.service', 'eventType']);
@@ -96,6 +99,26 @@ class ListBookings extends ListRecords
                     );
                 }),
             CreateAction::make(),
+        ];
+    }
+
+    protected function getEmptyStateHeading(): ?string
+    {
+        return 'Belum ada pemesanan';
+    }
+
+    protected function getEmptyStateDescription(): ?string
+    {
+        return 'Tambahkan pemesanan baru untuk mulai mengelola booking.';
+    }
+
+    protected function getEmptyStateActions(): array
+    {
+        return [
+            CreateAction::make()
+                ->label('Tambah Pemesanan')
+                ->icon('heroicon-o-plus')
+                ->color('primary'),
         ];
     }
 }

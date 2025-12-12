@@ -20,7 +20,8 @@ class CallToActionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-bolt';
 
-    protected static ?string $recordTitleAttribute = 'CTA section';
+    protected static ?string $recordTitleAttribute = 'title';
+    protected static ?string $navigationLabel = 'Bagian CTA';
     protected static string | UnitEnum | null $navigationGroup = 'Pengaturan Website';
     protected static ?int $navigationSort = 6;
 

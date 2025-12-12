@@ -9,16 +9,16 @@
         <div class="hidden md:flex items-center gap-8 text-white text-sm">
             <a href="{{ url('/') }}" class="hover:text-yellow-400">Home</a>
             <a href="{{ url('/#about') }}" class="hover:text-yellow-400"
-                >About</a
+                >Tentang</a
             >
             <a href="{{ url('/#service') }}" class="hover:text-yellow-400"
-                >Service</a
+                >Layanan</a
             >
             <a href="{{ url('/project') }}" class="hover:text-yellow-400"
-                >Project</a
+                >Projek</a
             >
             <a href="{{ url('/article') }}" class="hover:text-yellow-400"
-                >Article</a
+                >Artikel</a
             >
 <a 
     @auth
@@ -29,7 +29,7 @@
     @endauth
     class="block"
 >
-    Booking
+    Pesan
 </a>
 
             @auth
@@ -69,7 +69,7 @@
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                                 </svg>
-                                Logout
+                                Keluar
                             </button>
                         </form>
                     </div>
@@ -95,10 +95,10 @@
         class="hidden md:hidden bg-black/90 text-white px-6 py-4 space-y-4"
     >
         <a href="{{ url('/') }}" class="block">Home</a>
-        <a href="{{ url('/#about') }}" class="block">About</a>
-        <a href="{{ url('/#service') }}" class="block">Service</a>
-        <a href="{{ url('/project') }}" class="block">Project</a>
-        <a href="{{ url('/article') }}" class="block">Article</a>
+        <a href="{{ url('/#about') }}" class="block">Tentang</a>
+        <a href="{{ url('/#service') }}" class="block">Layanan</a>
+        <a href="{{ url('/project') }}" class="block">Projek</a>
+        <a href="{{ url('/article') }}" class="block">Artikel</a>
 <a 
     @auth
         href="{{ url('/booking') }}"
@@ -108,7 +108,7 @@
     @endauth
     class="block"
 >
-    Booking
+    Pesan
 </a>
 
 
@@ -143,7 +143,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                         </svg>
-                        Logout
+                        Keluar
                     </button>
                 </form>
             </div>
