@@ -13,7 +13,6 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use UnitEnum;
@@ -37,14 +36,15 @@ class AboutSectionResource extends Resource
                 TextInput::make('subtitle'),
                 Textarea::make('description')
                     ->columnSpanFull(),
-                FileUpload::make('image_1')
-                    ->image(),
-                FileUpload::make('image_2')
-                    ->image(),
-                FileUpload::make('image_3')
-                    ->image(),
-                FileUpload::make('image_4')
-                    ->image(),
+                FileUpload::make('images')
+                    ->label('Gambar (maks 5)')
+                    ->image()
+                    ->multiple()
+                    ->maxFiles(5)
+                    ->reorderable()
+                    ->disk('public')
+                    ->directory('about')
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -58,21 +58,17 @@ class AboutSectionResource extends Resource
                 TextColumn::make('subtitle')
                     ->label('Subjudul')
                     ->searchable(),
-                ImageColumn::make('image_1')
-                    ->label('Gambar 1'),
-                ImageColumn::make('image_2')
-                    ->label('Gambar 2'),
-                ImageColumn::make('image_3')
-                    ->label('Gambar 3'),
-                ImageColumn::make('image_4')
-                    ->label('Gambar 4'),
+                TextColumn::make('images')
+                    ->label('Jumlah Gambar')
+                    ->getStateUsing(fn ($record) => is_array($record->images) ? count($record->images) : 0)
+                    ->badge(),
                 TextColumn::make('created_at')
-                                        ->label('Dibuat pada')
+                    ->label('Dibuat pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                                        ->label('Diubah pada')
+                    ->label('Diubah pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

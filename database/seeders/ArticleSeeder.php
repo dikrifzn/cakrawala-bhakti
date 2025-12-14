@@ -20,65 +20,152 @@ class ArticleSeeder extends Seeder
 
         $posts = [
             [
-                'title' => 'Tren Dekorasi Pernikahan 2025',
-                'slug' => 'tren-dekorasi-pernikahan-2025',
-                'content' => '<p>Dekorasi pernikahan terus berkembang mengikuti tren modern. Tahun 2025 menampilkan beberapa tren menarik yang patut diperhatikan:</p><p><strong>1. Minimalis Elegan</strong></p><p>Desain minimalis tetap menjadi pilihan utama dengan sentuhan modern dan elegan. Warna netral seperti beige, cream, dan abu-abu mendominasi.</p><p><strong>2. Botanical & Nature</strong></p><p>Penggunaan elemen alam seperti tanaman live, bunga organik, dan material kayu alami semakin populer.</p><p><strong>3. Tech Integration</strong></p><p>Teknologi seperti proyeksi mapping, drone show, dan lighting interaktif menambah pengalaman yang memorable.</p><p>Konsultasikan tema pernikahan Anda dengan tim profesional kami untuk hasil yang sempurna!</p>',
-                'thumbnail' => 'article-wedding-decor.jpg',
-                'category_id' => $categories->firstWhere('slug', 'pernikahan')?->id,
-            ],
-            [
-                'title' => '10 Tips Sukses Acara Korporat',
-                'slug' => '10-tips-sukses-acara-korporat',
-                'content' => '<p>Acara korporat yang sukses memerlukan perencanaan matang. Berikut adalah 10 tips untuk memastikan acara korporat Anda berhasil:</p><p><strong>1. Tentukan Tujuan Acara</strong></p><p>Jelas tentang apa yang ingin dicapai dari acara ini.</p><p><strong>2. Pilih Venue yang Tepat</strong></p><p>Lokasi harus strategis dan sesuai dengan kapasitas peserta.</p><p><strong>3. Buat Timeline yang Detail</strong></p><p>Perencanaan waktu yang detail memastikan semuanya berjalan lancar.</p><p><strong>4. Perhatikan Catering</strong></p><p>Makanan berkualitas meningkatkan kepuasan peserta.</p><p><strong>5. Persiapkan Material Promosi</strong></p><p>Banners, merchandise, dan displays harus menarik dan profesional.</p><p>Biarkan tim kami menangani semua detail teknis acara Anda!</p>',
-                'thumbnail' => 'article-corporate-event.jpg',
-                'category_id' => $categories->firstWhere('slug', 'event-korporat')?->id,
-            ],
-            [
-                'title' => 'Cara Memilih Vendor Event yang Tepat',
-                'slug' => 'cara-memilih-vendor-event-yang-tepat',
-                'content' => '<p>Memilih vendor yang tepat adalah kunci kesuksesan acara. Berikut panduan memilih vendor event yang berkualitas:</p><p><strong>Portfolio & Experience</strong></p><p>Lihat portfolio mereka dan berapa lama mereka di industri ini.</p><p><strong>Referensi & Review</strong></p><p>Minta referensi dari klien sebelumnya dan baca review mereka.</p><p><strong>Komunikasi yang Baik</strong></p><p>Pastikan vendor responsif dan mudah berkomunikasi.</p><p><strong>Harga Kompetitif</strong></p><p>Bandingkan harga dengan vendor lain tanpa mengorbankan kualitas.</p><p><strong>Kontrak yang Jelas</strong></p><p>Semua detail harus tertulis dalam kontrak yang jelas dan transparan.</p><p>Cakrawala Bhakti siap menjadi vendor pilihan Anda dengan pengalaman lebih dari 15 tahun!</p>',
-                'thumbnail' => 'article-vendor-selection.jpg',
-                'category_id' => $categories->firstWhere('slug', 'tips-trik')?->id,
-            ],
-            [
-                'title' => 'Inovasi Terbaru dalam Teknologi Event',
-                'slug' => 'inovasi-terbaru-dalam-teknologi-event',
-                'content' => '<p>Teknologi terus mengubah cara kita menjalankan acara. Berikut inovasi terbaru yang perlu Anda ketahui:</p><p><strong>Virtual & Hybrid Events</strong></p><p>Kombinasi acara fisik dan virtual untuk jangkauan yang lebih luas.</p><p><strong>Augmented Reality (AR)</strong></p><p>Pengalaman interaktif yang menggabungkan dunia nyata dan digital.</p><p><strong>Artificial Intelligence</strong></p><p>AI membantu personalisasi pengalaman untuk setiap peserta.</p><p><strong>Real-time Analytics</strong></p><p>Data analytics real-time untuk mengukur kesuksesan acara.</p><p><strong>Sustainable Event Tech</strong></p><p>Teknologi ramah lingkungan untuk acara yang lebih berkelanjutan.</p><p>Manfaatkan teknologi terkini untuk acara Anda bersama kami!</p>',
-                'thumbnail' => 'article-tech-innovation.jpg',
-                'category_id' => $categories->firstWhere('slug', 'teknologi-event')?->id,
-            ],
-            [
-                'title' => 'Pernikahan Adat: Menghormati Tradisi dengan Gaya Modern',
-                'slug' => 'pernikahan-adat-menghormati-tradisi-dengan-gaya-modern',
-                'content' => '<p>Pernikahan adat tetap relevan dengan sentuhan modern. Bagaimana cara mengabungkan tradisi dengan gaya kontemporer?</p><p><strong>Menghormati Elemen Tradisional</strong></p><p>Pertahankan upacara dan ritual penting dari budaya Anda.</p><p><strong>Modernisasi Presentasi</strong></p><p>Gunakan elemen modern dalam dekorasi dan entertainment.</p><p><strong>Hybrid Wardrobe</strong></p><p>Perpaduan pakaian tradisional dengan sentuhan desainer kontemporer.</p><p><strong>Digital Documentation</strong></p><p>Live streaming dan drone photography untuk dokumentasi modern.</p><p><strong>Fusion Cuisine</strong></p><p>Menu yang menggabungkan masakan tradisional dan internasional.</p><p>Tim kami berpengalaman dalam mengelola pernikahan adat yang modern dan berkelas!</p>',
-                'thumbnail' => 'article-adat-wedding.jpg',
-                'category_id' => $categories->firstWhere('slug', 'pernikahan')?->id,
-            ],
-            [
-                'title' => 'Launching Produk yang Memorable: Strategi Kami',
-                'slug' => 'launching-produk-yang-memorable-strategi-kami',
-                'content' => '<p>Launching produk memerlukan strategi khusus untuk menciptakan buzz dan dampak maksimal.</p><p><strong>Pre-Launch Campaign</strong></p><p>Bangun antisipasi melalui teaser dan media sosial sebelum acara.</p><p><strong>Experiential Marketing</strong></p><p>Buat pengalaman interaktif yang membuat peserta merasa terlibat.</p><p><strong>Influencer Collaboration</strong></p><p>Melibatkan influencer untuk meningkatkan jangkauan dan kredibilitas.</p><p><strong>Multi-channel Coverage</strong></p><p>Liputan media online, offline, dan sosial media secara bersamaan.</p><p><strong>Follow-up Strategy</strong></p><p>Rencana komunikasi lanjutan setelah acara berakhir.</p><p>Percayakan launching produk Anda kepada tim profesional kami untuk hasil yang luar biasa!</p>',
-                'thumbnail' => 'article-product-launch.jpg',
-                'category_id' => $categories->firstWhere('slug', 'event-korporat')?->id,
-            ],
-            [
-                'title' => 'Konsep Acara Sosial yang Berdampak',
-                'slug' => 'konsep-acara-sosial-yang-berdampak',
-                'content' => '<p>Acara sosial tidak hanya tentang kesenangan, tetapi juga tentang dampak dan memberikan nilai positif kepada masyarakat.</p><p><strong>Program Sosial yang Terintegrasi</strong></p><p>Sertakan aktivitas sosial atau charity dalam acara Anda.</p><p><strong>Community Engagement</strong></p><p>Libatkan komunitas lokal dan berikan manfaat langsung kepada mereka.</p><p><strong>Sustainability Focus</strong></p><p>Terapkan praktik ramah lingkungan dalam setiap aspek acara.</p><p><strong>Educational Component</strong></p><p>Tambahkan elemen edukasi untuk meningkatkan nilai acara.</p><p><strong>Storytelling yang Kuat</strong></p><p>Ceritakan kisah yang menyentuh hati peserta.</p><p>Mari bersama menciptakan acara sosial yang bermakna dan berdampak!</p>',
-                'thumbnail' => 'article-social-event.jpg',
-                'category_id' => $categories->firstWhere('slug', 'acara-sosial')?->id,
-            ],
-            [
-                'title' => 'Trending: Virtual Events yang Sukses',
-                'slug' => 'trending-virtual-events-yang-sukses',
-                'content' => '<p>Virtual event telah menjadi bagian penting dari industri event modern. Berikut tren yang sedang berkembang:</p><p><strong>Hybrid Format</strong></p><p>Kombinasi peserta fisik dan virtual untuk jangkauan maksimal.</p><p><strong>Interactive Features</strong></p><p>Live polls, Q&A sessions, dan networking virtual untuk engagement.</p><p><strong>High Production Value</strong></p><p>Produksi berkualitas tinggi dengan multiple camera angles dan profesional.</p><p><strong>On-Demand Content</strong></p><p>Konten dapat diakses setelah acara berakhir untuk nilai jangka panjang.</p><p><strong>Personalized Experience</strong></p><p>Setiap peserta mendapat pengalaman yang disesuaikan dengan minat mereka.</p><p>Kami siap mengubah acara Anda menjadi virtual event yang engaging dan sukses!</p>',
-                'thumbnail' => 'article-virtual-event.jpg',
-                'category_id' => $categories->firstWhere('slug', 'trending-topics')?->id,
-            ],
+                    'title' => 'Djarum Superliga Badminton: Ajang Prestasi Bulutangkis Nasional',
+                    'slug' => 'djarum-superliga-badminton',
+                    'content' => '
+                    <p>Djarum Superliga Badminton merupakan salah satu turnamen bulutangkis paling bergengsi di Indonesia. Ajang ini mempertemukan klub-klub terbaik dengan atlet nasional maupun internasional yang memiliki kualitas tinggi.</p>
+
+                    <p>Turnamen ini tidak hanya menjadi wadah kompetisi, tetapi juga sarana pembinaan atlet muda agar mampu bersaing di level profesional. Setiap pertandingan dikemas dengan standar penyelenggaraan kelas dunia.</p>
+
+                    <p>Dukungan Djarum terhadap Superliga mencerminkan komitmen jangka panjang dalam memajukan olahraga bulutangkis Indonesia. Event ini juga menarik minat penonton dan komunitas olahraga dari berbagai daerah.</p>
+
+                    <p>Melalui penyelenggaraan rutin, Superliga menjadi bagian penting dalam ekosistem olahraga nasional dan industri event olahraga.</p>',
+                    'thumbnail' => 'articles/default-thumbnail.png',
+                    'category_id' => $categories->firstWhere('slug', 'trending-topics')?->id,
+                ],
+                [
+                    'title' => 'Audisi Umum PB Djarum: Menemukan Bintang Bulutangkis Masa Depan',
+                    'slug' => 'audisi-umum-pb-djarum',
+                    'content' => '
+                    <p>Audisi Umum PB Djarum dikenal sebagai program pencarian bakat bulutangkis terbesar di Indonesia. Ribuan peserta dari berbagai daerah mengikuti seleksi yang dilakukan secara profesional dan transparan.</p>
+
+                    <p>Proses audisi melibatkan pelatih berpengalaman yang menilai kemampuan teknis, fisik, dan mental peserta. Sistem seleksi dirancang untuk menjaring atlet dengan potensi jangka panjang.</p>
+
+                    <p>Program ini telah melahirkan banyak atlet berprestasi yang mengharumkan nama Indonesia di kancah internasional. Audisi menjadi bukti nyata peran Djarum dalam pembinaan olahraga.</p>
+
+                    <p>Melalui audisi ini, regenerasi atlet nasional dapat terus berjalan secara berkelanjutan.</p>',
+                    'thumbnail' => 'articles/default-thumbnail.png',
+                    'category_id' => $categories->firstWhere('slug', 'trending-topics')?->id,
+                ],
+                [
+                    'title' => 'Peran Djarum Foundation dalam Event Sosial dan Pendidikan',
+                    'slug' => 'djarum-foundation-event-sosial',
+                    'content' => '
+                    <p>Djarum Foundation secara aktif menyelenggarakan dan mendukung berbagai event sosial dan pendidikan di Indonesia. Kegiatan ini bertujuan meningkatkan kualitas sumber daya manusia.</p>
+
+                    <p>Program yang dijalankan meliputi beasiswa, pelatihan kepemimpinan, hingga pengembangan keterampilan generasi muda. Setiap event dirancang dengan konsep edukatif dan berkelanjutan.</p>
+
+                    <p>Melalui event sosial ini, Djarum Foundation berupaya memberikan dampak nyata bagi masyarakat luas. Kolaborasi dengan institusi pendidikan dan komunitas lokal menjadi kunci keberhasilan.</p>
+
+                    <p>Event-event tersebut menjadi bagian dari kontribusi sosial jangka panjang yang berfokus pada masa depan.</p>',
+                    'thumbnail' => 'articles/default-thumbnail.png',
+                    'category_id' => $categories->firstWhere('slug', 'acara-sosial')?->id,
+                ],
+                [
+                    'title' => 'Event Musik dan Hiburan yang Didukung Djarum',
+                    'slug' => 'event-musik-djarum',
+                    'content' => '
+                    <p>Djarum kerap terlibat dalam penyelenggaraan event musik berskala nasional dengan konsep yang kreatif. Event ini menggabungkan hiburan, teknologi, dan tata panggung modern.</p>
+
+                    <p>Line-up artis ternama serta produksi panggung profesional menjadi daya tarik utama. Pengunjung tidak hanya menikmati musik, tetapi juga pengalaman event yang immersive.</p>
+
+                    <p>Event musik ini memberikan ruang bagi industri kreatif untuk berkembang dan berkolaborasi. Banyak pelaku seni dan vendor lokal yang turut terlibat.</p>
+
+                    <p>Konsep event yang matang menjadikan acara musik ini selalu dinantikan oleh masyarakat.</p>',
+                    'thumbnail' => 'articles/default-thumbnail.png',
+                    'category_id' => $categories->firstWhere('slug', 'trending-topics')?->id,
+                ],
+                [
+                    'title' => 'Konsep Event Corporate Djarum yang Profesional dan Terstruktur',
+                    'slug' => 'konsep-event-corporate-djarum',
+                    'content' => '
+                    <p>Event corporate Djarum dikenal dengan perencanaan yang detail dan eksekusi yang profesional. Setiap acara dirancang sesuai dengan tujuan dan nilai perusahaan.</p>
+
+                    <p>Mulai dari peluncuran produk hingga internal gathering, seluruh rangkaian acara dikelola dengan standar tinggi. Manajemen waktu dan koordinasi menjadi prioritas utama.</p>
+
+                    <p>Konsep visual, tata panggung, dan pengalaman peserta selalu diperhatikan secara menyeluruh. Hal ini menciptakan kesan eksklusif dan berkelas.</p>
+
+                    <p>Event corporate yang tersusun rapi mencerminkan identitas dan profesionalisme brand.</p>',
+                    'thumbnail' => 'articles/default-thumbnail.png',
+                    'category_id' => $categories->firstWhere('slug', 'event-korporat')?->id,
+                ],
+                [
+                    'title' => 'Event Budaya dan Seni yang Didukung Djarum Foundation',
+                    'slug' => 'event-budaya-djarum-foundation',
+                    'content' => '
+                    <p>Djarum Foundation berperan aktif dalam mendukung pelestarian budaya melalui berbagai event seni dan budaya. Kegiatan ini melibatkan seniman lokal dan komunitas budaya.</p>
+
+                    <p>Festival budaya, pameran seni, dan pertunjukan tradisional menjadi sarana edukasi sekaligus hiburan. Event dikemas dengan pendekatan modern tanpa meninggalkan nilai tradisional.</p>
+
+                    <p>Melalui event budaya, generasi muda diajak untuk mengenal dan menghargai warisan bangsa. Kolaborasi lintas sektor menjadi kekuatan utama program ini.</p>
+
+                    <p>Pelestarian budaya melalui event menjadi investasi jangka panjang bagi identitas nasional.</p>',
+                    'thumbnail' => 'articles/default-thumbnail.png',
+                    'category_id' => $categories->firstWhere('slug', 'acara-sosial')?->id,
+                ],
+                [
+                    'title' => 'Manajemen Event Skala Besar ala Djarum',
+                    'slug' => 'manajemen-event-skala-besar-djarum',
+                    'content' => '
+                    <p>Event berskala besar membutuhkan manajemen yang matang dan terstruktur. Djarum menerapkan sistem kerja profesional pada setiap tahap penyelenggaraan.</p>
+
+                    <p>Perencanaan dimulai dari konsep, anggaran, hingga teknis pelaksanaan. Setiap divisi memiliki peran dan tanggung jawab yang jelas.</p>
+
+                    <p>Evaluasi pasca acara juga menjadi bagian penting untuk memastikan peningkatan kualitas event berikutnya. Pendekatan ini menjamin konsistensi mutu.</p>
+
+                    <p>Manajemen event yang baik menghasilkan pengalaman acara yang aman dan berkesan.</p>',
+                    'thumbnail' => 'articles/default-thumbnail.png',
+                    'category_id' => $categories->firstWhere('slug', 'tips-trik')?->id,
+                ],
+                [
+                    'title' => 'Kolaborasi Event Djarum dengan Event Organizer Profesional',
+                    'slug' => 'kolaborasi-event-djarum-eo',
+                    'content' => '
+                    <p>Kesuksesan event besar tidak terlepas dari peran Event Organizer profesional. Djarum menjalin kolaborasi dengan EO berpengalaman untuk memastikan kualitas acara.</p>
+
+                    <p>EO bertanggung jawab terhadap teknis produksi, koordinasi vendor, dan pengelolaan rundown. Kolaborasi yang solid menciptakan alur kerja yang efisien.</p>
+
+                    <p>Sinergi antara brand dan EO menghasilkan event yang selaras dengan visi dan target audiens. Setiap detail diperhatikan secara menyeluruh.</p>
+
+                    <p>Kolaborasi ini menjadi contoh praktik terbaik dalam industri event.</p>',
+                    'thumbnail' => 'articles/default-thumbnail.png',
+                    'category_id' => $categories->firstWhere('slug', 'tips-trik')?->id,
+                ],
+                [
+                    'title' => 'Dampak Event Djarum terhadap Industri Kreatif Nasional',
+                    'slug' => 'dampak-event-djarum-industri-kreatif',
+                    'content' => '
+                    <p>Event-event yang didukung Djarum memberikan dampak signifikan bagi industri kreatif nasional. Banyak pelaku kreatif terlibat dalam proses produksi acara.</p>
+
+                    <p>Vendor lokal, UMKM, dan tenaga kreatif mendapatkan kesempatan untuk berkembang. Event menjadi sarana distribusi ekonomi kreatif.</p>
+
+                    <p>Kolaborasi lintas sektor menciptakan ekosistem event yang sehat dan berkelanjutan. Dampaknya dirasakan secara luas.</p>
+
+                    <p>Industri kreatif terus tumbuh seiring meningkatnya kualitas penyelenggaraan event.</p>',
+                    'thumbnail' => 'articles/default-thumbnail.png',
+                    'category_id' => $categories->firstWhere('slug', 'trending-topics')?->id,
+                ],
+                [
+                    'title' => 'Strategi Penyelenggaraan Event Berkelanjutan ala Djarum',
+                    'slug' => 'strategi-event-berkelanjutan-djarum',
+                    'content' => '
+                    <p>Konsep keberlanjutan menjadi perhatian utama dalam penyelenggaraan event modern. Djarum menerapkan strategi ramah lingkungan dalam berbagai acara.</p>
+
+                    <p>Pengurangan limbah, efisiensi energi, dan penggunaan material berkelanjutan menjadi fokus utama. Setiap event dirancang dengan tanggung jawab sosial.</p>
+
+                    <p>Pendekatan ini tidak hanya meningkatkan citra acara, tetapi juga memberikan dampak positif bagi lingkungan.</p>
+
+                    <p>Event berkelanjutan menjadi standar baru dalam industri event.</p>',
+                    'thumbnail' => 'articles/default-thumbnail.png',
+                    'category_id' => $categories->firstWhere('slug', 'teknologi-event')?->id,
+                ],
         ];
 
         foreach ($posts as $post) {
-            Article::create($post);
+            Article::updateOrCreate(
+                ['slug' => $post['slug']],
+                $post,
+            );
         }
     }
 }

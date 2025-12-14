@@ -8,4 +8,7 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateWhyChooseUs extends CreateRecord
 {
     protected static string $resource = WhyChooseUsResource::class;
+
+    protected static ?string $title = 'Tambah Item Alasan';
+    protected ?string $heading = 'Tambah Item Alasan';
 }

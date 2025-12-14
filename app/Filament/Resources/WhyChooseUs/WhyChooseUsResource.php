@@ -5,10 +5,11 @@ namespace App\Filament\Resources\WhyChooseUs;
 use App\Filament\Resources\WhyChooseUs\Pages\EditWhyChooseUs;
 use App\Models\WhyChooseUs;
 use BackedEnum;
+use Filament\Forms\Components\FileUpload;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -27,19 +28,33 @@ class WhyChooseUsResource extends Resource
     protected static string | UnitEnum | null $navigationGroup = 'Pengaturan Website';
     protected static ?int $navigationSort = 3;
 
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canDelete($record): bool
+    {
+        return false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('title')
-                    ->required(),
-                Textarea::make('description')
-                    ->columnSpanFull(),
-                TextInput::make('icon'),
-                TextInput::make('sort_order')
                     ->required()
-                    ->numeric()
-                    ->default(0),
+                    ->label('Judul'),
+                FileUpload::make('image')
+                    ->label('Gambar')
+                    ->disk('public')
+                    ->directory('why-choose-us')
+                    ->image()
+                    ->imageEditor()
+                    ->maxSize(2048),
+                RichEditor::make('description')
+                    ->columnSpanFull()
+                    ->label('Deskripsi'),
             ]);
     }
 
@@ -50,20 +65,13 @@ class WhyChooseUsResource extends Resource
                 TextColumn::make('title')
                     ->label('Judul')
                     ->searchable(),
-                TextColumn::make('icon')
-                    ->label('Ikon')
+                TextColumn::make('description')
+                    ->label('Deskripsi')
+                    ->html()
+                    ->limit(50)
                     ->searchable(),
-                TextColumn::make('sort_order')
-                    ->label('Urutan')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('created_at')
-                                        ->label('Dibuat pada')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                                        ->label('Diubah pada')
+                    ->label('Dibuat pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

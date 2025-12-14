@@ -45,12 +45,12 @@ class EventTypeResource extends Resource
                     ->label('Nama Jenis Acara')
                     ->searchable(),
                 TextColumn::make('created_at')
-                                        ->label('Dibuat pada')
+                    ->label('Dibuat pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                                        ->label('Diubah pada')
+                    ->label('Diubah pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

@@ -138,12 +138,12 @@
 
             <div class="text-center">
                 <button type="submit"
-                    class="inline-block my-3 px-6 py-3 bg-yellow-400 text-black font-semibold rounded-md font-dmsans hover:bg-yellow-500 transition">
+                    class="inline-block my-3 px-6 py-3 bg-yellow-400 text-black font-semibold rounded-md font-dmsans hover:bg-yellow-500 transition cursor-pointer">
                     Create Account
                 </button>
 
                 <p class="text-center text-sm mt-3">
-                    Already have an account? <a onclick="openLoginModal()" class="text-yellow-600 font-semibold">Sign in</a>
+                    Already have an account? <a onclick="openLoginModal()" class="text-yellow-600 font-semibold cursor-pointer">Sign in</a>
                 </p>
 
                 <p class="text-center text-xs mt-3">
@@ -155,7 +155,6 @@
 </div>
 
 <script>
-// Open/Close Modal - Define outside DOMContentLoaded for immediate access
 window.openRegisterModal = () => {
     const m = document.getElementById("registerModal");
     m.classList.remove("hidden");

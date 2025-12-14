@@ -34,18 +34,12 @@ Route::get('/booking/success', function () {
     return view('pages.order.success');
 });
 
-// Email preview routes (for testing only - remove in production)
-Route::get('/emailnotification', function () {
-    $booking = \App\Models\Booking::with(['eventType', 'services'])->first();
-    return view('emails.booking.created', ['booking' => $booking]);
-});
-
 Route::get('/emailnotification/status', function () {
     $booking = \App\Models\Booking::with(['eventType', 'services'])->first();
     return view('emails.booking.status-updated', ['booking' => $booking]);
 });
 
-// Profile Routes (Protected by auth middleware)
+// Profile Routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');

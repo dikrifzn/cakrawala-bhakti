@@ -16,7 +16,6 @@ class BookingController extends Controller
 {
     public function index()
     {
-        // Ambil services yang dibuat oleh admin atau services lama (created_by = null)
         $adminServices = Service::where(function ($query) {
             $query->whereHas('creator', function ($q) {
                 $q->where('role', 'admin');
@@ -47,15 +46,13 @@ class BookingController extends Controller
             'services.*' => 'nullable|string',
         ]);
 
-        // Convert ISO date to Y-m-d
         $startDate = isset($data['start_date']) ? substr($data['start_date'], 0, 10) : null;
         $endDate = isset($data['end_date']) ? substr($data['end_date'], 0, 10) : null;
 
-        // Convert time to HH:MM:SS format
         $parseTime = function($t) {
             if (!$t) return null;
             $t = trim($t);
-            // Handle '10:00 AM' or '15:00 PM'
+
             if (preg_match('/^(\d{1,2}):(\d{2}) ?([AP]M)?$/i', $t, $m)) {
                 $h = (int)$m[1];
                 $min = (int)$m[2];
@@ -64,7 +61,7 @@ class BookingController extends Controller
                 if ($ampm === 'AM' && $h === 12) $h = 0;
                 return sprintf('%02d:%02d:00', $h, $min);
             }
-            // Handle '15:00' or already correct
+
             if (preg_match('/^(\d{1,2}):(\d{2})(:(\d{2}))?$/', $t, $m)) {
                 $h = (int)$m[1];
                 $min = (int)$m[2];
@@ -76,7 +73,6 @@ class BookingController extends Controller
         $startTime = isset($data['start_time']) ? $parseTime($data['start_time']) : null;
         $endTime = isset($data['end_time']) ? $parseTime($data['end_time']) : null;
 
-        // Extract numeric value from total_days (e.g., "8 hari" -> 8)
         $totalDays = null;
         if (isset($data['total_days']) && $data['total_days']) {
             preg_match('/\d+/', $data['total_days'], $matches);
@@ -97,7 +93,7 @@ class BookingController extends Controller
             'location' => $data['location'] ?? null,
             'notes' => $data['notes'] ?? null,
             'include_permit' => $data['include_permit'] ?? false,
-            'permit_price' => 0, // Will be set by admin
+            'permit_price' => 0,
             'total_price' => 0,
             'status' => 'pending',
         ]);
@@ -106,11 +102,10 @@ class BookingController extends Controller
 
         $services = $request->input('services', []);
         foreach ($services as $serviceValue) {
-            // serviceValue may be 'Name' or 'Name|price' if frontend provided price
+
             $name = $serviceValue;
             $price = null;
 
-            // If the serviceValue contains a pipe, split
             if (is_string($serviceValue) && str_contains($serviceValue, '|')) {
                 [$name, $maybePrice] = explode('|', $serviceValue, 2);
                 if (is_numeric($maybePrice)) $price = (int) $maybePrice;
@@ -118,7 +113,7 @@ class BookingController extends Controller
 
             $service = Service::where('service_name', $name)->first();
             if (! $service) {
-                // create a lightweight service record for custom services
+
                 $service = Service::create([
                     'service_name' => $name,
                     'short_description' => 'Custom service (created at booking)',
@@ -141,24 +136,19 @@ class BookingController extends Controller
         $booking->total_price = $total;
         $booking->save();
 
-        // Send notification to customer
         Notification::route('mail', $booking->customer_email)
             ->notify(new BookingCreatedNotification($booking));
 
-        // Notify all admins and managers in database (Filament panel notifications)
         $adminUsers = \App\Models\User::whereIn('role', ['admin', 'manager'])->get();
         Notification::send($adminUsers, new BookingCreatedNotification($booking));
 
-        // Get email settings from database
         $settings = SiteSetting::first();
         
-        // Send notification to admin email
         if ($settings && $settings->admin_email) {
             Notification::route('mail', $settings->admin_email)
                 ->notify(new BookingCreatedNotification($booking));
         }
 
-        // Send notification to manager email if exists
         if ($settings && $settings->manager_email) {
             Notification::route('mail', $settings->manager_email)
                 ->notify(new BookingCreatedNotification($booking));

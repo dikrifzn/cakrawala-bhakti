@@ -10,11 +10,12 @@ class AboutSection extends Model
         'title',
         'subtitle',
         'description',
-        'image_1',
-        'image_2',
-        'image_3',
-        'image_4',
+        'images',
     ];
 
     protected $table = 'about_sections';
+
+    protected $casts = [
+        'images' => 'array',
+    ];
 }

@@ -11,7 +11,6 @@ class WhyChooseUs extends Model
     protected $fillable = [
         'title',
         'description',
-        'icon',
-        'sort_order',
+        'image',
     ];
 }

@@ -16,6 +16,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Forms\Components\RichEditor;
 use UnitEnum;
 
 class CallToActionResource extends Resource
@@ -33,13 +34,16 @@ class CallToActionResource extends Resource
     {
         return $schema
             ->components([
-                TextInput::make('title')
-                    ->required(),
+                RichEditor::make('title')
+                    ->required()
+                    ->columnSpanFull(),
                 TextInput::make('highlight_text'),
                 Textarea::make('subtitle')
                     ->columnSpanFull(),
                 FileUpload::make('background_image')
-                    ->image(),
+                    ->image()
+                    ->disk('public')
+                    ->directory('cta'),
             ]);
     }
 
@@ -56,12 +60,12 @@ class CallToActionResource extends Resource
                 ImageColumn::make('background_image')
                     ->label('Gambar Latar'),
                 TextColumn::make('created_at')
-                                        ->label('Dibuat pada')
+                    ->label('Dibuat pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                                        ->label('Diubah pada')
+                    ->label('Diubah pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

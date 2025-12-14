@@ -32,7 +32,6 @@ class ListBookings extends ListRecords
                 ->icon('heroicon-o-document')
                 ->color('danger')
                 ->action(function () {
-                    // Get filtered table query
                     $query = $this->getFilteredTableQuery();
                     $bookings = $query->with('eventType', 'services')
                         ->orderBy('created_at', 'desc')
@@ -53,13 +52,11 @@ class ListBookings extends ListRecords
                 ->label('Export Excel')
                 ->icon('heroicon-o-arrow-down-tray')
                 ->action(function () {
-                    // Get filtered table query
                     $query = $this->getFilteredTableQuery();
                     $bookings = $query->with('eventType', 'services')
                         ->orderBy('created_at', 'desc')
                         ->get();
 
-                    // Create CSV content
                     $csvContent = "ID,Nama Pelanggan,Email,Telepon,Tipe Event,Tanggal Mulai,Tanggal Selesai,Jam Mulai,Jam Selesai,Jumlah Hari,Lokasi,Catatan,Total Harga,Status,Tanggal Dibuat\n";
 
                     foreach ($bookings as $booking) {
@@ -84,7 +81,6 @@ class ListBookings extends ListRecords
 
                     $filename = 'laporan_booking_' . now()->format('Y-m-d_H-i-s') . '.csv';
 
-                    // Ensure UTF-8 content to avoid JSON encoding issues on Livewire responses
                     $csvContent = mb_convert_encoding($csvContent, 'UTF-8', 'UTF-8');
 
                     return response()->streamDownload(

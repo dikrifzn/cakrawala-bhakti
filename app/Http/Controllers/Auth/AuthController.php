@@ -45,7 +45,6 @@ class AuthController extends Controller
             'role' => 'user',
         ]);
 
-        // Notify admins about new user registration
         $admins = User::where('role', 'admin')->get();
         Notification::send($admins, new UserRegisteredNotification($user));
 

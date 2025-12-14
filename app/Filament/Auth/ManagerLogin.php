@@ -6,9 +6,6 @@ use Illuminate\Validation\ValidationException;
 
 class ManagerLogin
 {
-    /**
-     * Validate manager role on login attempt
-     */
     public static function validate(string $email): void
     {
         $user = \App\Models\User::where('email', $email)->first();

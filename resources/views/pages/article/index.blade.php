@@ -1,5 +1,9 @@
 @extends('layouts.app') 
 
+@php
+    use App\Helpers\ImageHelper;
+@endphp
+
 @section('content')
 
 <section class="py-20">
@@ -53,11 +57,11 @@
     <!-- Articles Grid -->
     <div class="max-w-6xl mx-auto px-4 sm:px-6 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse($articles as $article)
-        <a href="{{ route('article.show', $article->slug) }}">
+        <a href="{{ route('article.show', $article) }}">
             <div class="bg-white shadow-sm rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
                 <div class="bg-gray-300 h-48 mb-4 rounded-md overflow-hidden">
                     @if($article->thumbnail)
-                        <img src="{{ $article->thumbnail ? asset('storage/'.$article->thumbnail) : asset('img/default-thumbnail.png') }}"
+                        <img src="{{ ImageHelper::image($article->thumbnail, 'default-thumbnail.png') }}"
                              loading="lazy"
                              alt="{{ $article->title }}" 
                              class="w-full h-full object-cover">
@@ -87,7 +91,7 @@
     </div>
 
     <!-- Pagination -->
-    @if($articles->hasPages())
+    @if(method_exists($articles, 'hasPages') && $articles->hasPages())
         <div class="max-w-6xl mx-auto px-4 sm:px-6 mt-12">
             {{ $articles->onEachSide(1)->links('components.pagination') }}
         </div>

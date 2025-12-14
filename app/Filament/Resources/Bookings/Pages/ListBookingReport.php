@@ -22,7 +22,6 @@ class ListBookingReport extends ListRecords
                         ->orderBy('created_at', 'desc')
                         ->get();
 
-                    // Create CSV content
                     $csvContent = "ID,Nama Pelanggan,Email,Telepon,Tipe Event,Tanggal Mulai,Tanggal Selesai,Jam Mulai,Jam Selesai,Jumlah Hari,Lokasi,Catatan,Total Harga,Status,Tanggal Dibuat\n";
 
                     foreach ($bookings as $booking) {

@@ -147,7 +147,6 @@
                 x-data="orderSummary()"
                 class="bg-gray-50 border rounded-xl p-6 space-y-4"
             >
-                    {{-- Hidden inputs populated by JS --}}
                     <input type="hidden" name="start_date" id="input_start_date">
                     <input type="hidden" name="end_date" id="input_end_date">
                     <input type="hidden" name="start_time" id="input_start_time">
@@ -283,7 +282,6 @@
 
 @endsection @push('scripts')
 <script>
-    // Define event type data globally FIRST
     const eventTypeDataMap = @json(App\Models\EventType::all()->pluck('name', 'id'));
     window.eventTypeDataGlobal = eventTypeDataMap;
 
@@ -627,17 +625,11 @@
                 const selectedId = this.value;
                 const selectedName = eventTypeDataMap[selectedId];
                 
-                // Get calendar Alpine component
                 const calendarEl = document.querySelector('[x-data]');
                 if (calendarEl && calendarEl._x_dataStack) {
                     const calendarData = calendarEl._x_dataStack[0];
-                    
-                    // Tentukan offset berdasarkan jenis acara
-                    // Jika "Pengadaan Barang", gunakan 7 hari
-                    // Jika jenis acara lainnya (event organizer), gunakan 14 hari
                     const minDays = (selectedName === 'Pengadaan Barang') ? 7 : 14;
                     
-                    // Update calendar dengan offset baru
                     calendarData.updateMinDaysOffset(minDays);
                 }
             });

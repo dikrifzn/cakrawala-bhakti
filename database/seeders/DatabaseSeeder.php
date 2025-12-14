@@ -21,13 +21,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             HeroBannerSeeder::class,
+            CallToActionSeeder::class,
             AboutSectionSeeder::class,
             WhyChooseUsSeeder::class,
             ServiceSeeder::class,
             ArticleCategorySeeder::class,
             ArticleSeeder::class,
             ProjectSeeder::class,
-            ProjectImageSeeder::class,
             EventTypeSeeder::class,
             BookingSeeder::class,
             SiteSettingSeeder::class,
@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
         $now = now();
         $tables = [
             'hero_banners',
+            'call_to_actions',
             'about_sections',
             'why_choose_us',
             'services',

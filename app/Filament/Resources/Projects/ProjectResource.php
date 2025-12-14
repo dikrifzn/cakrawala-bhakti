@@ -43,10 +43,15 @@ class ProjectResource extends Resource
                 DatePicker::make('date'),
                 Textarea::make('description')
                     ->columnSpanFull(),
-                FileUpload::make('cover_image')
-                    ->disk('public')
+                FileUpload::make('images')
+                    ->label('Gambar Proyek')
                     ->image()
-                    ->required(),
+                    ->multiple()
+                    ->reorderable()
+                    ->disk('public')
+                    ->directory('projects')
+                    ->columnSpanFull()
+                    ->helperText('Unggah beberapa gambar sekaligus. Urutan bisa diubah.'),
             ]);
     }
 
@@ -67,8 +72,10 @@ class ProjectResource extends Resource
                     ->label('Tanggal')
                     ->date()
                     ->sortable(),
-                ImageColumn::make('cover_image')
-                    ->label('Gambar'),
+                ImageColumn::make('images')
+                    ->label('Gambar')
+                    ->getStateUsing(fn ($record) => $record->images[0] ?? null)
+                    ->circular(),
                 TextColumn::make('created_at')
                     ->label('Dibuat pada')
                     ->dateTime()

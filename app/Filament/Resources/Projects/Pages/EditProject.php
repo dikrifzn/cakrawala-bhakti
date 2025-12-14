@@ -19,4 +19,5 @@ class EditProject extends EditRecord
             DeleteAction::make(),
         ];
     }
+
 }

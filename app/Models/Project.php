@@ -12,15 +12,11 @@ class Project extends Model
         'location',
         'date',
         'description',
-        'cover_image',
+        'images',
     ];
 
     protected $casts = [
         'date' => 'date',
+        'images' => 'array',
     ];
-
-    public function images()
-    {
-        return $this->hasMany(ProjectImage::class);
-    }
 }

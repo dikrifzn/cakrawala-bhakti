@@ -12,7 +12,6 @@ class Service extends Model
     protected $fillable = [
         'service_name',
         'short_description',
-        'icon',
         'price',
         'banner_image',
         'sort_order',
@@ -31,9 +30,6 @@ class Service extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    /**
-     * Scope to get services created by admin or legacy services
-     */
     public function scopeAdminServices(Builder $query): Builder
     {
         return $query->where(function ($q) {

@@ -51,9 +51,6 @@ class Booking extends Model
                     ->withTimestamps();
     }
 
-    /**
-     * Get service names as comma-separated string
-     */
     protected function serviceNames(): Attribute
     {
         return Attribute::make(

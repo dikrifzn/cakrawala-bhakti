@@ -15,26 +15,10 @@ class EventTypeSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seed a comprehensive list aligned with BookingSeeder usage
         $eventTypes = [
-            'Pernikahan',
-            'Engagement',
-            'Ulang Tahun',
-            'Resepsi',
-            'Seminar',
-            'Workshop',
-            'Conference',
-            'Product Launch',
-            'Gathering Keluarga',
-            'Team Building',
-            'Awards Ceremony',
-            'Launching Bisnis',
-            'Pernikahan Adat',
-            'Kenduri/Arisan',
-            'Festival/Bazaar',
-            'Konser/Musik',
-            'Outing Perusahaan',
-            'Gathering Internal',
-            'Acara Sosial/Charity',
+            'Event Organizer',
+            'Pengadaan Barang',
             'Lainnya',
         ];
 

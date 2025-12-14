@@ -11,12 +11,12 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = Article::select('id', 'title', 'slug', 'thumbnail', 'created_at', 'category_id')
+        $articles = Article::select('id', 'title', 'slug', 'thumbnail', 'created_at', 'category_id', 'content')
             ->with(['category' => function ($query) {
                 $query->select('id', 'name');
             }])
             ->latest()
-            ->paginate(12);
+            ->get();
 
         $categories = ArticleCategory::select('id', 'name', 'slug')
             ->withCount('articles')

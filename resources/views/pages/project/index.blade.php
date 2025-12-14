@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+    use App\Helpers\ImageHelper;
+@endphp
+
 @section('content')
 
 <section id="publication" class="py-20 bg-gray-50">
@@ -15,44 +19,42 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-14">
 
         @forelse($projects as $project)
-        <div>
+        <div class="group transition-all duration-300">
             <h4 class="font-semibold mb-4 font-poppins">
-                <a href="{{ route('project.show', $project) }}" class="hover:text-yellow-500">{{ $project->project_title }}</a>
+                <a href="{{ route('project.show', $project) }}" class="hover:text-yellow-500 transition">{{ $project->project_title }}</a>
             </h4>
 
-            <div class="swiper projectSwiper">
+            <div class="swiper projectSwiper opacity-100 group-hover:opacity-90 transition-opacity duration-300">
                 <div class="swiper-wrapper">
 
                     <div class="swiper-slide">
                         <div class="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-3">
-                            @if($project->images->count())
-                                @foreach($project->images as $imageRecord)
-                                    @php
-                                        $images = is_array($imageRecord->image) ? $imageRecord->image : [$imageRecord->image];
-                                    @endphp
-                                    @foreach($images as $key => $imagePath)
-                                        <div class="mb-3 break-inside-avoid">
-                                            @if($key == 0)
-                                                <a href="{{ route('project.show', $project) }}">
-                                                    <img src="{{ asset('storage/' . $imagePath) }}"
-                                                         loading="lazy" 
-                                                         class="w-full rounded-lg shadow-sm object-cover h-40" 
-                                                         alt="{{ $project->project_title }}">
-                                                </a>
-                                            @else
-                                                <img src="{{ asset('storage/' . $imagePath) }}" 
+                            @php
+                                $images = is_array($project->images) ? $project->images : [];
+                            @endphp
+                            @if(count($images))
+                                @foreach($images as $key => $imagePath)
+                                    <div class="mb-3 break-inside-avoid overflow-hidden rounded-lg group/img">
+                                        @if($key === 0)
+                                            <a href="{{ route('project.show', $project) }}">
+                                                <img src="{{ ImageHelper::image($imagePath, 'default-thumbnail.png') }}"
                                                      loading="lazy" 
-                                                     class="w-full rounded-lg shadow-sm object-cover h-40" 
+                                                     class="w-full shadow-sm object-cover h-40 group-hover/img:scale-110 transition-transform duration-300" 
                                                      alt="{{ $project->project_title }}">
-                                            @endif
-                                        </div>
-                                    @endforeach
+                                            </a>
+                                        @else
+                                            <img src="{{ ImageHelper::image($imagePath, 'default-thumbnail.png') }}" 
+                                                 loading="lazy" 
+                                                 class="w-full shadow-sm object-cover h-40 group-hover/img:scale-110 transition-transform duration-300" 
+                                                 alt="{{ $project->project_title }}">
+                                        @endif
+                                    </div>
                                 @endforeach
                             @else
-                                <div class="mb-3">
-                                    <img src="{{ asset('storage/' . $project->cover_image) }}" 
+                                <div class="mb-3 overflow-hidden rounded-lg group/img">
+                                    <img src="{{ ImageHelper::image(null, 'default-thumbnail.png') }}" 
                                          loading="lazy" 
-                                         class="w-full rounded-lg shadow-sm object-cover h-40" 
+                                         class="w-full shadow-sm object-cover h-40 group-hover/img:scale-110 transition-transform duration-300" 
                                          alt="{{ $project->project_title }}">
                                 </div>
                             @endif

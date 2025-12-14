@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+    use App\Helpers\ImageHelper;
+@endphp
+
 @section('content')
 
 <section class="py-20 bg-gray-50">
@@ -26,26 +30,26 @@
     @endif
 
     <div id="gallery" class="max-w-6xl mx-auto px-4 sm:px-6 columns-2 sm:columns-3 md:columns-4 gap-4">
-        @forelse($project->images as $imageRecord)
+        @php $images = is_array($project->images) ? $project->images : []; @endphp
+        @forelse($images as $imagePath)
             @php
-                $images = is_array($imageRecord->image) ? $imageRecord->image : [$imageRecord->image];
+                $meta = @getimagesize(storage_path('app/public/' . $imagePath));
+                $width = $meta[0] ?? 1600;
+                $height = $meta[1] ?? 900;
             @endphp
-            @foreach($images as $imagePath)
-                <a 
-                    href="{{ asset('storage/' . $imagePath) }}"
-                    data-pswp-width="1600"
-                    data-pswp-height="1000"
-                    data-cropped="true"
-                    class="block mb-4 break-inside-avoid overflow-hidden rounded-xl group"
+            <a 
+                href="{{ ImageHelper::image($imagePath, 'default-thumbnail.png') }}"
+                data-pswp-width="{{ $width }}"
+                data-pswp-height="{{ $height }}"
+                class="block mb-4 break-inside-avoid overflow-hidden rounded-xl group"
+            >
+                <img 
+                    src="{{ ImageHelper::image($imagePath, 'default-thumbnail.png') }}"
+                    loading="lazy"
+                    class="w-full rounded-xl transition duration-300 group-hover:scale-110"
+                    alt="{{ $project->project_title }}"
                 >
-                    <img 
-                        src="{{ asset('storage/' . $imagePath) }}"
-                        loading="lazy"
-                        class="w-full rounded-xl transition duration-300 group-hover:scale-110"
-                        alt="{{ $project->project_title }}"
-                    >
-                </a>
-            @endforeach
+            </a>
         @empty
             <p class="text-gray-500">Tidak ada gambar untuk proyek ini.</p>
         @endforelse

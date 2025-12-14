@@ -1,4 +1,10 @@
-@extends('layouts.app') @section('content')
+@extends('layouts.app') 
+
+@php
+    use App\Helpers\ImageHelper;
+@endphp
+
+@section('content')
 
 <section class="py-20 flex flex-col justify-center items-center m-5">
     <div class="max-w-[850px] mt-3">
@@ -22,8 +28,7 @@
         </div>
 
         @if($article->thumbnail)
-            <img src="{{ asset('storage/' . $article->thumbnail) }}" 
-                 onerror="this.src='{{ asset('img/placeholder.jpg') }}'"
+            <img src="{{ ImageHelper::image($article->thumbnail, 'default-thumbnail.png') }}" 
                  loading="lazy"
                  alt="{{ $article->title }}" 
                  class="w-full h-96 object-cover rounded-lg" />
@@ -49,8 +54,7 @@
                     <div class="bg-white shadow-sm rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
                         <div class="bg-gray-300 h-48 mb-4 rounded-md overflow-hidden">
                             @if($relatedArticle->thumbnail)
-                                <img src="{{ asset('storage/' . $relatedArticle->thumbnail) }}" 
-                                     onerror="this.src='{{ asset('img/placeholder.jpg') }}'"
+                                <img src="{{ ImageHelper::image($relatedArticle->thumbnail, 'default-thumbnail.png') }}" 
                                      loading="lazy"
                                      alt="{{ $relatedArticle->title }}" 
                                      class="w-full h-full object-cover">

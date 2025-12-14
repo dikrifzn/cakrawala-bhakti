@@ -39,13 +39,14 @@ class ServiceResource extends Resource
                 TextInput::make('service_name')
                     ->required(),
                 TextInput::make('short_description'),
-                TextInput::make('icon'),
                 TextInput::make('price')
                     ->required()
                     ->numeric()
                     ->prefix('Rp'),
                 FileUpload::make('banner_image')
-                    ->image(),
+                    ->image()
+                    ->disk('public')
+                    ->directory('services'),
                 TextInput::make('sort_order')
                     ->required()
                     ->numeric()
@@ -69,11 +70,8 @@ class ServiceResource extends Resource
                 TextColumn::make('short_description')
                     ->label('Deskripsi Singkat')
                     ->searchable(),
-                TextColumn::make('icon')
-                    ->label('Ikon')
-                    ->searchable(),
                 TextColumn::make('price')
-                                        ->label('Harga')
+                    ->label('Harga')
                     ->money()
                     ->sortable(),
                 ImageColumn::make('banner_image')
@@ -87,12 +85,12 @@ class ServiceResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')
-                                        ->label('Dibuat pada')
+                    ->label('Dibuat pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                                        ->label('Diubah pada')
+                    ->label('Diubah pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

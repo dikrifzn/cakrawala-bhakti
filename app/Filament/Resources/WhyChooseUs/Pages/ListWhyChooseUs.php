@@ -10,6 +10,9 @@ class ListWhyChooseUs extends ListRecords
 {
     protected static string $resource = WhyChooseUsResource::class;
 
+    protected static ?string $title = 'Bagian Alasan Memilih Kami';
+    protected ?string $heading = 'Bagian Alasan Memilih Kami';
+
     protected function getHeaderActions(): array
     {
         return [

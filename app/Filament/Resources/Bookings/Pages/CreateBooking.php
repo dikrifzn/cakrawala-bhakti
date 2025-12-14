@@ -15,7 +15,6 @@ class CreateBooking extends CreateRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        // Remove selectedServices from data to save
         unset($data['selectedServices']);
         return $data;
     }
@@ -24,7 +23,6 @@ class CreateBooking extends CreateRecord
     {
         $selectedServices = $this->form->getRawState()['selectedServices'] ?? [];
         
-        // Create booking services
         foreach ($selectedServices as $serviceId) {
             $service = \App\Models\Service::find($serviceId);
             if ($service) {

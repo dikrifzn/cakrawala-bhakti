@@ -74,12 +74,12 @@
 
             <div class="text-center">
                 <button type="submit"
-                    class="inline-block my-3 px-6 py-3 bg-yellow-400 text-black font-semibold rounded-md font-dmsans hover:bg-yellow-500 transition">
+                    class="inline-block my-3 px-6 py-3 bg-yellow-400 text-black font-semibold rounded-md font-dmsans hover:bg-yellow-500 transition cursor-pointer">
                     Sign In
                 </button>
             </form>
                 <p class="text-center text-sm mt-3">
-                    No account? <a onclick="openRegisterModal()" class="text-yellow-600 font-semibold">Create one</a>
+                    No account? <a onclick="openRegisterModal()" class="text-yellow-600 font-semibold cursor-pointer">Create one</a>
                 </p>
                 <p class="text-center text-xs mt-3">
                     By clicking "Sign in", you accept Cakrawala Bhakti’s <a href="">Terms of Service</a> and <a href="">Privacy Policy</a>.
@@ -89,7 +89,6 @@
 </div>
 
 <script>
-// Open/Close Modal - Define outside DOMContentLoaded for immediate access
 window.openLoginModal = () => {
     const m = document.getElementById("loginModal");
     m.classList.remove("hidden");
@@ -103,7 +102,6 @@ window.closeLoginModal = () => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Password Toggle
     const passInput = document.getElementById("passwordInput");
     const toggleBtn  = document.getElementById("togglePassword");
     const eye        = document.getElementById("iconEye");

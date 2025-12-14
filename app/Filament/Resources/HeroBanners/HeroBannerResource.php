@@ -32,13 +32,11 @@ class HeroBannerResource extends Resource
 
     public static function canCreate(): bool
     {
-        // Singleton: tidak boleh membuat record baru via UI
         return false;
     }
 
     public static function canDelete($record): bool
     {
-        // Singleton: tidak boleh menghapus record
         return false;
     }
 
@@ -51,8 +49,6 @@ class HeroBannerResource extends Resource
                     ->columnSpanFull(),
                 TextInput::make('highlight_text'),
                 Textarea::make('subtitle')
-                    ->columnSpanFull(),
-                Textarea::make('description')
                     ->columnSpanFull(),
                 TextInput::make('button_text'),
                 TextInput::make('button_link'),

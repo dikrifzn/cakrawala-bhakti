@@ -12,10 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('project_images', function (Blueprint $table) {
-            // Delete all existing data first
             \DB::table('project_images')->truncate();
             
-            // Change 'image' column to JSON to store multiple images
             $table->json('image')->nullable()->change();
         });
     }
@@ -26,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('project_images', function (Blueprint $table) {
-            // Revert back to string
+
             $table->string('image')->nullable()->change();
         });
     }

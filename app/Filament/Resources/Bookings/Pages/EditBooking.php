@@ -23,14 +23,12 @@ class EditBooking extends EditRecord
     {
         $statusChanged = $this->record->wasChanged('status');
 
-        // Notify customer when status updated by admin/manager
         if ($statusChanged && $this->record->customer_email) {
             $this->record->load(['services' => fn ($query) => $query->withPivot('price', 'quantity')]);
 
             Notification::route('mail', $this->record->customer_email)
                 ->notify(new BookingStatusUpdatedNotification($this->record));
             
-            // Notify all admins in database
             $admins = \App\Models\User::where('role', 'admin')->get();
             Notification::send($admins, new BookingStatusUpdatedNotification($this->record));
         }
@@ -39,7 +37,6 @@ class EditBooking extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            // Approve button - show when status is pending or rejected
             Action::make('approve')
                 ->label('Approve')
                 ->icon('heroicon-o-check-circle')
@@ -52,7 +49,6 @@ class EditBooking extends EditRecord
                     $this->redirect(static::getResource()::getUrl('edit', ['record' => $this->record]));
                 }),
             
-            // Reject button - show when status is pending or approved
             Action::make('reject')
                 ->label('Reject')
                 ->icon('heroicon-o-x-circle')
@@ -65,7 +61,6 @@ class EditBooking extends EditRecord
                     $this->redirect(static::getResource()::getUrl('edit', ['record' => $this->record]));
                 }),
             
-            // Finish button - show when status is approved
             Action::make('finish')
                 ->label('Selesaikan')
                 ->icon('heroicon-o-flag')

@@ -27,6 +27,26 @@ class EditAboutSection extends EditRecord
         return [];
     }
 
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $data['images'] = isset($data['images']) && is_array($data['images'])
+            ? array_values(array_filter($data['images']))
+            : [];
+
+        return $data;
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $images = isset($data['images']) && is_array($data['images'])
+            ? array_values(array_filter($data['images']))
+            : [];
+
+        $data['images'] = $images;
+
+        return $data;
+    }
+
     protected function getRedirectUrl(): string
     {
         return static::getResource()::getUrl('index');

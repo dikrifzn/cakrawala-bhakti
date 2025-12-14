@@ -29,8 +29,8 @@ class SiteSettingSeeder extends Seeder
             'instagram' => 'https://instagram.com/cakrawalabhakti',
             'facebook' => 'https://facebook.com/cakrawalabhakti',
             'tiktok' => 'https://tiktok.com/@cakrawalabhakti',
-            'logo_header' => 'logo-header.png',
-            'logo_footer' => 'logo-footer.png',
+            'logo_header' => 'logo-white.png',
+            'logo_footer' => 'logo-white.png',
         ]);
     }
 }

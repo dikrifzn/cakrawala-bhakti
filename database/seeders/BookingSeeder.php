@@ -17,13 +17,14 @@ class BookingSeeder extends Seeder
     public function run(): void
     {
         $eventTypes = EventType::all();
+        $fallbackEventTypeId = $eventTypes->first()->id ?? null;
 
         $bookings = [
             [
                 'customer_name' => 'Budi Santoso',
                 'customer_email' => 'budi.santoso@email.com',
                 'customer_phone' => '08123456789',
-                'event_type_id' => $eventTypes->firstWhere('name', 'Pernikahan')?->id ?? 1,
+                'event_type_id' => $eventTypes->firstWhere('name', 'Pernikahan')?->id ?? $fallbackEventTypeId,
                 'start_date' => '2025-06-15',
                 'end_date' => '2025-06-15',
                 'start_time' => '10:00',
@@ -38,7 +39,7 @@ class BookingSeeder extends Seeder
                 'customer_name' => 'Siti Nurhaliza',
                 'customer_email' => 'siti.nurhaliza@company.com',
                 'customer_phone' => '08198765432',
-                'event_type_id' => $eventTypes->firstWhere('name', 'Seminar')?->id ?? 6,
+                'event_type_id' => $eventTypes->firstWhere('name', 'Seminar')?->id ?? $fallbackEventTypeId,
                 'start_date' => '2025-03-10',
                 'end_date' => '2025-03-11',
                 'start_time' => '08:00',
@@ -53,7 +54,7 @@ class BookingSeeder extends Seeder
                 'customer_name' => 'Ahmad Wijaya',
                 'customer_email' => 'ahmad.wijaya@startup.com',
                 'customer_phone' => '08112345678',
-                'event_type_id' => $eventTypes->firstWhere('name', 'Product Launch')?->id ?? 8,
+                'event_type_id' => $eventTypes->firstWhere('name', 'Product Launch')?->id ?? $fallbackEventTypeId,
                 'start_date' => '2025-04-20',
                 'end_date' => '2025-04-20',
                 'start_time' => '14:00',
@@ -68,7 +69,7 @@ class BookingSeeder extends Seeder
                 'customer_name' => 'Dewi Lestari',
                 'customer_email' => 'dewi.lestari@email.com',
                 'customer_phone' => '08167890123',
-                'event_type_id' => $eventTypes->firstWhere('name', 'Ulang Tahun')?->id ?? 3,
+                'event_type_id' => $eventTypes->firstWhere('name', 'Ulang Tahun')?->id ?? $fallbackEventTypeId,
                 'start_date' => '2025-02-14',
                 'end_date' => '2025-02-14',
                 'start_time' => '18:00',
@@ -83,7 +84,7 @@ class BookingSeeder extends Seeder
                 'customer_name' => 'Rendra Gunawan',
                 'customer_email' => 'rendra.gunawan@corporate.com',
                 'customer_phone' => '08154321098',
-                'event_type_id' => $eventTypes->firstWhere('name', 'Team Building')?->id ?? 10,
+                'event_type_id' => $eventTypes->firstWhere('name', 'Team Building')?->id ?? $fallbackEventTypeId,
                 'start_date' => '2025-05-05',
                 'end_date' => '2025-05-06',
                 'start_time' => '09:00',
@@ -98,7 +99,7 @@ class BookingSeeder extends Seeder
                 'customer_name' => 'Linda Suryanto',
                 'customer_email' => 'linda.suryanto@email.com',
                 'customer_phone' => '08198765432',
-                'event_type_id' => $eventTypes->firstWhere('name', 'Engagement')?->id ?? 2,
+                'event_type_id' => $eventTypes->firstWhere('name', 'Engagement')?->id ?? $fallbackEventTypeId,
                 'start_date' => '2025-07-12',
                 'end_date' => '2025-07-12',
                 'start_time' => '17:00',
@@ -113,7 +114,7 @@ class BookingSeeder extends Seeder
                 'customer_name' => 'Yusuf Rahman',
                 'customer_email' => 'yusuf.rahman@company.com',
                 'customer_phone' => '08176543210',
-                'event_type_id' => $eventTypes->firstWhere('name', 'Acara Sosial/Charity')?->id ?? 19,
+                'event_type_id' => $eventTypes->firstWhere('name', 'Acara Sosial/Charity')?->id ?? $fallbackEventTypeId,
                 'start_date' => '2025-08-17',
                 'end_date' => '2025-08-17',
                 'start_time' => '08:00',

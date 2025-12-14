@@ -45,7 +45,11 @@ class ArticleResource extends Resource
                     ->relationship('category', 'name') 
                     ->searchable()
                     ->preload()
-                    ->required(),
+                    ->required()
+                    ->createOptionForm([
+                        TextInput::make('name')->label('Nama Kategori')->required(),
+                        TextInput::make('slug')->label('Slug')->required(),
+                    ]),
                 FileUpload::make('thumbnail')
                     ->image()
                     ->disk('public')

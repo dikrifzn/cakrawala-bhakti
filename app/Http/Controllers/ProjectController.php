@@ -12,12 +12,16 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::select('id', 'project_title', 'date')
-            ->with(['images' => function ($query) {
-                $query->select('id', 'project_id', 'image');
-            }])
+        $projects = Project::select('id', 'project_title', 'client_name', 'location', 'date', 'images')
             ->orderByDesc('date')
             ->paginate(6);
+
+        $projects->getCollection()->transform(function ($project) {
+            if (is_array($project->images)) {
+                $project->images = array_slice($project->images, 0, 10);
+            }
+            return $project;
+        });
         
         return view('pages.project.index', compact('projects'));
     }
@@ -27,7 +31,6 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        $project->load('images');
         return view('pages.project.detail', compact('project'));
     }
 }

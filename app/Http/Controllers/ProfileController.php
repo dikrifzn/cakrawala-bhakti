@@ -9,18 +9,12 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-    /**
-     * Show the profile edit form
-     */
     public function edit()
     {
         $user = Auth::user();
         return view('pages.profile.edit', compact('user'));
     }
 
-    /**
-     * Update user profile
-     */
     public function update(Request $request)
     {
         $user = Auth::user();
@@ -32,7 +26,6 @@ class ProfileController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        // Update user data
         $user->name = $validated['name'];
         $user->email = $validated['email'];
         
@@ -45,9 +38,6 @@ class ProfileController extends Controller
         return redirect()->route('profile.edit')->with('success', 'Profil berhasil diperbarui');
     }
 
-    /**
-     * Show user bookings
-     */
     public function bookings()
     {
         $user = Auth::user();
@@ -59,23 +49,17 @@ class ProfileController extends Controller
         return view('pages.profile.bookings', compact('bookings', 'user'));
     }
 
-    /**
-     * Show booking detail
-     */
     public function showBooking($id)
     {
         $booking = Booking::findOrFail($id);
         
-        // Ensure user can only view their own bookings
         if ($booking->user_id !== Auth::id()) {
             abort(403, 'Unauthorized access');
         }
 
-        // Load relationships with filtered services
         $booking->load([
             'eventType', 
             'services' => function($query) {
-                // Only show services created by admin or current user
                 $query->where(function($q) {
                     $q->whereHas('creator', function($subQuery) {
                         $subQuery->where('role', 'admin');

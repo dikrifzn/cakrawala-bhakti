@@ -46,7 +46,7 @@ class BookingResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'event_name';
     protected static ?string $navigationLabel = 'Pemesanan';
-    protected static string | UnitEnum | null $navigationGroup = 'Booking';
+    protected static string | UnitEnum | null $navigationGroup = 'Pemesanan';
     protected ?string $heading = 'Custom Page Heading';
     protected static ?int $navigationSort = 1;
 
@@ -136,7 +136,7 @@ class BookingResource extends Resource
                         Select::make('service_id')
                             ->label('Layanan')
                             ->options(function ($record, $get) {
-                                $booking = $get('../../'); // Get parent record (booking)
+                                $booking = $get('../../');
                                 $bookingRecord = $record?->booking ?? Booking::find($booking['id'] ?? null);
                                 
                                 return Service::where(function ($query) use ($bookingRecord) {
