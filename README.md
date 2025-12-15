@@ -1,52 +1,383 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# 🎉 Cakrawala Bhakti - Event Management Platform
 
-## About Laravel
+**Professional event organizer management platform built with Laravel 12 & Filament 4**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+[![Laravel](https://img.shields.io/badge/Laravel-12.0-FF2D20?style=flat-square&logo=laravel)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=flat-square&logo=php)](https://php.net)
+[![Filament](https://img.shields.io/badge/Filament-4.0-9333EA?style=flat-square&logo=laravel)](https://filamentphp.com)
+[![MySQL](https://img.shields.io/badge/MySQL-5.7%2B-4479A1?style=flat-square&logo=mysql)](https://mysql.com)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+[Features](#-fitur-utama) • [Quick Start](#-quick-start) • [Tech Stack](#-tech-stack) • [Documentation](#-dokumentasi) • [Contact](#-contact)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+</div>
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 📋 Tentang Project
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Cakrawala Bhakti** adalah platform manajemen event organizer yang komprehensif dan user-friendly. Program ini dikembangkan sebagai bagian dari pemenuhan Kerja Praktik Fakultas Ilmu Komputer Universitas Kuningan, dengan tujuan membantu pengelolaan event secara lebih efektif, terstruktur, dan terintegrasi.
 
-## Laravel Sponsors
+Platform ini memungkinkan:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+✅ Pelanggan untuk melakukan **pemesanan event dan layanan** secara online <br>
+✅ Admin untuk mengelola semua aspek bisnis melalui **dashboard Filament** <br>
+✅ Portfolio **showcase dengan galeri project dan artikel blog** <br>
+✅ Sistem notifikasi email otomatis untuk bookings <br>
+✅ Responsive design yang optimal di semua device <br>
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🚀 Fitur Utama
 
-## Contributing
+### 🏠 Public Website
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+-   **Homepage** dengan hero section, about, services showcase, dan CTA
+-   **Article Blog** dengan category filtering dan search
+-   **Project Portfolio** dengan masonry gallery dan lightbox
+-   **Booking System** - customer bisa pesan event dengan live pricing
+-   **Responsive Design** - optimal di mobile, tablet, desktop
+-   **Smooth Animations** - AOS scroll animations di setiap section
 
-## Code of Conduct
+### 🔐 Customer Features
+
+-   **User Authentication** - register, login, password reset
+-   **Booking Management** - lihat & track semua bookings
+-   **Profile Management** - edit profile & password
+-   **Email Notifications** - instant notifications untuk setiap update
+
+### 👨‍💼 Admin Panel (Filament)
+
+-   **Dashboard** dengan booking stats & quick actions
+-   **Booking Management** - approve/reject dengan email notifications
+-   **Service Management** - CRUD services dengan image upload
+-   **Content Management** - manage articles, projects, portfolio
+-   **Site Settings** - customize company info & social media
+-   **Export Features** - export bookings ke PDF/Excel
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer            | Technology                    |
+| ---------------- | ----------------------------- |
+| **Backend**      | Laravel 12 (PHP 8.2+)         |
+| **Admin Panel**  | Filament 4 (TALL Stack)       |
+| **Frontend**     | Blade + Vite + Tailwind CSS 4 |
+| **Database**     | MySQL 5.7+                    |
+| **JavaScript**   | Alpine.js 3, Swiper 11        |
+| **Animations**   | AOS.js 2.3.1                  |
+| **Email**        | Laravel Mail + Queue          |
+| **File Storage** | Local filesystem (S3 ready)   |
+
+---
+
+## ⚡ Quick Start
+
+### Prerequisites
+
+-   PHP 8.2+
+-   Composer
+-   Node.js 16+
+-   MySQL 5.7+
+-   Git
+
+### Installation
+
+```bash
+# 1. Clone repository
+git clone https://github.com/dikrifzn/cakrawala-bhakti.git
+cd cakrawala-bhakti
+
+# 2. Install dependencies
+composer install
+npm install
+
+# 3. Setup environment
+cp .env.example .env
+php artisan key:generate
+
+# 4. Configure database di .env
+DB_DATABASE=cakrawala
+DB_USERNAME=root
+DB_PASSWORD=
+
+# 5. Run migrations & seed
+php artisan migrate:fresh --seed
+
+# 6. Build assets
+npm run build
+
+# 7. Create storage symlink
+php artisan storage:link
+
+# 8. Better filament development
+php artisan icons:cache
+
+# ✅ Done! Aplikasi siap di-develop
+```
+
+### Running Development Server
+
+```bash
+# Terminal 1 - Jalankan 4 proses sekaligus
+composer dev
+
+# Atau jalankan secara terpisah:
+php artisan serve              # http://localhost:8000
+php artisan queue:work         # Process notifications
+npm run dev                    # Compile assets
+php artisan pail               # View logs
+```
+
+### Access Points
+
+| Role                   | URL                         | Email                  | Password   |
+| ---------------------- | --------------------------- | ---------------------- | ---------- |
+| **Website**            | http://localhost:8000       | -                      | -          |
+| **Admin Panel**        | http://localhost:8000/admin | `admin@cakrawala.com`    | `admin123` |
+| **Manager Panel** | http://localhost:8000/manager       | `manager@cakrawala.com` | `manager123` |
+| **Customer** (Testing) | http://localhost:8000       | `user@cakrawala.com` | `user123` |
+---
+<br>
+
+> 💡 **Tip**: Jika ingin testing booking, gunakan akun user. Akun admin untuk manajemen di panel. dan Akun manager untuk Laporan di panel
+
+---
+
+## 📁 Project Structure
+
+```
+cakrawala-bhakti/
+├── app/
+│   ├── Filament/              # Admin panel components
+│   ├── Http/Controllers/      # Page controllers
+│   ├── Models/                # 13 Eloquent models
+│   ├── Notifications/         # Email notifications
+│   └── Helpers/               # ImageHelper, dll
+├── resources/
+│   ├── views/                 # Blade templates
+│   ├── css/                   # Tailwind styles
+│   └── js/                    # Alpine.js
+├── database/
+│   ├── migrations/            # Database schemas
+│   ├── factories/             # Test data factories
+│   └── seeders/               # Initial data
+├── routes/
+│   └── web.php                # Public routes
+└── storage/                   # File uploads
+
+```
+
+## 🎯 Main Routes
+
+### Public Pages
+
+```
+GET  /                    # Homepage
+GET  /about               # About page
+GET  /article             # Articles list
+GET  /article/{article}   # Article detail
+GET  /project             # Projects list
+GET  /project/{project}   # Project detail
+```
+
+### Booking (Protected)
+
+```
+GET  /booking             # Booking form
+POST /booking             # Submit booking
+GET  /booking/success     # Success page
+```
+
+### Profile (Protected)
+
+```
+GET  /profile             # Edit profile
+PUT  /profile             # Update profile
+GET  /profile/bookings    # My bookings
+GET  /profile/bookings/{id} # Booking detail
+```
+
+### Admin Panel
+
+```
+GET  /admin               # Dashboard
+GET  /admin/bookings      # Manage bookings
+GET  /admin/layanan       # Manage services
+GET  /admin/articles      # Manage articles
+GET  /admin/projects      # Manage projects
+... dan resource lainnya
+```
+
+---
+
+## 🔧 Configuration
+
+### Environment Variables
+
+```env
+# App
+APP_NAME="Cakrawala Bhakti"
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+# Database
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=cakrawala
+DB_USERNAME=root
+DB_PASSWORD=
+
+# Mail (untuk development)
+
+MAIL_MAILER=smtp
+# Atau gunakan mailtrap/mailgun
+MAIL_SCHEME=null
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=hello@example.com
+MAIL_PASSWORD=yourapppassword
+MAIL_FROM_ADDRESS=hello@example.com
+MAIL_FROM_NAME="${APP_NAME}"
+MAIL_ENCRYPTION=tls
+
+# Queue
+QUEUE_CONNECTION=database
+
+# Storage
+FILESYSTEM_DISK=local
+```
+
+---
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+composer test
+
+# Run specific test
+php artisan test tests/Feature/BookingTest.php
+
+# With coverage
+php artisan test --coverage
+```
+
+---
+
+## 📦 Database Models
+
+13 core models dengan relationships:
+
+-   **User** - Admin & Customer accounts
+-   **Booking** - Event orders
+-   **BookingService** - Services dalam booking
+-   **Service** - Available services
+-   **EventType** - Tipe acara
+-   **Project** - Portfolio projects
+-   **Article** - Blog articles
+-   **ArticleCategory** - Article categories
+-   **HeroBanner** - Homepage hero section
+-   **AboutSection** - About section
+-   **WhyChooseUs** - Why choose us section
+-   **CallToAction** - CTA section
+-   **SiteSetting** - Global site configuration
+
+---
+
+## 🚀 Deployment
+
+```bash
+# 1. Prepare production
+php artisan config:cache
+php artisan route:cache
+npm run build
+
+# 2. Set environment
+# .env: APP_ENV=production, APP_DEBUG=false
+
+# 3. Run migrations
+php artisan migrate --force
+
+# 4. Setup queue worker
+php artisan queue:work
+
+# 5. Setup Laravel Horizon (optional for queue monitoring)
+php artisan horizon
+```
+
+**Server Requirements:**
+
+-   PHP 8.2+
+-   Nginx/Apache
+-   MySQL 5.7+
+-   Composer
+-   Node.js (untuk build only)
+
+---
+
+## 🐛 Troubleshooting
+
+### Storage symlink error
+
+```bash
+php artisan storage:link
+```
+
+### Email not sending
+
+```bash
+# Check queue is running
+php artisan queue:work
+
+# Or use sync driver temporarily
+QUEUE_CONNECTION=sync
+```
+
+### Database migration failed
+
+```bash
+# Fresh reset (development only)
+php artisan migrate:fresh --seed
+```
+
+---
+
+## 📞 Contact & Support
+
+**PT Cakrawala Bhakti**
+
+📧 Email: info@cakrawalabhakti.com <br>
+📱 Phone: (021) 1234-5678 <br>
+📍 Address: Jl. Sudirman No. 123, Jakarta Pusat <br>
+📱 Social Media:
+
+-   Instagram: [@cakrawalabhakti](https://instagram.com/cakrawalabhakti)
+-   Facebook: [Cakrawala Bhakti](https://facebook.com/cakrawalabhakti)
+-   TikTok: [@cakrawalabhakti](https://tiktok.com/@cakrawalabhakti)
+
+---
+
+## 📄 License
+
+MIT License - lihat file [LICENSE](LICENSE)
+
+---
+
+<div align="center">
+
+**Made with ❤️ by Kelompok 20 Kerja Praktik**
+
+⭐ Jika project ini bermanfaat, silakan star repository ini!
+
+[↑ Kembali ke atas](#-cakrawala-bhakti---event-management-platform)
+
+</div>
 
 In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 

@@ -1,2 +1,10 @@
 *
 !.gitignore
+!about/default-thumbnail.png
+!articles/default-thumbnail.png
+!hero-banners/default-thumbnail.png
+!projects/default-thumbnail.png
+!cta/default-thumbnail.png
+!services/default-thumbnail.png
+!why-choose-us/default-thumbnail.png
+!logo-white.png
