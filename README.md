@@ -18,13 +18,15 @@
 
 ## 📋 Tentang Project
 
-**Cakrawala Bhakti** adalah platform manajemen event organizer yang comprehensive dan user-friendly. Platform ini memungkinkan:
+**Cakrawala Bhakti** adalah platform manajemen event organizer yang komprehensif dan user-friendly. Program ini dikembangkan sebagai bagian dari pemenuhan Kerja Praktik Fakultas Ilmu Komputer Universitas Kuningan, dengan tujuan membantu pengelolaan event secara lebih efektif, terstruktur, dan terintegrasi.
 
-✅ Pelanggan untuk melakukan **pemesanan event dan layanan** secara online
-✅ Admin untuk mengelola semua aspek bisnis melalui **dashboard Filament**
-✅ Portfolio **showcase dengan galeri project dan artikel blog**
-✅ Sistem notifikasi email otomatis untuk bookings
-✅ Responsive design yang optimal di semua device
+Platform ini memungkinkan:
+
+✅ Pelanggan untuk melakukan **pemesanan event dan layanan** secara online <br>
+✅ Admin untuk mengelola semua aspek bisnis melalui **dashboard Filament** <br>
+✅ Portfolio **showcase dengan galeri project dan artikel blog** <br>
+✅ Sistem notifikasi email otomatis untuk bookings <br>
+✅ Responsive design yang optimal di semua device <br>
 
 ---
 
@@ -86,7 +88,7 @@
 
 ```bash
 # 1. Clone repository
-git clone <repository-url>
+git clone https://github.com/dikrifzn/cakrawala-bhakti.git
 cd cakrawala-bhakti
 
 # 2. Install dependencies
@@ -110,6 +112,9 @@ npm run build
 
 # 7. Create storage symlink
 php artisan storage:link
+
+# 8. Better filament development
+php artisan icons:cache
 
 # ✅ Done! Aplikasi siap di-develop
 ```
@@ -229,8 +234,17 @@ DB_USERNAME=root
 DB_PASSWORD=
 
 # Mail (untuk development)
-MAIL_MAILER=log
+
+MAIL_MAILER=smtp
 # Atau gunakan mailtrap/mailgun
+MAIL_SCHEME=null
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=hello@example.com
+MAIL_PASSWORD=yourapppassword
+MAIL_FROM_ADDRESS=hello@example.com
+MAIL_FROM_NAME="${APP_NAME}"
+MAIL_ENCRYPTION=tls
 
 # Queue
 QUEUE_CONNECTION=database
@@ -338,10 +352,9 @@ php artisan migrate:fresh --seed
 
 **PT Cakrawala Bhakti**
 
-📧 Email: info@cakrawalabhakti.com
-📱 Phone: (021) 1234-5678
-📍 Address: Jl. Sudirman No. 123, Jakarta Pusat
-
+📧 Email: info@cakrawalabhakti.com <br>
+📱 Phone: (021) 1234-5678 <br>
+📍 Address: Jl. Sudirman No. 123, Jakarta Pusat <br>
 📱 Social Media:
 
 -   Instagram: [@cakrawalabhakti](https://instagram.com/cakrawalabhakti)
