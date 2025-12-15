@@ -32,6 +32,9 @@ class EditBooking extends EditRecord
             $admins = \App\Models\User::where('role', 'admin')->get();
             Notification::send($admins, new BookingStatusUpdatedNotification($this->record));
         }
+
+        // Notifikasi sukses
+        $this->notify('success', 'Pemesanan berhasil diperbarui.');
     }
 
     protected function getHeaderActions(): array

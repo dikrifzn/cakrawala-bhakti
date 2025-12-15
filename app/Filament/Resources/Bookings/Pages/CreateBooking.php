@@ -34,5 +34,8 @@ class CreateBooking extends CreateRecord
                 ]);
             }
         }
+
+        // Notifikasi sukses
+        $this->notify('success', 'Pemesanan berhasil dibuat.');
     }
 }

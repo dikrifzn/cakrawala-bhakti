@@ -19,7 +19,7 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 space-y-14">
 
         @forelse($projects as $project)
-        <div class="group transition-all duration-300">
+        <div class="group transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
             <h4 class="font-semibold mb-4 font-poppins">
                 <a href="{{ route('project.show', $project) }}" class="hover:text-yellow-500 transition">{{ $project->project_title }}</a>
             </h4>

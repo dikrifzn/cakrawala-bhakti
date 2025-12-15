@@ -56,8 +56,8 @@
 
     <!-- Articles Grid -->
     <div class="max-w-6xl mx-auto px-4 sm:px-6 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @forelse($articles as $article)
-        <a href="{{ route('article.show', $article) }}">
+        @forelse($articles as $i => $article)
+        <a href="{{ route('article.show', $article) }}" data-aos="fade-up" data-aos-delay="{{ 100 + ($i * 50) }}">
             <div class="bg-white shadow-sm rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
                 <div class="bg-gray-300 h-48 mb-4 rounded-md overflow-hidden">
                     @if($article->thumbnail)

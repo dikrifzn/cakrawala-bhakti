@@ -19,8 +19,9 @@ class SiteSettingSeeder extends Seeder
         
         SiteSetting::create([
             'site_name' => 'Cakrawala Bhakti',
-            'tagline' => 'Event organizer terpercaya untuk segala kebutuhan acara Anda',
-            'footer_description' => 'Cakrawala Bhakti adalah perusahaan event organizer yang berdedikasi untuk menciptakan pengalaman acara yang tak terlupakan dengan tim profesional dan berpengalaman lebih dari 15 tahun di industri.',
+            'tagline' => 'Event Organizer & Planner Profesional',
+            'footer_description' => 'Kami membantu Anda menciptakan acara berkesanmulai dari konsep, perencanaan, hingga pelaksanaan.
+Bersama Cakrawala, setiap momen menjadi istimewa.',
             'address' => 'Jl. Sudirman No. 123, Jakarta Pusat',
             'phone' => '(021) 1234-5678',
             'email' => 'info@cakrawalabhakti.com',

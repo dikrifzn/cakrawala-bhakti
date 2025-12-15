@@ -1,6 +1,6 @@
 @extends('layouts.app') 
 @section('content')
-<section class="py-20 flex flex-col justify-center items-center px-5">
+<section class="py-20 flex flex-col justify-center items-center px-5" data-aos="fade-up" data-aos-delay="100">
     <div class="w-full max-w-5xl bg-white shadow-lg rounded-2xl p-10">
         <form method="POST" action="{{ route('booking.store') }}">
             @csrf

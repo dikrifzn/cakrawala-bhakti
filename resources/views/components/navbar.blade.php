@@ -77,7 +77,7 @@
             @else
                 <button
                     onclick="openLoginModal()"
-                    class="px-4 py-2 bg-yellow-400 text-black rounded-md font-semibold hover:bg-yellow-300"
+                    class="px-4 py-2 bg-yellow-400 text-black rounded-md font-semibold hover:bg-yellow-300 cursor-pointer"
                 >
                     Masuk
                 </button>

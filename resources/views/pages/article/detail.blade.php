@@ -6,7 +6,7 @@
 
 @section('content')
 
-<section class="py-20 flex flex-col justify-center items-center m-5">
+<section class="py-20 flex flex-col justify-center items-center m-5" data-aos="fade-up" data-aos-delay="100">
     <div class="max-w-[850px] mt-3">
         <a href="{{ route('article.index') }}" class="text-black hover:text-yellow-500 mb-4 inline-block">
             ← Kembali ke Artikel
@@ -50,8 +50,8 @@
             </div>
 
             <div class="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                @foreach($relatedArticles as $relatedArticle)
-                    <div class="bg-white shadow-sm rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
+                @foreach($relatedArticles as $j => $relatedArticle)
+                    <div class="bg-white shadow-sm rounded-lg p-4 hover:shadow-lg transition-shadow duration-300" data-aos="fade-up" data-aos-delay="{{ 100 + ($j * 50) }}">
                         <div class="bg-gray-300 h-48 mb-4 rounded-md overflow-hidden">
                             @if($relatedArticle->thumbnail)
                                 <img src="{{ ImageHelper::image($relatedArticle->thumbnail, 'default-thumbnail.png') }}" 

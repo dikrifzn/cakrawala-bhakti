@@ -7,7 +7,7 @@
         <div>
             <img src="{{ ImageHelper::image($siteSetting?->logo_footer, 'logo-white.png') }}" class="h-10 mb-4" />
             <p class="text-sm leading-relaxed mb-4 font-poppins font-light">
-                <span class="font-semibold text-xl">{{ $siteSetting?->site_name ?? 'Cakrawala Event Organizer' }}</span>
+                <span class="font-semibold text-xl">{{ $siteSetting?->tagline ?? 'Cakrawala Event Organizer' }}</span>
                 <br/>{{ $siteSetting?->footer_description ?? 'Kami membantu Anda menciptakan acara berkesanmulai dari konsep, perencanaan, hingga pelaksanaan. Bersama Cakrawala, setiap momen menjadi istimewa.' }}
             </p>
             <div class="flex items-center gap-4 text-xl mt-6">

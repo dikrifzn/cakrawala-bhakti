@@ -6,7 +6,7 @@
 
 @section('content')
 
-<section class="py-20 bg-gray-50">
+<section class="py-20 bg-gray-50" data-aos="fade-up" data-aos-delay="100">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 mb-10">
         <a href="{{ route('project.index') }}" class="text-black hover:text-yellow-500 mb-4 inline-block">
             ← Kembali ke Proyek
@@ -29,7 +29,7 @@
         </div>
     @endif
 
-    <div id="gallery" class="max-w-6xl mx-auto px-4 sm:px-6 columns-2 sm:columns-3 md:columns-4 gap-4">
+    <div id="gallery" class="max-w-6xl mx-auto px-4 sm:px-6 columns-2 sm:columns-3 md:columns-4 gap-4" data-aos="zoom-in-up" data-aos-delay="200">
         @php $images = is_array($project->images) ? $project->images : []; @endphp
         @forelse($images as $imagePath)
             @php

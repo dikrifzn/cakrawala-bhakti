@@ -267,7 +267,7 @@
         <p class="text-sm font-semibold tracking-wide mb-2 font-poppins">Our Articles</p>
         <h2 class="text-3xl font-bold font-poppins">Latest Articles</h2>
         <p class="max-w-xl text-gray-500 text-sm font-dmsans font-medium mt-2">
-            Sebuah festival komunitas yang menghadirkan ratusan pengunjung dan puluhan tenant lokal. Tim Cakrawala menangani seluruh perencanaan, koordinasi, hingga produksi acara agar berjalan lancar dan berkesan.
+            Temukan berbagai tips, inspirasi, dan cerita menarik seputar dunia event management. Dari ide konsep acara hingga tren dekorasi terbaru semua kami bagikan untuk membantu Anda menciptakan event terbaik.
         </p>
     </div>
 
