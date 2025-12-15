@@ -1,0 +1,159 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Booking;
+use App\Models\Service;
+use App\Models\BookingService;
+use App\Models\SiteSetting;
+use App\Models\User;
+use App\Notifications\BookingCreatedNotification;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Auth;
+
+class BookingController extends Controller
+{
+    public function index()
+    {
+        $adminServices = Service::where(function ($query) {
+            $query->whereHas('creator', function ($q) {
+                $q->where('role', 'admin');
+            })
+            ->orWhereNull('created_by');
+        })->get();
+        
+        return view('pages.order.index', ['adminServices' => $adminServices]);
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'customer_name' => 'required|string|max:255',
+            'customer_email' => 'required|email|max:255',
+            'customer_phone' => 'nullable|string|max:50',
+            'event_name' => 'required|string|max:255',
+            'event_type_id' => 'required|integer|exists:event_types,id',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+            'start_time' => 'nullable|string',
+            'end_time' => 'nullable|string',
+            'total_days' => 'nullable|string',
+            'location' => 'nullable|string|max:500',
+            'notes' => 'nullable|string',
+            'include_permit' => 'nullable|boolean',
+            'services' => 'nullable|array',
+            'services.*' => 'nullable|string',
+        ]);
+
+        $startDate = isset($data['start_date']) ? substr($data['start_date'], 0, 10) : null;
+        $endDate = isset($data['end_date']) ? substr($data['end_date'], 0, 10) : null;
+
+        $parseTime = function($t) {
+            if (!$t) return null;
+            $t = trim($t);
+
+            if (preg_match('/^(\d{1,2}):(\d{2}) ?([AP]M)?$/i', $t, $m)) {
+                $h = (int)$m[1];
+                $min = (int)$m[2];
+                $ampm = isset($m[3]) ? strtoupper($m[3]) : null;
+                if ($ampm === 'PM' && $h < 12) $h += 12;
+                if ($ampm === 'AM' && $h === 12) $h = 0;
+                return sprintf('%02d:%02d:00', $h, $min);
+            }
+
+            if (preg_match('/^(\d{1,2}):(\d{2})(:(\d{2}))?$/', $t, $m)) {
+                $h = (int)$m[1];
+                $min = (int)$m[2];
+                $sec = isset($m[4]) ? (int)$m[4] : 0;
+                return sprintf('%02d:%02d:%02d', $h, $min, $sec);
+            }
+            return null;
+        };
+        $startTime = isset($data['start_time']) ? $parseTime($data['start_time']) : null;
+        $endTime = isset($data['end_time']) ? $parseTime($data['end_time']) : null;
+
+        $totalDays = null;
+        if (isset($data['total_days']) && $data['total_days']) {
+            preg_match('/\d+/', $data['total_days'], $matches);
+            $totalDays = isset($matches[0]) ? (int)$matches[0] : null;
+        }
+
+        $booking = Booking::create([
+            'user_id' => Auth::id(),
+            'customer_name' => $data['customer_name'],
+            'customer_email' => $data['customer_email'],
+            'customer_phone' => $data['customer_phone'] ?? null,
+            'event_type_id' => $data['event_type_id'],
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'total_days' => $totalDays,
+            'location' => $data['location'] ?? null,
+            'notes' => $data['notes'] ?? null,
+            'include_permit' => $data['include_permit'] ?? false,
+            'permit_price' => 0,
+            'total_price' => 0,
+            'status' => 'pending',
+        ]);
+
+        $total = 0;
+
+        $services = $request->input('services', []);
+        foreach ($services as $serviceValue) {
+
+            $name = $serviceValue;
+            $price = null;
+
+            if (is_string($serviceValue) && str_contains($serviceValue, '|')) {
+                [$name, $maybePrice] = explode('|', $serviceValue, 2);
+                if (is_numeric($maybePrice)) $price = (int) $maybePrice;
+            }
+
+            $service = Service::where('service_name', $name)->first();
+            if (! $service) {
+
+                $service = Service::create([
+                    'service_name' => $name,
+                    'short_description' => 'Custom service (created at booking)',
+                    'price' => $price ?? 0,
+                    'created_by' => Auth::id(),
+                ]);
+            }
+
+            $finalPrice = $price ?? ($service->price ?? 0);
+            $total += (int) $finalPrice;
+
+            BookingService::create([
+                'booking_id' => $booking->id,
+                'service_id' => $service->id,
+                'price' => $finalPrice,
+                'quantity' => 1,
+            ]);
+        }
+
+        $booking->total_price = $total;
+        $booking->save();
+
+        Notification::route('mail', $booking->customer_email)
+            ->notify(new BookingCreatedNotification($booking));
+
+        $adminUsers = \App\Models\User::whereIn('role', ['admin', 'manager'])->get();
+        Notification::send($adminUsers, new BookingCreatedNotification($booking));
+
+        $settings = SiteSetting::first();
+        
+        if ($settings && $settings->admin_email) {
+            Notification::route('mail', $settings->admin_email)
+                ->notify(new BookingCreatedNotification($booking));
+        }
+
+        if ($settings && $settings->manager_email) {
+            Notification::route('mail', $settings->manager_email)
+                ->notify(new BookingCreatedNotification($booking));
+        }
+
+        return redirect('/booking/success')->with('booking', $booking);
+    }
+}
