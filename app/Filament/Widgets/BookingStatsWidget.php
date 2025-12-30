@@ -11,14 +11,21 @@ class BookingStatsWidget extends BaseWidget
     protected function getStats(): array
     {
         $totalBookings = Booking::count();
-        $pendingBookings = Booking::where('status', 'pending')->count();
-        $approvedBookings = Booking::where('status', 'approved')->count();
-        $finishedBookings = Booking::where('status', 'finished')->count();
+        $pendingBookings = Booking::where('admin_status', 'review')->count();
+        $approvedBookings = Booking::where('admin_status', 'approved')->count();
+        $finishedBookings = Booking::where('customer_status', 'final_approved')->count();
         
-        $totalRevenue = Booking::whereIn('status', ['approved', 'finished'])->sum('total_price');
-        $monthlyRevenue = Booking::whereIn('status', ['approved', 'finished'])
+        $totalRevenue = Booking::where('customer_status', 'final_approved')
+            ->with('details')
+            ->get()
+            ->sum(fn ($b) => $b->details->sum('price'));
+
+        $monthlyRevenue = Booking::where('customer_status', 'final_approved')
             ->whereMonth('created_at', now()->month)
-            ->sum('total_price');
+            ->whereYear('created_at', now()->year)
+            ->with('details')
+            ->get()
+            ->sum(fn ($b) => $b->details->sum('price'));
 
         return [
             Stat::make('Total Booking', $totalBookings)

@@ -9,68 +9,79 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
+    /**
+     * Form edit profil
+     */
     public function edit()
     {
-        $user = Auth::user();
-        return view('pages.profile.edit', compact('user'));
+        return view('pages.profile.edit', [
+            'user' => Auth::user(),
+        ]);
     }
 
+    /**
+     * Update profil user
+     */
     public function update(Request $request)
     {
         $user = Auth::user();
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:20',
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|max:255|unique:users,email,' . $user->id,
+            'phone'    => 'nullable|string|max:20',
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        $user->name = $validated['name'];
+        $user->name  = $validated['name'];
         $user->email = $validated['email'];
-        
+
         if (!empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);
         }
 
         $user->save();
 
-        return redirect()->route('profile.edit')->with('success', 'Profil berhasil diperbarui');
+        return redirect()
+            ->route('profile.edit')
+            ->with('success', 'Profil berhasil diperbarui');
     }
+
+    /**
+     * List booking milik user
+     */
 
     public function bookings()
     {
-        $user = Auth::user();
-        $bookings = Booking::where('user_id', $user->id)
-            ->with(['eventType', 'services'])
+        $bookings = Booking::where('user_id', Auth::id())
             ->orderByDesc('created_at')
             ->paginate(10);
 
-        return view('pages.profile.bookings', compact('bookings', 'user'));
+        // Bisa tambahkan eager loading untuk rincian, gantt, dsb jika sudah ada relasi/model
+
+        return view('pages.profile.bookings', [
+            'user'     => Auth::user(),
+            'bookings' => $bookings,
+        ]);
     }
 
+    /**
+     * Detail booking
+     */
     public function showBooking($id)
     {
-        $booking = Booking::findOrFail($id);
-        
-        if ($booking->user_id !== Auth::id()) {
-            abort(403, 'Unauthorized access');
-        }
+        $booking = Booking::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
 
-        $booking->load([
-            'eventType', 
-            'services' => function($query) {
-                $query->where(function($q) {
-                    $q->whereHas('creator', function($subQuery) {
-                        $subQuery->where('role', 'admin');
-                    })
-                    ->orWhere('created_by', Auth::id())
-                    ->orWhereNull('created_by');
-                });
-            },
-            'bookingServices.service'
+        // Contoh: eager load rincian, gantt, PIC jika sudah ada relasi/model
+        // $booking->load(['details', 'gantt', 'pic']);
+
+        return view('pages.profile.booking-detail', [
+            'booking' => $booking,
+            // 'details' => $booking->details,
+            // 'gantt' => $booking->gantt,
+            // 'pic' => $booking->pic,
         ]);
-
-        return view('pages.profile.booking-detail', compact('booking'));
     }
 }

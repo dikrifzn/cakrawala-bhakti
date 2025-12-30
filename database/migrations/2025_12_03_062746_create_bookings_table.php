@@ -17,25 +17,22 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             
             $table->string('customer_name');
-            $table->string('customer_email')->nullable();
-            $table->string('customer_phone')->nullable();
+            $table->string('customer_email');
+            $table->string('customer_phone');
 
-            $table->foreignId('event_type_id')->constrained('event_types')->cascadeOnDelete();
+            $table->string('proposal_file');
+            $table->text('proposal_description')->nullable();
 
+            $table->string('event_name');
             $table->date('start_date');
             $table->date('end_date');
-            $table->time('start_time')->nullable();
-            $table->time('end_time')->nullable();
 
-            $table->integer('total_days')->default(1);
-
-            $table->string('location')->nullable();
+            $table->string('location');
 
             $table->text('notes')->nullable();
 
-            $table->bigInteger('total_price')->default(0);
-
-            $table->enum('status', ['pending', 'approved', 'rejected', 'finished'])->default('pending');
+            $table->enum('admin_status', ['review','approved','rejected','pricing_sent','on_process','finished','details_sent','gantt_uploaded'])->default('review')->notnull();
+            $table->enum('customer_status', ['submitted', 'review', 'approved', 'rejected', 'details_approved', 'final_approved'])->default('review')->notnull();
             $table->timestamps();
         });
     }

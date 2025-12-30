@@ -6,24 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            $table->boolean('include_permit')->default(false)->after('notes');
-            $table->bigInteger('permit_price')->default(0)->after('include_permit');
+            $table->string('gantt_chart')->nullable();
+            $table->string('approval_file')->nullable();
+            $table->string('pic_contact')->nullable();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('bookings', function (Blueprint $table) {
-            $table->dropColumn(['include_permit', 'permit_price']);
+            $table->dropColumn(['gantt_chart', 'approval_file', 'pic_contact']);
         });
     }
 };

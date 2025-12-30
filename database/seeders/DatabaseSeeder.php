@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
             ArticleSeeder::class,
             ProjectSeeder::class,
             EventTypeSeeder::class,
-            BookingSeeder::class,
+            // BookingSeeder::class,
             SiteSettingSeeder::class,
         ]);
 
@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
             'projects',
             'project_images',
             'event_types',
-            'bookings',
+            // 'bookings',
             'landing_sections',
             'site_settings',
         ];

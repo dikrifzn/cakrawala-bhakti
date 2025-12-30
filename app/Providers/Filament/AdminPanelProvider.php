@@ -25,6 +25,9 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Http\Middleware\EnsureAdminRole;
 use App\Http\Middleware\RestrictAdminLogin;
 use Filament\Navigation\NavigationGroup;
+use Filament\Support\Assets\Css;
+use Illuminate\Support\Facades\Vite;
+
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -36,6 +39,9 @@ class AdminPanelProvider extends PanelProvider
             ->favicon(asset('img/single-logo.png'))
             ->id('admin')
             ->path('admin')
+            ->assets([
+                Css::make('tailwind', Vite::asset('resources/css/app.css')),
+            ])
             ->login()
             ->breadcrumbs(false)
             ->colors([
@@ -55,7 +61,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                AccountWidget::class,
                 BookingStatsWidget::class,
                 BookingChartWidget::class,
                 LatestBookingsWidget::class,

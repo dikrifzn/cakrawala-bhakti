@@ -10,9 +10,7 @@ class BookingStatusUpdatedNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(public $booking)
-    {
-    }
+    public function __construct(public $booking) {}
 
     public function via(object $notifiable): array
     {
@@ -22,9 +20,9 @@ class BookingStatusUpdatedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $status = ucfirst($this->booking->status ?? 'pending');
-        
+
         return (new MailMessage)
-            ->subject('Update Status Booking #' . str_pad($this->booking->id, 6, '0', STR_PAD_LEFT) . ' - ' . $status)
+            ->subject('Update Status Booking #'.str_pad($this->booking->id, 6, '0', STR_PAD_LEFT).' - '.$status)
             ->view('emails.booking.status-updated', ['booking' => $this->booking]);
     }
 
@@ -36,20 +34,20 @@ class BookingStatusUpdatedNotification extends Notification
             'rejected' => 'Ditolak',
             'finished' => 'Selesai',
         ];
-        
+
         $statusLabel = $statusLabels[$this->booking->status] ?? ucfirst($this->booking->status);
-        
+
         return [
             'format' => 'filament',
             'booking_id' => $this->booking->id,
             'customer_name' => $this->booking->customer_name,
             'status' => $this->booking->status,
-            'message' => 'Status pemesanan ' . $this->booking->customer_name . ' diubah menjadi: ' . $statusLabel,
+            'message' => 'Status pemesanan '.$this->booking->customer_name.' diubah menjadi: '.$statusLabel,
             'actions' => [
                 [
                     'name' => 'view',
                     'label' => 'Lihat Detail',
-                    'url' => route('filament.admin.resources.bookings.edit', ['record' => $this->booking->id]),
+                    'url' => \App\Filament\Resources\Bookings\BookingResource::getUrl('edit', ['record' => $this->booking->id]),
                 ],
             ],
         ];

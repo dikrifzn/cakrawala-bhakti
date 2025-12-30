@@ -90,7 +90,7 @@
                     <td>{{ $startDate }}</td>
                     <td>{{ $endDate }}</td>
                     <td>{{ $b->total_days ?? '-' }}</td>
-                    <td>Rp {{ number_format($b->total_price, 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($b->details->sum('price') ?? 0, 0, ',', '.') }}</td>
                     <td>{{ ucfirst($b->status) }}</td>
                 </tr>
                 

@@ -31,9 +31,9 @@ class LatestBookingsWidget extends BaseWidget
                 Tables\Columns\TextColumn::make('start_date')
                     ->label('Tanggal')
                     ->date('d M Y'),
-                Tables\Columns\TextColumn::make('total_price')
+                Tables\Columns\TextColumn::make('price_total')
                     ->label('Total')
-                    ->money('IDR', locale: 'id'),
+                    ->getStateUsing(fn ($record) => 'Rp ' . number_format($record->details->sum('price') ?? 0, 0, ',', '.')),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->formatStateUsing(fn (string $state) => match ($state) {

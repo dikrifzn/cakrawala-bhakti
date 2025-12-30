@@ -163,7 +163,7 @@
                                 <tr style="background:#fef3c7;">
                                     <td colspan="3" style="padding:16px; font-size:16px; font-weight:700; color:#92400e; text-align:right;">Total Harga:</td>
                                     <td style="padding:16px; font-size:18px; font-weight:700; color:#b45309; text-align:right;">
-                                        Rp {{ number_format($booking->total_price, 0, ',', '.') }}
+                                        Rp {{ number_format($booking->details->sum('price') ?? 0, 0, ',', '.') }}
                                     </td>
                                 </tr>
                             </tfoot>

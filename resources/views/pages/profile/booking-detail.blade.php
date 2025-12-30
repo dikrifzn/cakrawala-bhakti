@@ -3,228 +3,301 @@
 @section('content')
 <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 pt-24">
     <div class="max-w-4xl mx-auto">
+
         {{-- Header --}}
         <div class="mb-8 flex items-center justify-between">
             <div>
-                <a href="{{ route('profile.bookings') }}" class="text-yellow-600 hover:text-yellow-700 font-semibold text-sm flex items-center gap-1 mb-4">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                    Kembali ke Pesanan
+                <a href="{{ route('profile.bookings') }}"
+                   class="text-yellow-600 hover:text-yellow-700 font-semibold text-sm flex items-center gap-1 mb-4">
+                    ← Kembali ke Pesanan
                 </a>
+
                 <h1 class="text-3xl font-bold text-gray-900">Detail Pesanan</h1>
-                <p class="mt-2 text-gray-600">ID Booking: #{{ str_pad($booking->id, 6, '0', STR_PAD_LEFT) }}</p>
+                <p class="mt-2 text-gray-600">
+                    ID Booking: #{{ str_pad($booking->id, 6, '0', STR_PAD_LEFT) }}
+                </p>
             </div>
-            <div>
-                <span class="inline-block px-4 py-2 rounded-full text-sm font-semibold 
-                    @if($booking->status === 'pending') bg-yellow-100 text-yellow-800
-                    @elseif($booking->status === 'approved') bg-blue-100 text-blue-800
-                    @elseif($booking->status === 'finished') bg-green-100 text-green-800
-                    @elseif($booking->status === 'rejected') bg-red-100 text-red-800
-                    @else bg-gray-100 text-gray-800 @endif">
-                    {{ ucfirst($booking->status) }}
-                </span>
-            </div>
+
+            <span class="px-4 py-2 rounded-full text-sm font-semibold
+                @if($booking->customer_status === 'review') bg-yellow-100 text-yellow-800
+                @elseif($booking->customer_status === 'details_approved') bg-blue-100 text-blue-800
+                @elseif($booking->customer_status === 'final_approved') bg-green-100 text-green-800
+                @elseif($booking->customer_status === 'rejected') bg-red-100 text-red-800
+                @else bg-gray-100 text-gray-800 @endif">
+                @if($booking->customer_status === 'details_approved') Rincian Disetujui
+                @elseif($booking->customer_status === 'final_approved') Final Disetujui
+                @else {{ ucfirst($booking->customer_status) }}
+                @endif
+            </span>
         </div>
 
-        {{-- Main Content --}}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {{-- Left Column - Detail --}}
-            <div class="lg:col-span-2 space-y-6">
-                {{-- Event Information --}}
+        {{-- Main --}}
+        <div class="space-y-6">
+
+            {{-- Informasi Acara --}}
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-bold mb-4">Informasi Acara</h2>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Nama Acara</p>
+                        <p class="font-semibold">{{ $booking->event_name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Lokasi</p>
+                        <p class="font-semibold">{{ $booking->location }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Tanggal Mulai</p>
+                        <p class="font-semibold">
+                            {{ \Carbon\Carbon::parse($booking->start_date)->format('d M Y') }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Tanggal Selesai</p>
+                        <p class="font-semibold">
+                            {{ \Carbon\Carbon::parse($booking->end_date)->format('d M Y') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Informasi Pemesan --}}
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-bold mb-4">Informasi Pemesan</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Nama</p>
+                        <p class="font-semibold">{{ $booking->customer_name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Email</p>
+                        <p class="font-semibold">{{ $booking->customer_email }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Telepon</p>
+                        <p class="font-semibold">{{ $booking->customer_phone }}</p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Proposal --}}
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-bold mb-4">Proposal Acara</h2>
+
+                <a href="{{ route('booking.downloadFile', ['booking' => $booking->id, 'type' => 'proposal_file']) }}"
+                   target="_blank"
+                   class="inline-flex items-center gap-2 text-yellow-600 font-semibold hover:underline">
+                    📄 Download Proposal
+                </a>
+            </div>
+
+            {{-- Catatan --}}
+            @if($booking->notes)
                 <div class="bg-white rounded-lg shadow p-6">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4">Informasi Acara</h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-sm text-gray-600 uppercase tracking-wide">Jenis Acara</p>
-                            <p class="text-lg font-semibold text-gray-900 mt-1">{{ $booking->eventType->name ?? '-' }}</p>
+                    <h2 class="text-xl font-bold mb-4">Catatan Tambahan</h2>
+                    <p class="text-gray-700">{{ $booking->notes }}</p>
+                </div>
+            @endif
+
+
+            {{-- Progress Timeline --}}
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-bold mb-6">📈 Progress Status</h2>
+                
+                <div class="space-y-4">
+                    {{-- Step 1: Review Proposal --}}
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full {{ $booking->admin_status !== 'review' ? 'bg-green-500' : 'bg-yellow-400' }} flex items-center justify-center text-white font-bold text-sm">
+                            {{ $booking->admin_status !== 'review' ? '✓' : '1' }}
                         </div>
-                        <div>
-                            <p class="text-sm text-gray-600 uppercase tracking-wide">Nama Acara</p>
-                            <p class="text-lg font-semibold text-gray-900 mt-1">{{ $booking->event_name ?? '-' }}</p>
+                        <div class="flex-grow">
+                            <p class="font-semibold text-gray-900">Admin Review Proposal</p>
+                            <p class="text-sm text-gray-600">Admin sedang mereview proposal acara Anda</p>
+                            @if($booking->admin_status !== 'review')
+                                <p class="text-xs text-green-600 mt-1">✓ Selesai</p>
+                            @endif
                         </div>
-                        <div>
-                            <p class="text-sm text-gray-600 uppercase tracking-wide">Tanggal Mulai</p>
-                            <p class="text-lg font-semibold text-gray-900 mt-1">{{ \Carbon\Carbon::parse($booking->start_date)->format('d M Y') }}</p>
+                    </div>
+
+                    {{-- Step 2: Rincian Jasa --}}
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full {{ in_array($booking->admin_status, ['details_sent', 'gantt_uploaded']) ? 'bg-green-500' : ($booking->admin_status === 'approved' ? 'bg-yellow-400' : 'bg-gray-300') }} flex items-center justify-center text-white font-bold text-sm">
+                            {{ in_array($booking->admin_status, ['details_sent', 'gantt_uploaded']) ? '✓' : '2' }}
                         </div>
-                        <div>
-                            <p class="text-sm text-gray-600 uppercase tracking-wide">Tanggal Selesai</p>
-                            <p class="text-lg font-semibold text-gray-900 mt-1">{{ $booking->end_date ? \Carbon\Carbon::parse($booking->end_date)->format('d M Y') : '-' }}</p>
+                        <div class="flex-grow">
+                            <p class="font-semibold text-gray-900">Rincian Jasa & Harga</p>
+                            <p class="text-sm text-gray-600">Admin mengirimkan detail jasa dan harga</p>
+                            @if(in_array($booking->admin_status, ['details_sent', 'gantt_uploaded']))
+                                <p class="text-xs text-green-600 mt-1">✓ Selesai</p>
+                            @endif
                         </div>
-                        <div>
-                            <p class="text-sm text-gray-600 uppercase tracking-wide">Jam Mulai</p>
-                            <p class="text-lg font-semibold text-gray-900 mt-1">{{ $booking->start_time ?? '-' }}</p>
+                    </div>
+
+                    {{-- Step 3: Gantt Chart & Final Agreement --}}
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full {{ $booking->admin_status === 'gantt_uploaded' ? 'bg-green-500' : ($booking->admin_status === 'details_sent' ? 'bg-yellow-400' : 'bg-gray-300') }} flex items-center justify-center text-white font-bold text-sm">
+                            {{ $booking->admin_status === 'gantt_uploaded' ? '✓' : '3' }}
                         </div>
-                        <div>
-                            <p class="text-sm text-gray-600 uppercase tracking-wide">Jam Selesai</p>
-                            <p class="text-lg font-semibold text-gray-900 mt-1">{{ $booking->end_time ?? '-' }}</p>
+                        <div class="flex-grow">
+                            <p class="font-semibold text-gray-900">Gantt Chart & Persetujuan Final</p>
+                            <p class="text-sm text-gray-600">Admin mengirimkan jadwal kerja dan dokumen persetujuan</p>
+                            @if($booking->admin_status === 'gantt_uploaded')
+                                <p class="text-xs text-green-600 mt-1">✓ Selesai</p>
+                            @endif
                         </div>
-                        <div>
-                            <p class="text-sm text-gray-600 uppercase tracking-wide">Total Hari</p>
-                            <p class="text-lg font-semibold text-gray-900 mt-1">{{ $booking->total_days ?? '-' }} hari</p>
+                    </div>
+
+                    {{-- Step 4: Final Approval --}}
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full {{ $booking->customer_status === 'final_approved' ? 'bg-green-500' : ($booking->admin_status === 'gantt_uploaded' ? 'bg-yellow-400' : 'bg-gray-300') }} flex items-center justify-center text-white font-bold text-sm">
+                            {{ $booking->customer_status === 'final_approved' ? '✓' : '4' }}
                         </div>
-                        <div>
-                            <p class="text-sm text-gray-600 uppercase tracking-wide">Lokasi</p>
-                            <p class="text-lg font-semibold text-gray-900 mt-1">{{ $booking->location ?? '-' }}</p>
+                        <div class="flex-grow">
+                            <p class="font-semibold text-gray-900">Konfirmasi Final Anda</p>
+                            <p class="text-sm text-gray-600">Anda melakukan persetujuan final booking</p>
+                            @if($booking->customer_status === 'final_approved')
+                                <p class="text-xs text-green-600 mt-1">✓ Selesai</p>
+                            @endif
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {{-- Customer Information --}}
+            {{-- Rincian Jasa (Stage 2) --}}
+            @if(in_array($booking->admin_status, ['details_sent', 'gantt_uploaded']))
                 <div class="bg-white rounded-lg shadow p-6">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4">Informasi Kontak</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <p class="text-sm text-gray-600 uppercase tracking-wide">Nama Pemesan</p>
-                            <p class="text-lg font-semibold text-gray-900 mt-1">{{ $booking->customer_name }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-600 uppercase tracking-wide">Email</p>
-                            <p class="text-lg font-semibold text-gray-900 mt-1">{{ $booking->customer_email }}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-600 uppercase tracking-wide">Nomor Telepon</p>
-                            <p class="text-lg font-semibold text-gray-900 mt-1">{{ $booking->customer_phone ?? '-' }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Services --}}
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4">Layanan yang Dipilih</h2>
-                    @if($booking->services->count() > 0)
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead class="bg-gray-50 border-b">
+                    <h2 class="text-xl font-bold mb-4">💰 Rincian Jasa & Harga</h2>
+                    
+                    @if($booking->details->count() > 0)
+                        <div class="overflow-x-auto mb-4">
+                            <table class="w-full text-sm">
+                                <thead class="border-b">
                                     <tr>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Nama Layanan</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Harga</th>
-                                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Jumlah</th>
-                                        <th class="px-4 py-3 text-right text-sm font-semibold text-gray-700">Subtotal</th>
+                                        <th class="text-left py-2 font-semibold">Jasa</th>
+                                        <th class="text-center py-2 font-semibold">Harga</th>
+                                        <th class="text-right py-2 font-semibold">Catatan</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y">
-                                    @foreach($booking->services as $service)
-                                        @php
-                                            $pivot = $service->pivot;
-                                            $price = $pivot->price ?? $service->price ?? 0;
-                                            $quantity = $pivot->quantity ?? 1;
-                                            $subtotal = $price * $quantity;
-                                        @endphp
-                                        <tr>
-                                            <td class="px-4 py-3 text-gray-900">{{ $service->service_name }}</td>
-                                            <td class="px-4 py-3 text-gray-900">Rp {{ number_format($price, 0, ',', '.') }}</td>
-                                            <td class="px-4 py-3 text-gray-900">{{ $quantity }}</td>
-                                            <td class="px-4 py-3 text-right font-semibold text-gray-900">Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
+                                <tbody>
+                                    @foreach($booking->details as $detail)
+                                        <tr class="border-b hover:bg-gray-50">
+                                            <td class="text-left py-3">{{ $detail->service_name }}</td>
+                                            <td class="text-center py-3 font-semibold">Rp {{ number_format($detail->price, 0, ',', '.') }}</td>
+                                            <td class="text-right py-3 text-gray-600">{{ $detail->notes ?? '-' }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                <tfoot class="border-t-2 bg-gray-50">
+                                    <tr>
+                                        <td class="py-3 font-bold">Total</td>
+                                        <td class="py-3 font-bold"></td>
+                                        <td class="text-right py-3 text-lg font-bold text-yellow-600">Rp {{ number_format($booking->details->sum('price') ?? 0, 0, ',', '.') }}</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
+
+                        {{-- Action Buttons for Details Stage --}}
+                        @if($booking->admin_status === 'details_sent' && $booking->customer_status === 'review')
+                            <div class="flex gap-3 mt-6">
+                                <form action="{{ route('booking.client.approveDetails', $booking->id) }}" method="POST" class="flex-1">
+                                    @csrf
+                                    <button type="submit" class="w-full px-4 py-2 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition">
+                                        ✓ Setujui Rincian
+                                    </button>
+                                </form>
+                                <form action="{{ route('booking.client.rejectDetails', $booking->id) }}" method="POST" class="flex-1">
+                                    @csrf
+                                    <button type="submit" class="w-full px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition">
+                                        ✗ Tolak Rincian
+                                    </button>
+                                </form>
+                            </div>
+                        @elseif($booking->admin_status === 'details_sent' && $booking->customer_status !== 'review')
+                                <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                <p class="text-sm text-blue-800">
+                                    <span class="font-semibold">Status:</span> Anda telah {{ $booking->customer_status === 'details_approved' ? '✓ menyetujui' : '✗ menolak' }} rincian jasa ini.
+                                </p>
+                            </div>
+                        @endif
                     @else
-                        <p class="text-gray-600">Tidak ada layanan yang dipilih</p>
+                        <p class="text-gray-600">Rincian jasa belum tersedia. Admin masih menyiapkan detail.</p>
                     @endif
                 </div>
+            @endif
 
-                {{-- Permit Information --}}
-                @if($booking->include_permit)
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h2 class="text-xl font-bold text-gray-900 mb-4">Informasi Perizinan</h2>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center pb-3 border-b">
-                                <span class="text-gray-600">Perizinan</span>
-                                <span class="font-semibold text-gray-900">Include</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-600">Harga Perizinan</span>
-                                @if($booking->permit_price > 0)
-                                    <span class="font-semibold text-gray-900">Rp {{ number_format($booking->permit_price, 0, ',', '.') }}</span>
-                                @else
-                                    <span class="text-yellow-600">Menunggu admin</span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
-                {{-- Notes --}}
-                @if($booking->notes)
-                    <div class="bg-white rounded-lg shadow p-6">
-                        <h2 class="text-xl font-bold text-gray-900 mb-4">Catatan Tambahan</h2>
-                        <p class="text-gray-700 leading-relaxed">{{ $booking->notes }}</p>
-                    </div>
-                @endif
-            </div>
-
-            {{-- Right Column - Summary --}}
-            <div class="lg:col-span-1">
-                {{-- Price Summary --}}
-                <div class="bg-white rounded-lg shadow p-6 sticky top-24">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4">Ringkasan Harga</h2>
+            {{-- Gantt Chart & Final Agreement (Stage 3) --}}
+            @if($booking->admin_status === 'gantt_uploaded')
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-xl font-bold mb-4">📊 Jadwal Pengerjaan & Persetujuan Final</h2>
                     
-                    @php
-                        $subtotal = $booking->services->sum(function($service) {
-                            $price = $service->pivot->price ?? $service->price ?? 0;
-                            $quantity = $service->pivot->quantity ?? 1;
-                            return $price * $quantity;
-                        });
-                    @endphp
+                    <div class="space-y-4 mb-6">
+                        {{-- Gantt Chart --}}
+                        @if($booking->gantt_chart)
+                            <div class="border rounded-lg p-4 bg-gray-50">
+                                <p class="text-sm font-semibold text-gray-700 mb-2">Gantt Chart</p>
+                                <a href="{{ asset('storage/' . $booking->gantt_chart) }}" 
+                                   target="_blank"
+                                   class="inline-flex items-center gap-2 text-yellow-600 font-semibold hover:underline">
+                                    📊 Download Gantt Chart
+                                </a>
+                            </div>
+                        @endif
 
-                    <div class="space-y-3 pb-4 border-b">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Subtotal Layanan</span>
-                            <span class="font-semibold text-gray-900">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
-                        </div>
-                        @if($booking->include_permit)
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-600">Perizinan</span>
-                                @if($booking->permit_price > 0)
-                                    <span class="font-semibold text-gray-900">Rp {{ number_format($booking->permit_price, 0, ',', '.') }}</span>
-                                @else
-                                    <span class="text-yellow-600 text-sm">Menunggu admin</span>
-                                @endif
+                        {{-- Approval File --}}
+                        @if($booking->approval_file)
+                            <div class="border rounded-lg p-4 bg-gray-50">
+                                <p class="text-sm font-semibold text-gray-700 mb-2">Lembar Persetujuan & Perjanjian</p>
+                                <a href="{{ asset('storage/' . $booking->approval_file) }}" 
+                                   target="_blank"
+                                   class="inline-flex items-center gap-2 text-yellow-600 font-semibold hover:underline">
+                                    📄 Download Lembar Persetujuan
+                                </a>
+                            </div>
+                        @endif
+
+                        {{-- PIC Contact --}}
+                        @if($booking->pic_contact)
+                            <div class="border rounded-lg p-4 bg-gray-50">
+                                <p class="text-sm font-semibold text-gray-700 mb-2">👤 PIC (Contact Person)</p>
+                                <p class="text-gray-800">{{ $booking->pic_contact }}</p>
                             </div>
                         @endif
                     </div>
 
-                    <div class="py-4 border-b">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Pajak (0%)</span>
-                            <span class="font-semibold text-gray-900">Rp 0</span>
+                    {{-- Action Buttons for Final Approval --}}
+                    @if($booking->customer_status !== 'final_approved' && $booking->customer_status !== 'rejected')
+                        <div class="flex gap-3">
+                            <form action="{{ route('booking.client.finalApprove', $booking->id) }}" method="POST" class="flex-1">
+                                @csrf
+                                <button type="submit" class="w-full px-4 py-2 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition">
+                                    ✓ Setujui & Konfirmasi
+                                </button>
+                            </form>
+                            <button type="button" onclick="alert('Tolak fitur akan datang')" class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition">
+                                ✗ Tolak
+                            </button>
                         </div>
-                    </div>
-
-                    <div class="pt-4">
-                        <div class="flex justify-between items-center mb-4">
-                            <span class="text-lg font-bold text-gray-900">Total Harga</span>
-                            <span class="text-2xl font-bold text-yellow-600">Rp {{ number_format($booking->total_price, 0, ',', '.') }}</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-50 rounded-lg p-4 mt-6">
-                        <p class="text-sm text-gray-600 uppercase tracking-wide mb-2">Dibuat pada</p>
-                        <p class="font-semibold text-gray-900">{{ $booking->created_at->format('d M Y H:i') }}</p>
-                    </div>
-
-                    @if($booking->status === 'pending')
-                        <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                            <p class="text-sm text-yellow-800"><strong>Status:</strong> Pesanan Anda sedang menunggu persetujuan dari tim kami.</p>
-                        </div>
-                    @elseif($booking->status === 'approved')
-                        <div class="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                            <p class="text-sm text-blue-800"><strong>Status:</strong> Pesanan Anda telah disetujui. Tim akan segera menghubungi Anda.</p>
-                        </div>
-                    @elseif($booking->status === 'finished')
-                        <div class="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                            <p class="text-sm text-green-800"><strong>Status:</strong> Acara Anda telah selesai. Terima kasih!</p>
-                        </div>
-                    @elseif($booking->status === 'rejected')
-                        <div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                            <p class="text-sm text-red-800"><strong>Status:</strong> Pesanan Anda telah ditolak. Hubungi tim kami untuk informasi lebih lanjut.</p>
+                    @elseif($booking->customer_status === 'final_approved')
+                        <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <p class="text-sm text-green-800">
+                                <span class="font-semibold">✓ Booking Dikonfirmasi!</span> Semua dokumen sudah disetujui. Hubungi PIC kami untuk melanjutkan.
+                            </p>
                         </div>
                     @endif
                 </div>
+            @endif
+
+            {{-- Info --}}
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
+                <p class="text-blue-800">
+                    <span class="font-semibold">📌 Catatan:</span> Semua tahapan akan muncul di halaman ini seiring dengan proses review admin. Pantau status Anda secara berkala.
+                </p>
             </div>
+
         </div>
     </div>
 </div>

@@ -14,19 +14,18 @@ class Booking extends Model
         'customer_name',
         'customer_email',
         'customer_phone',
+        'proposal_file',
+        'proposal_description',
         'event_name',
-        'event_type_id',
         'start_date',
         'end_date',
-        'start_time',
-        'end_time',
-        'total_days',
         'location',
         'notes',
-        'total_price',
-        'status',
-        'include_permit',
-        'permit_price',
+        'admin_status',
+        'customer_status',
+        'gantt_chart',
+        'approval_file',
+        'pic_contact',
     ];
 
     public function user(): BelongsTo
@@ -44,20 +43,9 @@ class Booking extends Model
         return $this->hasMany(BookingService::class);
     }
 
-    public function services()
+    public function details(): HasMany
     {
-        return $this->belongsToMany(Service::class, 'booking_services')
-                    ->withPivot('price', 'quantity')
-                    ->withTimestamps();
+        return $this->hasMany(BookingDetail::class);
     }
 
-    protected function serviceNames(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => $this->bookingServices
-                ->map(fn ($bs) => $bs->service?->service_name ?? 'Unknown')
-                ->filter()
-                ->join(', ') ?: '-',
-        );
-    }
 }

@@ -25,8 +25,7 @@
         </p>
 
         <p class="mt-2 font-dmsans text-white z-10">
-            Kami akan segera menghubungi email konfirmasi ke 
-            <span class="font-semibold">{{ session('booking')->customer_email ?? 'example@gmail.com' }}</span>
+            Kami akan segera memproses pesanan Anda. lihat orderan mu di <a href="{{ route('profile.bookings') }}" class="text-yellow-300 underline">Sini</a>
         </p>
 
     </div>

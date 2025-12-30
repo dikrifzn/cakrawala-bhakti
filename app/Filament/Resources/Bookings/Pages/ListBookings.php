@@ -73,7 +73,7 @@ class ListBookings extends ListRecords
                                 $booking->total_days,
                                 '"' . str_replace('"', '""', $booking->location ?? '') . '"',
                                 '"' . str_replace('"', '""', $booking->notes ?? '') . '"',
-                                'Rp ' . number_format($booking->total_price, 0, ',', '.'),
+                                'Rp ' . number_format($booking->details->sum('price') ?? 0, 0, ',', '.'),
                                 $booking->status,
                                 $booking->created_at->format('Y-m-d H:i:s'),
                             ]) . "\n";

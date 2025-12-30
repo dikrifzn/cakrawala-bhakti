@@ -9,7 +9,9 @@ use Illuminate\Notifications\Notification;
 class BookingCreatedNotification extends Notification
 {
     use Queueable;
+
     public $booking;
+
     /**
      * Create a new notification instance.
      */
@@ -34,7 +36,7 @@ class BookingCreatedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Konfirmasi Booking #' . str_pad($this->booking->id, 6, '0', STR_PAD_LEFT) . ' - Cakrawala Bhakti')
+            ->subject('Konfirmasi Booking #'.str_pad($this->booking->id, 6, '0', STR_PAD_LEFT).' - Cakrawala Bhakti')
             ->view('emails.booking.created', [
                 'booking' => $this->booking,
             ]);
@@ -52,12 +54,12 @@ class BookingCreatedNotification extends Notification
             'booking_id' => $this->booking->id,
             'customer_name' => $this->booking->customer_name,
             'event_type' => $this->booking->eventType?->name,
-            'message' => 'Pemesanan baru dari ' . $this->booking->customer_name,
+            'message' => 'Pemesanan baru dari '.$this->booking->customer_name,
             'actions' => [
                 [
                     'name' => 'view',
                     'label' => 'Lihat Detail',
-                    'url' => route('filament.admin.resources.bookings.edit', ['record' => $this->booking->id]),
+                    'url' => \App\Filament\Resources\Bookings\BookingResource::getUrl('edit', ['record' => $this->booking->id]),
                 ],
             ],
         ];

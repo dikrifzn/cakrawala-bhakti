@@ -12,15 +12,16 @@ class BookingStatusChart extends StatsOverviewWidget
 
     protected function getStats(): array
     {
+        // Map to actual `admin_status` values stored on bookings
         $statuses = [
-            'pending' => ['label' => 'Pending', 'color' => 'warning'],
+            'review' => ['label' => 'Pending', 'color' => 'warning'],
             'approved' => ['label' => 'Approved', 'color' => 'success'],
             'rejected' => ['label' => 'Rejected', 'color' => 'danger'],
             'finished' => ['label' => 'Finished', 'color' => 'info'],
         ];
 
         return collect($statuses)->map(function ($meta, $status) {
-            $count = Booking::where('status', $status)->count();
+            $count = Booking::where('admin_status', $status)->count();
 
             return Stat::make($meta['label'], number_format($count))
                 ->color($meta['color']);
