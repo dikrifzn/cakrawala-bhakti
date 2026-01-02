@@ -14,8 +14,12 @@ class Booking extends Model
         'customer_name',
         'customer_email',
         'customer_phone',
+        'pic_contact',
         'proposal_file',
         'proposal_description',
+        'signature_file',
+        'approval_file',
+        'gantt_chart',
         'event_name',
         'start_date',
         'end_date',
@@ -23,19 +27,20 @@ class Booking extends Model
         'notes',
         'admin_status',
         'customer_status',
-        'gantt_chart',
-        'approval_file',
-        'pic_contact',
+        'approved_by',
+        'approved_at',
+        'approval_ip',
+    ];
+
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'approved_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function eventType(): BelongsTo
-    {
-        return $this->belongsTo(EventType::class);
     }
 
     public function bookingServices(): HasMany
@@ -46,6 +51,11 @@ class Booking extends Model
     public function details(): HasMany
     {
         return $this->hasMany(BookingDetail::class);
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(BookingTask::class);
     }
 
 }

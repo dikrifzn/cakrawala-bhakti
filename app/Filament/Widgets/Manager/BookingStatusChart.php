@@ -14,10 +14,12 @@ class BookingStatusChart extends StatsOverviewWidget
     {
         // Map to actual `admin_status` values stored on bookings
         $statuses = [
-            'review' => ['label' => 'Pending', 'color' => 'warning'],
-            'approved' => ['label' => 'Approved', 'color' => 'success'],
+            'review' => ['label' => 'Review', 'color' => 'warning'],
+            'detail_sent' => ['label' => 'Detail Sent', 'color' => 'info'],
+            'final_approved' => ['label' => 'Approval Sent', 'color' => 'primary'],
+            'on_progress' => ['label' => 'On Progress', 'color' => 'success'],
+            'finished' => ['label' => 'Finished', 'color' => 'success'],
             'rejected' => ['label' => 'Rejected', 'color' => 'danger'],
-            'finished' => ['label' => 'Finished', 'color' => 'info'],
         ];
 
         return collect($statuses)->map(function ($meta, $status) {

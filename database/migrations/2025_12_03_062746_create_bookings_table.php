@@ -31,8 +31,20 @@ return new class extends Migration
 
             $table->text('notes')->nullable();
 
-            $table->enum('admin_status', ['review','approved','rejected','pricing_sent','on_process','finished','details_sent','gantt_uploaded'])->default('review')->notnull();
-            $table->enum('customer_status', ['submitted', 'review', 'approved', 'rejected', 'details_approved', 'final_approved'])->default('review')->notnull();
+            $table->enum('admin_status', [
+                'review',
+                'detail_sent',
+                'final_approved', 
+                'on_progress', 
+                'finished', 
+                'rejected'
+                ])->default('review');
+            $table->enum('customer_status', [
+                'submitted', 
+                'detail_approved', 
+                'final_signed', 
+                'rejected'
+                ])->default('submitted');
             $table->timestamps();
         });
     }

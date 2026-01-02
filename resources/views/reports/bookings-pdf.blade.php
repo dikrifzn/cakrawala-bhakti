@@ -64,15 +64,13 @@
         <thead>
             <tr>
                 <th style="width: 5%;">ID</th>
-                <th style="width: 12%;">Nama</th>
-                <th style="width: 15%;">Email</th>
-                <th style="width: 10%;">Telepon</th>
-                <th style="width: 12%;">Event</th>
-                <th style="width: 8%;">Mulai</th>
-                <th style="width: 8%;">Selesai</th>
-                <th style="width: 5%;">Hari</th>
-                <th style="width: 12%;">Total</th>
-                <th style="width: 10%;">Status</th>
+                <th style="width: 15%;">Nama</th>
+                <th style="width: 15%;">Event</th>
+                <th style="width: 10%;">Mulai</th>
+                <th style="width: 10%;">Selesai</th>
+                <th style="width: 15%;">Lokasi</th>
+                <th style="width: 15%;">Total Harga</th>
+                <th style="width: 15%;">Status</th>
             </tr>
         </thead>
         <tbody>
@@ -84,28 +82,27 @@
                 <tr>
                     <td>{{ $b->id }}</td>
                     <td>{{ $b->customer_name }}</td>
-                    <td>{{ $b->customer_email }}</td>
-                    <td>{{ $b->customer_phone }}</td>
-                    <td>{{ $b->eventType->name ?? '-' }}</td>
+                    <td>{{ $b->event_name ?? '-' }}</td>
                     <td>{{ $startDate }}</td>
                     <td>{{ $endDate }}</td>
-                    <td>{{ $b->total_days ?? '-' }}</td>
+                    <td>{{ $b->location ?? '-' }}</td>
                     <td>Rp {{ number_format($b->details->sum('price') ?? 0, 0, ',', '.') }}</td>
-                    <td>{{ ucfirst($b->status) }}</td>
+                    <td>{{ ucfirst($b->admin_status ?? 'review') }}</td>
                 </tr>
                 
-                <!-- Services Row -->
-                @if($b->bookingServices->count() > 0)
+                <!-- Details Row -->
+                @if($b->details->count() > 0)
                 <tr>
-                    <td colspan="10">
+                    <td colspan="8">
                         <div class="services-section">
-                            <h4>Layanan yang Dipesan:</h4>
+                            <h4>Rincian Jasa:</h4>
                             <ul class="services-list">
-                                @foreach($b->bookingServices as $bs)
+                                @foreach($b->details as $detail)
                                     <li>
-                                        {{ $bs->service->service_name ?? 'Unknown' }}
-                                        @if($bs->price > 0)
-                                            - Rp {{ number_format($bs->price, 0, ',', '.') }}
+                                        {{ $detail->service_name }}
+                                        - Rp {{ number_format($detail->price, 0, ',', '.') }}
+                                        @if($detail->notes)
+                                            ({{ $detail->notes }})
                                         @endif
                                     </li>
                                 @endforeach
@@ -117,7 +114,7 @@
                 
             @empty
                 <tr>
-                    <td colspan="10" style="text-align:center;">Tidak ada data</td>
+                    <td colspan="8" style="text-align:center;">Tidak ada data</td>
                 </tr>
             @endforelse
         </tbody>

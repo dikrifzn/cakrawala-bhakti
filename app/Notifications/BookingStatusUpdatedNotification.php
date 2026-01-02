@@ -19,7 +19,7 @@ class BookingStatusUpdatedNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $status = ucfirst($this->booking->status ?? 'pending');
+        $status = ucfirst($this->booking->admin_status ?? 'review');
 
         return (new MailMessage)
             ->subject('Update Status Booking #'.str_pad($this->booking->id, 6, '0', STR_PAD_LEFT).' - '.$status)
@@ -29,19 +29,21 @@ class BookingStatusUpdatedNotification extends Notification
     public function toDatabase(object $notifiable): array
     {
         $statusLabels = [
-            'pending' => 'Pending',
-            'approved' => 'Disetujui',
-            'rejected' => 'Ditolak',
-            'finished' => 'Selesai',
+            'review' => 'Review',
+            'detail_sent' => 'Detail Sent',
+            'final_approved' => 'Approval Sent',
+            'on_progress' => 'On Progress',
+            'finished' => 'Finished',
+            'rejected' => 'Rejected',
         ];
 
-        $statusLabel = $statusLabels[$this->booking->status] ?? ucfirst($this->booking->status);
+        $statusLabel = $statusLabels[$this->booking->admin_status] ?? ucfirst($this->booking->admin_status);
 
         return [
             'format' => 'filament',
             'booking_id' => $this->booking->id,
             'customer_name' => $this->booking->customer_name,
-            'status' => $this->booking->status,
+            'status' => $this->booking->admin_status,
             'message' => 'Status pemesanan '.$this->booking->customer_name.' diubah menjadi: '.$statusLabel,
             'actions' => [
                 [

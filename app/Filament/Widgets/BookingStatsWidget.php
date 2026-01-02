@@ -12,15 +12,15 @@ class BookingStatsWidget extends BaseWidget
     {
         $totalBookings = Booking::count();
         $pendingBookings = Booking::where('admin_status', 'review')->count();
-        $approvedBookings = Booking::where('admin_status', 'approved')->count();
-        $finishedBookings = Booking::where('customer_status', 'final_approved')->count();
+        $detailSentBookings = Booking::where('admin_status', 'detail_sent')->count();
+        $finishedBookings = Booking::where('admin_status', 'finished')->count();
         
-        $totalRevenue = Booking::where('customer_status', 'final_approved')
+        $totalRevenue = Booking::where('customer_status', 'final_signed')
             ->with('details')
             ->get()
             ->sum(fn ($b) => $b->details->sum('price'));
 
-        $monthlyRevenue = Booking::where('customer_status', 'final_approved')
+        $monthlyRevenue = Booking::where('customer_status', 'final_signed')
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->with('details')
@@ -38,10 +38,10 @@ class BookingStatsWidget extends BaseWidget
                 ->descriptionIcon('heroicon-o-clock')
                 ->color('warning'),
                 
-            Stat::make('Approved', $approvedBookings)
-                ->description('Booking disetujui')
-                ->descriptionIcon('heroicon-o-check-circle')
-                ->color('success'),
+            Stat::make('Detail Sent', $detailSentBookings)
+                ->description('Rincian dikirim ke client')
+                ->descriptionIcon('heroicon-o-paper-airplane')
+                ->color('info'),
                 
             Stat::make('Finished', $finishedBookings)
                 ->description('Acara selesai')

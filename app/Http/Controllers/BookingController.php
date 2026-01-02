@@ -3,16 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Services\ApprovalService;
+use App\Filament\Resources\Bookings\BookingResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class BookingController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index()
     {
-        return view('pages.order.index');
+        return view('pages.booking.index');
     }
 
     public function store(Request $request)
@@ -56,171 +62,249 @@ class BookingController extends Controller
             'customer_status'  => 'submitted',
         ]);
 
+        // Dispatch notification to admins
+        $adminUsers = \App\Models\User::where('role', 'admin')->orWhere('role', 'manager')->get();
+        foreach ($adminUsers as $admin) {
+            $admin->notify(new \App\Notifications\BookingCreatedNotification($booking));
+        }
+
         return redirect('/booking/success');
     }
-    // ADMIN: Review proposal event
-    public function adminReview($id)
+
+    /**
+     * Simple redirects for admin helper routes.
+     */
+    public function adminReview(Booking $booking)
     {
-        $booking = Booking::findOrFail($id);
-        // Render admin review blade for legacy/admin users
-        return view('admin.booking.review', compact('booking'));
+        return Redirect::to(BookingResource::getUrl('edit', ['record' => $booking]));
     }
 
-    // ADMIN: Show input rincian blade
-    public function detailsInputView($id)
+    public function detailsInputView(Booking $booking)
     {
-        $booking = Booking::findOrFail($id);
-        return view('admin.booking.details', compact('booking'));
+        return Redirect::to(BookingResource::getUrl('edit', ['record' => $booking]));
     }
 
-    // ADMIN: Show upload gantt blade
-    public function uploadView($id)
+    public function uploadView(Booking $booking)
     {
-        $booking = Booking::findOrFail($id);
-        return view('admin.booking.upload', compact('booking'));
+        return Redirect::to(BookingResource::getUrl('edit', ['record' => $booking]));
     }
 
-    // ADMIN: Approve proposal event
-    public function adminApprove(Request $request, $id)
+    /**
+     * Admin: approve initial submission (moves to detail_sent).
+     */
+    public function adminApprove(Booking $booking)
     {
-        $booking = Booking::findOrFail($id);
-        // Update status admin dan simpan catatan jika ada
-        $booking->admin_status = 'approved';
-        $booking->save();
-        // Redirect to Filament review page
-        return redirect()->to(\App\Filament\Resources\Bookings\BookingResource::getUrl('review', ['record' => $booking->id]))->with('success', 'Proposal disetujui, silakan input rincian jasa.');
-    }
+        $this->authorize('manageWorkflow', $booking);
 
-    // ADMIN: Reject proposal event
-    public function adminReject(Request $request, $id)
-    {
-        $booking = Booking::findOrFail($id);
-        $booking->admin_status = 'rejected';
-        $booking->save();
-        // Notifikasi ke client bisa ditambahkan di sini
-        return redirect()->to(\App\Filament\Resources\Bookings\BookingResource::getUrl('review', ['record' => $booking->id]))->with('error', 'Proposal ditolak.');
-    }
+        $booking->update(['admin_status' => 'detail_sent', 'customer_status' => 'submitted']);
 
-    // ADMIN: Kirim rincian jasa ke client
-    public function sendDetailsToClient(Request $request, $id)
-    {
-        $booking = Booking::findOrFail($id);
-        if ($booking->admin_status !== 'approved') {
-            return back()->with('error', 'Status booking tidak valid untuk mengirim rincian.');
+        // Notify customer about status change
+        if ($booking->user) {
+            $booking->user->notify(new \App\Notifications\BookingStatusUpdatedNotification($booking, 'Booking Anda telah disetujui. Detail layanan akan segera dikirimkan.'));
         }
-        $request->validate([
-            'details' => 'required|array',
+
+        return Redirect::back()->with('success', 'Booking disetujui. Silakan kirim rincian ke client.');
+    }
+
+    /**
+     * Admin: reject booking.
+     */
+    public function adminReject(Booking $booking)
+    {
+        $this->authorize('manageWorkflow', $booking);
+
+        $booking->update(['admin_status' => 'rejected', 'customer_status' => 'rejected']);
+
+        // Notify customer about rejection
+        if ($booking->user) {
+            $booking->user->notify(new \App\Notifications\BookingStatusUpdatedNotification($booking, 'Booking Anda telah ditolak.'));
+        }
+
+        return Redirect::back()->with('error', 'Booking ditolak.');
+    }
+
+    /**
+     * Admin: send service details to customer.
+     */
+    public function sendDetailsToClient(Request $request, Booking $booking)
+    {
+        $this->authorize('manageWorkflow', $booking);
+
+        $validated = $request->validate([
+            'details' => 'required|array|min:1',
             'details.*.service_name' => 'required|string|max:255',
             'details.*.price' => 'required|numeric|min:0',
             'details.*.notes' => 'nullable|string',
         ]);
+
         $booking->details()->delete();
-        $total = 0;
-        foreach ($request->details as $detail) {
+        foreach ($validated['details'] as $detail) {
             $booking->details()->create($detail);
-            $total += $detail['price'];
-        }
-        $booking->admin_status = 'details_sent';
-        // set customer status to 'review' so client can approve/reject
-        $booking->customer_status = 'review';
-        $booking->save();
-        // TODO: Notifikasi ke client (email/alert)
-        return redirect()->to(\App\Filament\Resources\Bookings\BookingResource::getUrl('review', ['record' => $booking->id]))->with('success', 'Rincian jasa dikirim ke client.');
-    }
-
-    // CLIENT: Lihat rincian jasa dari admin
-    public function clientViewDetails($id)
-    {
-        $booking = Booking::findOrFail($id);
-        // Tampilkan rincian jasa, harga, dsb ke client
-        return view('pages.order.details', compact('booking'));
-    }
-
-    // Secure file download for booking attachments
-    public function downloadFile(Request $request, $id, $type)
-    {
-        $allowed = ['proposal_file', 'gantt_chart', 'approval_file'];
-        if (! in_array($type, $allowed)) {
-            abort(404);
         }
 
-        $booking = Booking::findOrFail($id);
-        $path = $booking->{$type};
-        if (! $path) {
-            abort(404);
-        }
-
-        $disk = Storage::disk('public');
-        if (! $disk->exists($path)) {
-            abort(404);
-        }
-
-        // If ?inline=1 is present, attempt to display the file inline (PDF preview)
-        if ($request->query('inline')) {
-            $fullPath = storage_path('app/public/' . $path);
-            if (! file_exists($fullPath)) {
-                abort(404);
-            }
-            return response()->file($fullPath);
-        }
-
-        return $disk->download($path);
-    }
-
-    // CLIENT: Approve rincian jasa
-    public function clientApproveDetails(Request $request, $id)
-    {
-        $booking = Booking::findOrFail($id);
-        // Client approving the service details (not final approval of gantt)
-        $booking->customer_status = 'details_approved';
-        $booking->save();
-        // Notifikasi ke admin bisa ditambahkan di sini
-        return redirect()->route('profile.booking-detail', $booking->id)->with('success', 'Rincian jasa disetujui. Tunggu admin mengirim jadwal pengerjaan.');
-    }
-
-    // CLIENT: Reject rincian jasa
-    public function clientRejectDetails(Request $request, $id)
-    {
-        $booking = Booking::findOrFail($id);
-        $booking->customer_status = 'rejected';
-        $booking->save();
-        // Notifikasi ke admin bisa ditambahkan di sini
-        return redirect()->route('profile.booking-detail', $booking->id)->with('error', 'Rincian jasa ditolak.');
-    }
-
-    // ADMIN: Upload Gantt chart & lembar persetujuan
-    public function uploadGantt(Request $request, $id)
-    {
-        $booking = Booking::findOrFail($id);
-        if ($booking->admin_status !== 'details_sent') {
-            return back()->with('error', 'Status booking tidak valid untuk upload gantt chart.');
-        }
-        if ($booking->customer_status !== 'details_approved') {
-            return back()->with('error', 'Client belum menyetujui rincian jasa sehingga gantt tidak bisa diupload.');
-        }
-        $request->validate([
-            'gantt_chart' => 'required|file|mimes:pdf,png,jpg,jpeg|max:5120',
-            'approval_file' => 'required|file|mimes:pdf,png,jpg,jpeg|max:5120',
-            'pic_contact' => 'required|string|max:255',
+        $booking->update([
+            'admin_status' => 'detail_sent',
+            'customer_status' => 'submitted',
         ]);
-        $ganttPath = $request->file('gantt_chart')->store('gantt_charts', 'public');
-        $approvalPath = $request->file('approval_file')->store('approval_files', 'public');
-        $booking->gantt_chart = $ganttPath;
-        $booking->approval_file = $approvalPath;
-        $booking->pic_contact = $request->pic_contact;
-        $booking->admin_status = 'gantt_uploaded';
-        $booking->save();
-        // TODO: Notifikasi ke client (email/alert)
-        return redirect()->to(\App\Filament\Resources\Bookings\BookingResource::getUrl('review', ['record' => $booking->id]))->with('success', 'Gantt chart & lembar persetujuan diupload.');
+
+        return Redirect::route('booking.client.details', $booking)->with('success', 'Rincian jasa dikirim ke client.');
     }
 
-    // CLIENT: Final approval (setujui lembar persetujuan)
-    public function clientFinalApprove(Request $request, $id)
+    /**
+     * Customer: view details.
+     */
+    public function clientViewDetails(Booking $booking)
     {
-        $booking = Booking::findOrFail($id);
-        $booking->customer_status = 'final_approved';
-        $booking->save();
-        // Notifikasi ke admin bisa ditambahkan di sini
-        return redirect()->route('profile.booking-detail', $booking->id)->with('success', 'Booking dikonfirmasi! Hubungi PIC kami untuk melanjutkan proses.');
+        $this->authorize('view', $booking);
+
+        // Allow access if admin sent details or approved final document
+        abort_unless(in_array($booking->admin_status, ['detail_sent', 'final_approved', 'on_progress', 'finished']), 404);
+
+        // Reload from database with relations to get latest data
+        $booking = Booking::with(['details', 'tasks', 'user'])->findOrFail($booking->id);
+
+        return view('pages.profile.booking-detail', ['booking' => $booking]);
+    }
+
+    /**
+     * Customer: approve details.
+     */
+    public function clientApproveDetails(Booking $booking)
+    {
+        $this->authorize('approveDetails', $booking);
+
+        abort_unless($booking->admin_status === 'detail_sent', 404);
+
+        $booking->update(['customer_status' => 'detail_approved']);
+
+        return Redirect::route('booking.client.details', $booking)->with('success', 'Rincian disetujui. Menunggu lembar persetujuan dari admin.');
+    }
+
+    /**
+     * Customer: reject details.
+     */
+    public function clientRejectDetails(Booking $booking)
+    {
+        abort_unless($booking->admin_status === 'detail_sent', 404);
+
+        $booking->update([
+            'admin_status' => 'rejected',
+            'customer_status' => 'rejected',
+        ]);
+
+        return Redirect::route('booking.client.details', $booking)->with('error', 'Anda menolak penawaran ini.');
+    }
+
+    /**
+     * Preview approval PDF (unsigned) for client.
+     */
+    public function previewApproval(Booking $booking)
+    {
+        $pdfContent = ApprovalService::previewApprovalPdf($booking);
+
+        return new StreamedResponse(function () use ($pdfContent) {
+            echo $pdfContent;
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="approval_preview.pdf"',
+        ]);
+    }
+
+    /**
+     * Preview signed approval PDF inline (with signature).
+     */
+    public function previewSignedApproval(Booking $booking)
+    {
+        abort_unless($booking->approval_file && Storage::disk('public')->exists($booking->approval_file), 404);
+
+        $pdfContent = Storage::disk('public')->get($booking->approval_file);
+
+        return new StreamedResponse(function () use ($pdfContent) {
+            echo $pdfContent;
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="approval_' . $booking->id . '.pdf"',
+        ]);
+    }
+
+    /**
+     * Show signature upload form.
+     */
+    public function signatureUploadForm(Booking $booking)
+    {
+        // Only allow signature upload when admin_status is final_approved
+        abort_unless($booking->admin_status === 'final_approved', 404);
+
+        return view('pages.profile.booking-detail', ['booking' => $booking]);
+    }
+
+    /**
+     * Customer uploads signature; generate signed PDF.
+     */
+    public function uploadSignature(Request $request, Booking $booking)
+    {
+        $this->authorize('uploadSignature', $booking);
+
+        // Guard: must be final_approved status
+        abort_unless($booking->admin_status === 'final_approved', 404);
+
+        $request->validate([
+            'signature' => 'required|file|mimes:png,jpg,jpeg|max:5120',
+        ]);
+
+        $signaturePath = $request->file('signature')->store('signatures', 'public');
+        \Log::info('Signature stored at: ' . $signaturePath);
+        
+        $signedPath = ApprovalService::saveApprovalPdf($booking, $signaturePath);
+        \Log::info('Signed PDF saved at: ' . $signedPath);
+
+        $booking->update([
+            'signature_file' => $signaturePath,
+            'approval_file' => $signedPath,
+            'customer_status' => 'final_signed',
+            'approved_by' => auth()->id(),
+            'approved_at' => now(),
+            'approval_ip' => $request->ip(),
+        ]);
+        
+        \Log::info('Booking updated - Customer Status: final_signed, Approval File: ' . $signedPath);
+
+        return Redirect::route('booking.client.details', $booking)->with('success', 'Tanda tangan diterima. Menunggu admin memulai pengerjaan.');
+    }
+
+    /**
+     * Client final approval (fallback).
+     */
+    public function clientFinalApprove(Booking $booking)
+    {
+        $booking->update(['admin_status' => 'final_approved']);
+
+        return Redirect::route('booking.client.details', $booking);
+    }
+
+    /**
+     * Download stored file securely.
+     */
+    public function downloadFile(Booking $booking, string $type)
+    {
+        $this->authorize('view', $booking);
+
+        $allowed = ['proposal_file', 'approval_file', 'signature_file'];
+        abort_unless(in_array($type, $allowed, true), 404);
+
+        $path = $booking->{$type};
+        abort_unless($path && Storage::disk('public')->exists($path), 404);
+
+        $fullPath = Storage::disk('public')->path($path);
+        $mimeType = Storage::disk('public')->mimeType($path);
+
+        if (request()->boolean('inline')) {
+            return response()->file($fullPath, [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="'.basename($path).'"',
+            ]);
+        }
+
+        return Storage::disk('public')->download($path, basename($path));
     }
 }

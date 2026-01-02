@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Article;
-use App\Models\EventType;
 use App\Models\Service;
 use App\Models\HeroBanner;
 use App\Models\AboutSection;
@@ -45,8 +44,6 @@ class HomeController extends Controller
             ->limit(3)
             ->get();
 
-        $events = EventType::select('id', 'name')->get();
-
         $services = Service::select('id', 'service_name', 'short_description', 'price', 'banner_image', 'sort_order')
             ->adminServices()
             ->orderBy('sort_order')
@@ -60,7 +57,6 @@ class HomeController extends Controller
             'callToAction',
             'projects',
             'articles',
-            'events',
             'services',
             'pageTitle'
         ));

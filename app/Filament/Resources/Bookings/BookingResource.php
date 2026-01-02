@@ -117,8 +117,8 @@ class BookingResource extends Resource
                         ->label('Catatan'),
                 ])
                 ->columnSpanFull()
-                ->visible(fn ($record) => in_array($record?->admin_status, ['details_sent', 'gantt_uploaded']))
-                ->readOnly(),
+                ->visible(fn ($record) => in_array($record?->admin_status, ['detail_sent', 'final_approved', 'on_progress', 'finished']))
+                ->disabled(),
 
             // total price is computed from related details; not stored on booking
 
@@ -129,40 +129,25 @@ class BookingResource extends Resource
                 ->label('Status Admin')
                 ->options([
                     'review' => '1️⃣ Review',
-                    'approved' => '2️⃣ Approved',
-                    'details_sent' => '3️⃣ Details Sent',
-                    'gantt_uploaded' => '4️⃣ Gantt Uploaded',
+                    'detail_sent' => '2️⃣ Detail Sent',
+                    'final_approved' => '3️⃣ Approval Sent',
+                    'on_progress' => '4️⃣ On Progress',
+                    'finished' => '5️⃣ Finished',
                     'rejected' => '❌ Rejected',
                 ])
                 ->required()
-                ->readOnly(),
+                ->disabled(),
 
             Select::make('customer_status')
                 ->label('Status Client')
                 ->options([
                     'submitted' => 'Submitted',
-                    'final_approved' => '✓ Final Approved',
+                    'detail_approved' => '✓ Detail Approved',
+                    'final_signed' => '✓ Final Signed',
                     'rejected' => '✗ Rejected',
                 ])
                 ->required()
-                ->readOnly(),
-
-            // Admin inline actions (Approve / Reject) shown at form bottom
-            Placeholder::make('admin_actions')
-                ->content(fn ($record) => $record && $record->admin_status === 'review' ? new HtmlString(
-                    "<div class='flex justify-end gap-3 mt-6'>".
-                    "<form method='POST' action='".route('booking.admin.reject', ['booking' => $record->id])."' style='display:inline'>".
-                        csrf_field().
-                        "<button type='submit' class='px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700'>✗ Tolak</button>".
-                    '</form>'.
-                    "<form method='POST' action='".route('booking.admin.approve', ['booking' => $record->id])."' style='display:inline'>".
-                        csrf_field().
-                        "<button type='submit' class='px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700'>✓ Setujui</button>".
-                    '</form>'.
-                    "<a href='".\App\Filament\Resources\Bookings\BookingResource::getUrl('index')."' class='px-4 py-2 rounded-lg border text-sm text-gray-700'>Batal</a>".
-                    '</div>'
-                ) : new HtmlString(''))
-                ->columnSpanFull(),
+                ->disabled(),
         ]);
     }
 
@@ -193,17 +178,19 @@ class BookingResource extends Resource
                     ->badge()
                     ->formatStateUsing(fn ($state) => match ($state) {
                         'review' => '1️⃣ Review',
-                        'approved' => '2️⃣ Approved',
-                        'details_sent' => '3️⃣ Details',
-                        'gantt_uploaded' => '4️⃣ Gantt',
+                        'detail_sent' => '2️⃣ Detail Sent',
+                        'final_approved' => '3️⃣ Approval Sent',
+                        'on_progress' => '4️⃣ On Progress',
+                        'finished' => '5️⃣ Finished',
                         'rejected' => '❌ Rejected',
                         default => $state,
                     })
                     ->color(fn ($state) => match ($state) {
                         'review' => 'info',
-                        'approved' => 'warning',
-                        'details_sent' => 'primary',
-                        'gantt_uploaded' => 'success',
+                        'detail_sent' => 'warning',
+                        'final_approved' => 'primary',
+                        'on_progress' => 'success',
+                        'finished' => 'success',
                         'rejected' => 'danger',
                         default => 'secondary',
                     }),
@@ -213,7 +200,8 @@ class BookingResource extends Resource
                     ->badge()
                     ->color(fn ($state) => match ($state) {
                         'submitted' => 'info',
-                        'final_approved' => 'success',
+                        'detail_approved' => 'warning',
+                        'final_signed' => 'success',
                         'rejected' => 'danger',
                         default => 'secondary',
                     }),

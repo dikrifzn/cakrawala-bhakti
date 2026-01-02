@@ -10,7 +10,7 @@
 @php
     $heroBg = ImageHelper::image($heroBanner?->background_image, 'placeholder-hero.jpg');
 @endphp
-<section class="relative w-full h-[90vh] bg-cover bg-center" style="background-image: url('{{ $heroBg }}')">
+<section class="relative w-full h-screen bg-cover bg-center" style="background-image: url('{{ $heroBg }}')">
     <div class="absolute inset-0 bg-black/70"></div>
 
     <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-48 text-white">
@@ -153,16 +153,16 @@
         @endphp
         @forelse($services as $service)
             <div class="group bg-white hover:bg-yellow-500 h-56 flex items-center justify-center 
-                text-black font-semibold shadow-md hover:scale-105 transition-all duration-300 cursor-pointer relative overflow-hidden min-w-[25%] flex-shrink-0 snap-start" data-aos="zoom-in" data-aos-delay="{{ $loop->index * 50 }}">
+                text-black font-semibold shadow-md hover:scale-105 transition-all duration-300 relative overflow-hidden min-w-[25%] shrink-0 snap-start" data-aos="zoom-in" data-aos-delay="{{ $loop->index * 50 }}">
                 <div class="absolute inset-0" style="background-image: url('{{ ImageHelper::image($service->banner_image, 'default-thumbnail.png') }}'); background-size: cover; background-position: center;"></div>
                 <div class="absolute inset-0 bg-white/70 group-hover:bg-yellow-500/60 transition-all"></div>
-                <span class="relative z-10 text-lg md:text-xl">{{ $service->service_name }} →</span>
+                <span class="relative z-10 text-lg md:text-xl">{{ $service->service_name }}</span>
             </div>
         @empty
             @foreach($events as $event)
                 <div class="bg-white hover:bg-yellow-500 h-56 flex items-center justify-center 
-                    text-black font-semibold shadow-md hover:scale-105 transition-all duration-300 cursor-pointer min-w-[25%] flex-shrink-0 snap-start">
-                    <span class="text-lg md:text-xl">{{ $event->name }} →</span>
+                    text-black font-semibold shadow-md hover:scale-105 transition-all duration-300 min-w-[25%] shrink-0 snap-start">
+                    <span class="text-lg md:text-xl">{{ $event->name }}</span>
                 </div>
             @endforeach
         @endforelse

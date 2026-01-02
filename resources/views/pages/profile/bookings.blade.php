@@ -48,9 +48,10 @@
                             <div class="flex flex-col gap-2 items-end">
                                 <span class="px-3 py-1 rounded-full text-xs font-semibold
                                     @if($booking->admin_status === 'review') bg-yellow-100 text-yellow-800
-                                    @elseif($booking->admin_status === 'approved') bg-blue-100 text-blue-800
-                                    @elseif($booking->admin_status === 'details_sent') bg-purple-100 text-purple-800
-                                    @elseif($booking->admin_status === 'gantt_uploaded') bg-green-100 text-green-800
+                                    @elseif($booking->admin_status === 'detail_sent') bg-purple-100 text-purple-800
+                                    @elseif($booking->admin_status === 'final_approved') bg-blue-100 text-blue-800
+                                    @elseif($booking->admin_status === 'on_progress') bg-green-100 text-green-800
+                                    @elseif($booking->admin_status === 'finished') bg-green-200 text-green-900
                                     @elseif($booking->admin_status === 'rejected') bg-red-100 text-red-800
                                     @else bg-gray-100 text-gray-800 @endif">
                                     
@@ -58,14 +59,17 @@
                                         @case('review')
                                             👀 Review
                                             @break
-                                        @case('approved')
-                                            ✓ Approved
-                                            @break
-                                        @case('details_sent')
+                                        @case('detail_sent')
                                             💰 Rincian Jasa
                                             @break
-                                        @case('gantt_uploaded')
-                                            📊 Gantt Chart
+                                        @case('final_approved')
+                                            📄 Approval Dikirim
+                                            @break
+                                        @case('on_progress')
+                                            🚧 On Progress
+                                            @break
+                                        @case('finished')
+                                            🏁 Selesai
                                             @break
                                         @case('rejected')
                                             ✗ Ditolak
@@ -76,7 +80,7 @@
                                 </span>
 
                                 {{-- Customer Status if relevant --}}
-                                @if(in_array($booking->customer_status, ['details_approved','final_approved']))
+                                @if(in_array($booking->customer_status, ['detail_approved','final_signed']))
                                     <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
                                         ✓ Anda Setujui
                                     </span>
@@ -118,11 +122,11 @@
                                 Diajukan: {{ $booking->created_at->format('d M Y H:i') }}
                                 
                                 {{-- Action Hint --}}
-                                @if($booking->admin_status === 'details_sent' && $booking->customer_status === 'review')
+                                @if($booking->admin_status === 'detail_sent' && $booking->customer_status === 'submitted')
                                     <span class="ml-2 px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-semibold">
                                         ⚠️ Tunggu tindakan Anda
                                     </span>
-                                @elseif($booking->admin_status === 'gantt_uploaded' && $booking->customer_status !== 'final_approved')
+                                @elseif($booking->admin_status === 'final_approved' && $booking->customer_status !== 'final_signed')
                                     <span class="ml-2 px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-semibold">
                                         ✓ Siap dikonfirmasi
                                     </span>

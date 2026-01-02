@@ -35,7 +35,7 @@ Route::get('/article/{article}', [ArticleController::class, 'show'])->name('arti
 Route::get('/booking', [BookingController::class, 'index'])->name('booking.index')->middleware('auth');
 Route::post('/booking', [BookingController::class, 'store'])->name('booking.store')->middleware('auth');
 Route::get('/booking/success', function () {
-    return view('pages.order.success');
+    return view('pages.booking.success');
 });
 
 // Admin review proposal event
@@ -49,13 +49,26 @@ Route::post('/admin/booking/{booking}/reject', [BookingController::class, 'admin
 // Admin kirim rincian jasa ke client
 Route::post('/admin/booking/{booking}/send-details', [BookingController::class, 'sendDetailsToClient'])->name('booking.admin.sendDetails')->middleware('auth');
 
-// Client review rincian jasa
-Route::get('/booking/{booking}/details', [BookingController::class, 'clientViewDetails'])->name('booking.client.details')->middleware('auth');
+// Client review rincian jasa (canonical route)
+Route::get('/profile/bookings/{id}', [ProfileController::class, 'showBooking'])->name('profile.booking-detail')->middleware('auth');
+
+// Legacy route redirects
+Route::get('/booking/{booking}/details', function ($id) {
+    return redirect()->route('profile.booking-detail', $id);
+})->middleware('auth');
+
+Route::get('/booking/{booking}/signature-upload', function ($id) {
+    return redirect()->route('profile.booking-detail', $id);
+})->middleware('auth');
+
+// Client approval actions (still need these POST routes)
 Route::post('/booking/{booking}/approve-details', [BookingController::class, 'clientApproveDetails'])->name('booking.client.approveDetails')->middleware('auth');
 Route::post('/booking/{booking}/reject-details', [BookingController::class, 'clientRejectDetails'])->name('booking.client.rejectDetails')->middleware('auth');
 
-// Admin upload gantt chart & lembar persetujuan
-Route::post('/admin/booking/{booking}/upload-gantt', [BookingController::class, 'uploadGantt'])->name('booking.admin.uploadGantt')->middleware('auth');
+// Client approval workflow: preview → signature → final (unified in profile.booking-detail)
+Route::get('/booking/{booking}/approval-preview', [BookingController::class, 'previewApproval'])->name('booking.approval.preview');
+Route::get('/booking/{booking}/approval-preview-signed', [BookingController::class, 'previewSignedApproval'])->name('booking.approval.preview-signed');
+Route::post('/booking/{booking}/signature-upload', [BookingController::class, 'uploadSignature'])->name('booking.signature.upload')->middleware('auth');
 
 // Client final approval
 Route::post('/booking/{booking}/final-approve', [BookingController::class, 'clientFinalApprove'])->name('booking.client.finalApprove')->middleware('auth');

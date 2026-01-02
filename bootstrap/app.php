@@ -14,6 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\SetCacheHeaders::class,
         ]);
+        
+        $middleware->alias([
+            'admin.or.manager' => \App\Http\Middleware\EnsureAdminOrManager::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

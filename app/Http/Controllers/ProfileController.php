@@ -57,8 +57,6 @@ class ProfileController extends Controller
             ->orderByDesc('created_at')
             ->paginate(10);
 
-        // Bisa tambahkan eager loading untuk rincian, gantt, dsb jika sudah ada relasi/model
-
         return view('pages.profile.bookings', [
             'user'     => Auth::user(),
             'bookings' => $bookings,
@@ -73,9 +71,6 @@ class ProfileController extends Controller
         $booking = Booking::where('id', $id)
             ->where('user_id', Auth::id())
             ->firstOrFail();
-
-        // Contoh: eager load rincian, gantt, PIC jika sudah ada relasi/model
-        // $booking->load(['details', 'gantt', 'pic']);
 
         return view('pages.profile.booking-detail', [
             'booking' => $booking,

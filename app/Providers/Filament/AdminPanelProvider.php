@@ -47,8 +47,8 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->globalSearch(false)
             ->sidebarCollapsibleOnDesktop()
-            ->databaseNotifications()
             ->navigationGroups([
                 NavigationGroup::make()->label('Booking'),
                 NavigationGroup::make()->label('Publikasi'),

@@ -28,9 +28,10 @@ class DatabaseSeeder extends Seeder
             ArticleCategorySeeder::class,
             ArticleSeeder::class,
             ProjectSeeder::class,
-            EventTypeSeeder::class,
-            // BookingSeeder::class,
             SiteSettingSeeder::class,
+            BookingSeeder::class,
+            BookingDetailSeeder::class,
+            BookingTaskSeeder::class,
         ]);
 
         $now = now();
@@ -45,7 +46,9 @@ class DatabaseSeeder extends Seeder
             'projects',
             'project_images',
             'event_types',
-            // 'bookings',
+            'bookings',
+            'booking_details',
+            'booking_tasks',
             'landing_sections',
             'site_settings',
         ];

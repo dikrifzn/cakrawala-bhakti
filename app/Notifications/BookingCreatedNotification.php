@@ -53,7 +53,7 @@ class BookingCreatedNotification extends Notification
             'format' => 'filament',
             'booking_id' => $this->booking->id,
             'customer_name' => $this->booking->customer_name,
-            'event_type' => $this->booking->eventType?->name,
+            'event_type' => $this->booking->event_name,
             'message' => 'Pemesanan baru dari '.$this->booking->customer_name,
             'actions' => [
                 [

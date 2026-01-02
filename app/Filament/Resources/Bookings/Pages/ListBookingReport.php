@@ -18,7 +18,7 @@ class ListBookingReport extends ListRecords
                 ->label('Export Excel')
                 ->icon('heroicon-o-arrow-down-tray')
                 ->action(function () {
-                    $bookings = Booking::with('eventType', 'services')
+                    $bookings = Booking::with('services')
                         ->orderBy('created_at', 'desc')
                         ->get();
 
@@ -30,7 +30,7 @@ class ListBookingReport extends ListRecords
                             '"' . str_replace('"', '""', $booking->customer_name) . '"',
                             '"' . $booking->customer_email . '"',
                             '"' . $booking->customer_phone . '"',
-                            '"' . ($booking->eventType?->name ?? '-') . '"',
+                            '"-"',
                             $booking->start_date,
                             $booking->end_date,
                             $booking->start_time,
