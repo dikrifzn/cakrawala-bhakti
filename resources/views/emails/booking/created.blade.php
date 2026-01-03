@@ -131,6 +131,7 @@
                         <h2 style="margin:0 0 15px 0; font-size:18px; font-weight:700; color:#1f2937;">
                             🎯 Layanan yang Dipilih
                         </h2>
+                        @if($booking->services && $booking->services->count() > 0)
                         <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; border-radius:8px; overflow:hidden;">
                             <thead>
                                 <tr style="background:#fbbf24;">
@@ -163,11 +164,18 @@
                                 <tr style="background:#fef3c7;">
                                     <td colspan="3" style="padding:16px; font-size:16px; font-weight:700; color:#92400e; text-align:right;">Total Harga:</td>
                                     <td style="padding:16px; font-size:18px; font-weight:700; color:#b45309; text-align:right;">
-                                        Rp {{ number_format($booking->total_price, 0, ',', '.') }}
+                                        Rp {{ number_format($booking->details->sum('price') ?? 0, 0, ',', '.') }}
                                     </td>
                                 </tr>
                             </tfoot>
                         </table>
+                        @else
+                        <div style="background:#f3f4f6; border-radius:8px; padding:20px; text-align:center;">
+                            <p style="margin:0; font-size:14px; color:#6b7280;">
+                                ℹ️ Rincian layanan akan dikirimkan oleh admin setelah review proposal Anda.
+                            </p>
+                        </div>
+                        @endif
                     </td>
                 </tr>
 

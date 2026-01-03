@@ -11,14 +11,21 @@ class BookingStatsWidget extends BaseWidget
     protected function getStats(): array
     {
         $totalBookings = Booking::count();
-        $pendingBookings = Booking::where('status', 'pending')->count();
-        $approvedBookings = Booking::where('status', 'approved')->count();
-        $finishedBookings = Booking::where('status', 'finished')->count();
+        $pendingBookings = Booking::where('admin_status', 'review')->count();
+        $detailSentBookings = Booking::where('admin_status', 'detail_sent')->count();
+        $finishedBookings = Booking::where('admin_status', 'finished')->count();
         
-        $totalRevenue = Booking::whereIn('status', ['approved', 'finished'])->sum('total_price');
-        $monthlyRevenue = Booking::whereIn('status', ['approved', 'finished'])
+        $totalRevenue = Booking::where('customer_status', 'final_signed')
+            ->with('details')
+            ->get()
+            ->sum(fn ($b) => $b->details->sum('price'));
+
+        $monthlyRevenue = Booking::where('customer_status', 'final_signed')
             ->whereMonth('created_at', now()->month)
-            ->sum('total_price');
+            ->whereYear('created_at', now()->year)
+            ->with('details')
+            ->get()
+            ->sum(fn ($b) => $b->details->sum('price'));
 
         return [
             Stat::make('Total Booking', $totalBookings)
@@ -31,10 +38,10 @@ class BookingStatsWidget extends BaseWidget
                 ->descriptionIcon('heroicon-o-clock')
                 ->color('warning'),
                 
-            Stat::make('Approved', $approvedBookings)
-                ->description('Booking disetujui')
-                ->descriptionIcon('heroicon-o-check-circle')
-                ->color('success'),
+            Stat::make('Detail Sent', $detailSentBookings)
+                ->description('Rincian dikirim ke client')
+                ->descriptionIcon('heroicon-o-paper-airplane')
+                ->color('info'),
                 
             Stat::make('Finished', $finishedBookings)
                 ->description('Acara selesai')

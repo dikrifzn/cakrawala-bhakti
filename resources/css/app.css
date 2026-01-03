@@ -6,6 +6,8 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@source '../../app/Filament/**/*.php';
+@source '../../vendor/filament/**/*.blade.php';
 
 @theme {
     --font-sans: 'Inter', sans-serif;

@@ -11,10 +11,20 @@ class RestrictManagerLogin
 {
     /**
      * Handle an incoming request.
+     * Validates that only manager role can login to manager panel.
      */
     public function handle(Request $request, Closure $next): mixed
     {
         if (Auth::check()) {
+            // Jika sudah login, pastikan role-nya manager
+            $user = Auth::user();
+            if ($user->role !== 'manager') {
+                Auth::logout();
+                $message = $user->role === 'admin' 
+                    ? 'Anda adalah admin. Silakan gunakan panel admin di /admin'
+                    : 'Akses ditolak. Panel manager hanya untuk manager.';
+                return redirect('/manager/login')->with('error', $message);
+            }
             return $next($request);
         }
 

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('price');
             $table->string('banner_image')->nullable();
             $table->integer('sort_order')->default(0);
+            $table->foreignId('created_by')->nullable()->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }

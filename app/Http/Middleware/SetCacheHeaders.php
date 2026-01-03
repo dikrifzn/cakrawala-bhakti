@@ -14,11 +14,11 @@ class SetCacheHeaders
     {
         $response = $next($request);
 
+        // Use headers->set to support StreamedResponse/BinaryFileResponse
         if ($request->is('css/*', 'js/*', 'img/*', 'fonts/*')) {
-            $response->header('Cache-Control', 'public, max-age=31536000, immutable');
-        } 
-        elseif ($response->headers->get('content-type') && strpos($response->headers->get('content-type'), 'text/html') !== false) {
-            $response->header('Cache-Control', 'public, max-age=3600, must-revalidate');
+            $response->headers->set('Cache-Control', 'public, max-age=31536000, immutable');
+        } elseif ($response->headers->get('content-type') && strpos($response->headers->get('content-type'), 'text/html') !== false) {
+            $response->headers->set('Cache-Control', 'public, max-age=3600, must-revalidate');
         }
 
         return $response;

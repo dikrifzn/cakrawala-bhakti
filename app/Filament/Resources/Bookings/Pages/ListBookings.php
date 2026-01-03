@@ -21,7 +21,7 @@ class ListBookings extends ListRecords
 
     protected function getTableQuery(): Builder|Relation|null
     {
-        return parent::getTableQuery()?->with(['bookingServices.service', 'eventType']);
+        return parent::getTableQuery()?->with(['bookingServices.service']);
     }
 
     protected function getHeaderActions(): array
@@ -33,7 +33,7 @@ class ListBookings extends ListRecords
                 ->color('danger')
                 ->action(function () {
                     $query = $this->getFilteredTableQuery();
-                    $bookings = $query->with('eventType', 'services')
+                    $bookings = $query->with(['details', 'tasks'])
                         ->orderBy('created_at', 'desc')
                         ->get();
 
@@ -53,11 +53,11 @@ class ListBookings extends ListRecords
                 ->icon('heroicon-o-arrow-down-tray')
                 ->action(function () {
                     $query = $this->getFilteredTableQuery();
-                    $bookings = $query->with('eventType', 'services')
+                    $bookings = $query->with(['details', 'tasks'])
                         ->orderBy('created_at', 'desc')
                         ->get();
 
-                    $csvContent = "ID,Nama Pelanggan,Email,Telepon,Tipe Event,Tanggal Mulai,Tanggal Selesai,Jam Mulai,Jam Selesai,Jumlah Hari,Lokasi,Catatan,Total Harga,Status,Tanggal Dibuat\n";
+                    $csvContent = "ID,Nama Pelanggan,Email,Telepon,Event,Tanggal Mulai,Tanggal Selesai,Lokasi,PIC,Catatan,Total Harga,Status Admin,Status Customer,Tanggal Dibuat\n";
 
                     foreach ($bookings as $booking) {
                             $csvContent .= implode(',', [
@@ -65,16 +65,15 @@ class ListBookings extends ListRecords
                                 '"' . str_replace('"', '""', $booking->customer_name) . '"',
                                 '"' . ($booking->customer_email ?? '') . '"',
                                 '"' . ($booking->customer_phone ?? '') . '"',
-                                '"' . str_replace('"', '""', $booking->eventType?->name ?? '-') . '"',
-                                $booking->start_date,
-                                $booking->end_date,
-                                $booking->start_time,
-                                $booking->end_time,
-                                $booking->total_days,
+                                '"' . str_replace('"', '""', $booking->event_name ?? '') . '"',
+                                $booking->start_date ? $booking->start_date->format('Y-m-d') : '-',
+                                $booking->end_date ? $booking->end_date->format('Y-m-d') : '-',
                                 '"' . str_replace('"', '""', $booking->location ?? '') . '"',
+                                '"' . str_replace('"', '""', $booking->pic_contact ?? '') . '"',
                                 '"' . str_replace('"', '""', $booking->notes ?? '') . '"',
-                                'Rp ' . number_format($booking->total_price, 0, ',', '.'),
-                                $booking->status,
+                                '"Rp ' . number_format($booking->details->sum('price') ?? 0, 0, ',', '.') . '"',
+                                '"' . ucfirst($booking->admin_status ?? 'review') . '"',
+                                '"' . ucfirst($booking->customer_status ?? 'submitted') . '"',
                                 $booking->created_at->format('Y-m-d H:i:s'),
                             ]) . "\n";
                     }

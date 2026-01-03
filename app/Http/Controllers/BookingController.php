@@ -2,158 +2,309 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Booking;
-use App\Models\Service;
-use App\Models\BookingService;
-use App\Models\SiteSetting;
-use App\Models\User;
-use App\Notifications\BookingCreatedNotification;
-use Illuminate\Support\Facades\Notification;
+use App\Services\ApprovalService;
+use App\Filament\Resources\Bookings\BookingResource;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class BookingController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index()
     {
-        $adminServices = Service::where(function ($query) {
-            $query->whereHas('creator', function ($q) {
-                $q->where('role', 'admin');
-            })
-            ->orWhereNull('created_by');
-        })->get();
-        
-        return view('pages.order.index', ['adminServices' => $adminServices]);
+        return view('pages.booking.index');
     }
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'customer_email' => 'required|email|max:255',
-            'customer_phone' => 'nullable|string|max:50',
-            'event_name' => 'required|string|max:255',
-            'event_type_id' => 'required|integer|exists:event_types,id',
-            'start_date' => 'nullable|date',
-            'end_date' => 'nullable|date',
-            'start_time' => 'nullable|string',
-            'end_time' => 'nullable|string',
-            'total_days' => 'nullable|string',
-            'location' => 'nullable|string|max:500',
-            'notes' => 'nullable|string',
-            'include_permit' => 'nullable|boolean',
-            'services' => 'nullable|array',
-            'services.*' => 'nullable|string',
+        $validated = $request->validate([
+            'customer_name'   => 'required|string|max:255',
+            'customer_email'  => 'required|email|max:255',
+            'customer_phone'  => 'required|string|max:50',
+
+            'proposal'        => 'required|file|mimes:pdf,doc,docx|max:5120',
+
+            'event_name'      => 'required|string|max:255',
+            'start_date'      => 'required|date',
+            'end_date'        => 'required|date|after_or_equal:start_date',
+            'location'        => 'required|string|max:255',
+            'notes'           => 'nullable|string',
         ]);
 
-        $startDate = isset($data['start_date']) ? substr($data['start_date'], 0, 10) : null;
-        $endDate = isset($data['end_date']) ? substr($data['end_date'], 0, 10) : null;
-
-        $parseTime = function($t) {
-            if (!$t) return null;
-            $t = trim($t);
-
-            if (preg_match('/^(\d{1,2}):(\d{2}) ?([AP]M)?$/i', $t, $m)) {
-                $h = (int)$m[1];
-                $min = (int)$m[2];
-                $ampm = isset($m[3]) ? strtoupper($m[3]) : null;
-                if ($ampm === 'PM' && $h < 12) $h += 12;
-                if ($ampm === 'AM' && $h === 12) $h = 0;
-                return sprintf('%02d:%02d:00', $h, $min);
-            }
-
-            if (preg_match('/^(\d{1,2}):(\d{2})(:(\d{2}))?$/', $t, $m)) {
-                $h = (int)$m[1];
-                $min = (int)$m[2];
-                $sec = isset($m[4]) ? (int)$m[4] : 0;
-                return sprintf('%02d:%02d:%02d', $h, $min, $sec);
-            }
-            return null;
-        };
-        $startTime = isset($data['start_time']) ? $parseTime($data['start_time']) : null;
-        $endTime = isset($data['end_time']) ? $parseTime($data['end_time']) : null;
-
-        $totalDays = null;
-        if (isset($data['total_days']) && $data['total_days']) {
-            preg_match('/\d+/', $data['total_days'], $matches);
-            $totalDays = isset($matches[0]) ? (int)$matches[0] : null;
-        }
+        $proposalPath = $request->file('proposal')->store(
+            'proposals',
+            'public'
+        );
 
         $booking = Booking::create([
-            'user_id' => Auth::id(),
-            'customer_name' => $data['customer_name'],
-            'customer_email' => $data['customer_email'],
-            'customer_phone' => $data['customer_phone'] ?? null,
-            'event_type_id' => $data['event_type_id'],
-            'start_date' => $startDate,
-            'end_date' => $endDate,
-            'start_time' => $startTime,
-            'end_time' => $endTime,
-            'total_days' => $totalDays,
-            'location' => $data['location'] ?? null,
-            'notes' => $data['notes'] ?? null,
-            'include_permit' => $data['include_permit'] ?? false,
-            'permit_price' => 0,
-            'total_price' => 0,
-            'status' => 'pending',
+            'user_id'          => Auth::id(),
+
+            'customer_name'    => $validated['customer_name'],
+            'customer_email'   => $validated['customer_email'],
+            'customer_phone'   => $validated['customer_phone'],
+
+            'proposal_file'    => $proposalPath,
+
+            'event_name'       => $validated['event_name'],
+            'start_date'       => $validated['start_date'],
+            'end_date'         => $validated['end_date'],
+            'location'         => $validated['location'],
+
+            'notes'            => $validated['notes'] ?? null,
+
+            'admin_status'     => 'review',
+            'customer_status'  => 'submitted',
         ]);
 
-        $total = 0;
+        // Dispatch notification to admins
+        $adminUsers = \App\Models\User::where('role', 'admin')->orWhere('role', 'manager')->get();
+        foreach ($adminUsers as $admin) {
+            $admin->notify(new \App\Notifications\BookingCreatedNotification($booking));
+        }
 
-        $services = $request->input('services', []);
-        foreach ($services as $serviceValue) {
+        return redirect('/booking/success');
+    }
 
-            $name = $serviceValue;
-            $price = null;
+    /**
+     * Simple redirects for admin helper routes.
+     */
+    public function adminReview(Booking $booking)
+    {
+        return Redirect::to(BookingResource::getUrl('edit', ['record' => $booking]));
+    }
 
-            if (is_string($serviceValue) && str_contains($serviceValue, '|')) {
-                [$name, $maybePrice] = explode('|', $serviceValue, 2);
-                if (is_numeric($maybePrice)) $price = (int) $maybePrice;
-            }
+    public function detailsInputView(Booking $booking)
+    {
+        return Redirect::to(BookingResource::getUrl('edit', ['record' => $booking]));
+    }
 
-            $service = Service::where('service_name', $name)->first();
-            if (! $service) {
+    public function uploadView(Booking $booking)
+    {
+        return Redirect::to(BookingResource::getUrl('edit', ['record' => $booking]));
+    }
 
-                $service = Service::create([
-                    'service_name' => $name,
-                    'short_description' => 'Custom service (created at booking)',
-                    'price' => $price ?? 0,
-                    'created_by' => Auth::id(),
-                ]);
-            }
+    /**
+     * Admin: approve initial submission (moves to detail_sent).
+     */
+    public function adminApprove(Booking $booking)
+    {
+        $this->authorize('manageWorkflow', $booking);
 
-            $finalPrice = $price ?? ($service->price ?? 0);
-            $total += (int) $finalPrice;
+        $booking->update(['admin_status' => 'detail_sent', 'customer_status' => 'submitted']);
 
-            BookingService::create([
-                'booking_id' => $booking->id,
-                'service_id' => $service->id,
-                'price' => $finalPrice,
-                'quantity' => 1,
+        // Notify customer about status change
+        if ($booking->user) {
+            $booking->user->notify(new \App\Notifications\BookingStatusUpdatedNotification($booking, 'Booking Anda telah disetujui. Detail layanan akan segera dikirimkan.'));
+        }
+
+        return Redirect::back()->with('success', 'Booking disetujui. Silakan kirim rincian ke client.');
+    }
+
+    /**
+     * Admin: reject booking.
+     */
+    public function adminReject(Booking $booking)
+    {
+        $this->authorize('manageWorkflow', $booking);
+
+        $booking->update(['admin_status' => 'rejected', 'customer_status' => 'rejected']);
+
+        // Notify customer about rejection
+        if ($booking->user) {
+            $booking->user->notify(new \App\Notifications\BookingStatusUpdatedNotification($booking, 'Booking Anda telah ditolak.'));
+        }
+
+        return Redirect::back()->with('error', 'Booking ditolak.');
+    }
+
+    /**
+     * Admin: send service details to customer.
+     */
+    public function sendDetailsToClient(Request $request, Booking $booking)
+    {
+        $this->authorize('manageWorkflow', $booking);
+
+        $validated = $request->validate([
+            'details' => 'required|array|min:1',
+            'details.*.service_name' => 'required|string|max:255',
+            'details.*.price' => 'required|numeric|min:0',
+            'details.*.notes' => 'nullable|string',
+        ]);
+
+        $booking->details()->delete();
+        foreach ($validated['details'] as $detail) {
+            $booking->details()->create($detail);
+        }
+
+        $booking->update([
+            'admin_status' => 'detail_sent',
+            'customer_status' => 'submitted',
+        ]);
+
+        return Redirect::route('profile.booking-detail', $booking)->with('success', 'Rincian jasa dikirim ke client.');
+    }
+
+    /**
+     * Customer: view details.
+     */
+    public function clientViewDetails(Booking $booking)
+    {
+        $this->authorize('view', $booking);
+
+        // Allow access if admin sent details or approved final document
+        abort_unless(in_array($booking->admin_status, ['detail_sent', 'final_approved', 'on_progress', 'finished']), 404);
+
+        // Reload from database with relations to get latest data
+        $booking = Booking::with(['details', 'tasks', 'user'])->findOrFail($booking->id);
+
+        return view('pages.profile.booking-detail', ['booking' => $booking]);
+    }
+
+    /**
+     * Customer: approve details.
+     */
+    public function clientApproveDetails(Booking $booking)
+    {
+        $this->authorize('approveDetails', $booking);
+
+        abort_unless($booking->admin_status === 'detail_sent', 404);
+
+        $booking->update(['customer_status' => 'detail_approved']);
+
+        return Redirect::route('profile.booking-detail', $booking)->with('success', 'Rincian disetujui. Menunggu lembar persetujuan dari admin.');
+    }
+
+    /**
+     * Customer: reject details.
+     */
+    public function clientRejectDetails(Booking $booking)
+    {
+        abort_unless($booking->admin_status === 'detail_sent', 404);
+
+        $booking->update([
+            'admin_status' => 'rejected',
+            'customer_status' => 'rejected',
+        ]);
+
+        return Redirect::route('profile.booking-detail', $booking)->with('error', 'Anda menolak penawaran ini.');
+    }
+
+    /**
+     * Preview approval PDF (unsigned) for client.
+     */
+    public function previewApproval(Booking $booking)
+    {
+        $pdfContent = ApprovalService::previewApprovalPdf($booking);
+
+        return new StreamedResponse(function () use ($pdfContent) {
+            echo $pdfContent;
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="approval_preview.pdf"',
+        ]);
+    }
+
+    /**
+     * Preview signed approval PDF inline (with signature).
+     */
+    public function previewSignedApproval(Booking $booking)
+    {
+        abort_unless($booking->approval_file && Storage::disk('public')->exists($booking->approval_file), 404);
+
+        $pdfContent = Storage::disk('public')->get($booking->approval_file);
+
+        return new StreamedResponse(function () use ($pdfContent) {
+            echo $pdfContent;
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="approval_' . $booking->id . '.pdf"',
+        ]);
+    }
+
+    /**
+     * Show signature upload form.
+     */
+    public function signatureUploadForm(Booking $booking)
+    {
+        // Only allow signature upload when admin_status is final_approved
+        abort_unless($booking->admin_status === 'final_approved', 404);
+
+        return view('pages.profile.booking-detail', ['booking' => $booking]);
+    }
+
+    /**
+     * Customer uploads signature; generate signed PDF.
+     */
+    public function uploadSignature(Request $request, Booking $booking)
+    {
+        $this->authorize('uploadSignature', $booking);
+
+        // Guard: must be final_approved status
+        abort_unless($booking->admin_status === 'final_approved', 404);
+
+        $request->validate([
+            'signature' => 'required|file|mimes:png,jpg,jpeg|max:5120',
+        ]);
+
+        $signaturePath = $request->file('signature')->store('signatures', 'public');
+        \Log::info('Signature stored at: ' . $signaturePath);
+        
+        $signedPath = ApprovalService::saveApprovalPdf($booking, $signaturePath);
+        \Log::info('Signed PDF saved at: ' . $signedPath);
+
+        $booking->update([
+            'signature_file' => $signaturePath,
+            'approval_file' => $signedPath,
+            'customer_status' => 'final_signed',
+            'approved_by' => auth()->id(),
+            'approved_at' => now(),
+            'approval_ip' => $request->ip(),
+        ]);
+        
+        \Log::info('Booking updated - Customer Status: final_signed, Approval File: ' . $signedPath);
+
+        return Redirect::route('profile.booking-detail', $booking)->with('success', 'Tanda tangan diterima. Menunggu admin memulai pengerjaan.');
+    }
+
+    /**
+     * Client final approval (fallback).
+     */
+    public function clientFinalApprove(Booking $booking)
+    {
+        $booking->update(['admin_status' => 'final_approved']);
+
+        return Redirect::route('profile.booking-detail', $booking);
+    }
+
+    /**
+     * Download stored file securely.
+     */
+    public function downloadFile(Booking $booking, string $type)
+    {
+        $this->authorize('view', $booking);
+
+        $allowed = ['proposal_file', 'approval_file', 'signature_file'];
+        abort_unless(in_array($type, $allowed, true), 404);
+
+        $path = $booking->{$type};
+        abort_unless($path && Storage::disk('public')->exists($path), 404);
+
+        $fullPath = Storage::disk('public')->path($path);
+        $mimeType = Storage::disk('public')->mimeType($path);
+
+        if (request()->boolean('inline')) {
+            return response()->file($fullPath, [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="'.basename($path).'"',
             ]);
         }
 
-        $booking->total_price = $total;
-        $booking->save();
-
-        Notification::route('mail', $booking->customer_email)
-            ->notify(new BookingCreatedNotification($booking));
-
-        $adminUsers = \App\Models\User::whereIn('role', ['admin', 'manager'])->get();
-        Notification::send($adminUsers, new BookingCreatedNotification($booking));
-
-        $settings = SiteSetting::first();
-        
-        if ($settings && $settings->admin_email) {
-            Notification::route('mail', $settings->admin_email)
-                ->notify(new BookingCreatedNotification($booking));
-        }
-
-        if ($settings && $settings->manager_email) {
-            Notification::route('mail', $settings->manager_email)
-                ->notify(new BookingCreatedNotification($booking));
-        }
-
-        return redirect('/booking/success')->with('booking', $booking);
+        return Storage::disk('public')->download($path, basename($path));
     }
 }
