@@ -147,7 +147,7 @@ class BookingController extends Controller
             'customer_status' => 'submitted',
         ]);
 
-        return Redirect::route('booking.client.details', $booking)->with('success', 'Rincian jasa dikirim ke client.');
+        return Redirect::route('profile.booking-detail', $booking)->with('success', 'Rincian jasa dikirim ke client.');
     }
 
     /**
@@ -177,7 +177,7 @@ class BookingController extends Controller
 
         $booking->update(['customer_status' => 'detail_approved']);
 
-        return Redirect::route('booking.client.details', $booking)->with('success', 'Rincian disetujui. Menunggu lembar persetujuan dari admin.');
+        return Redirect::route('profile.booking-detail', $booking)->with('success', 'Rincian disetujui. Menunggu lembar persetujuan dari admin.');
     }
 
     /**
@@ -192,7 +192,7 @@ class BookingController extends Controller
             'customer_status' => 'rejected',
         ]);
 
-        return Redirect::route('booking.client.details', $booking)->with('error', 'Anda menolak penawaran ini.');
+        return Redirect::route('profile.booking-detail', $booking)->with('error', 'Anda menolak penawaran ini.');
     }
 
     /**
@@ -269,7 +269,7 @@ class BookingController extends Controller
         
         \Log::info('Booking updated - Customer Status: final_signed, Approval File: ' . $signedPath);
 
-        return Redirect::route('booking.client.details', $booking)->with('success', 'Tanda tangan diterima. Menunggu admin memulai pengerjaan.');
+        return Redirect::route('profile.booking-detail', $booking)->with('success', 'Tanda tangan diterima. Menunggu admin memulai pengerjaan.');
     }
 
     /**
@@ -279,7 +279,7 @@ class BookingController extends Controller
     {
         $booking->update(['admin_status' => 'final_approved']);
 
-        return Redirect::route('booking.client.details', $booking);
+        return Redirect::route('profile.booking-detail', $booking);
     }
 
     /**

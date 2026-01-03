@@ -27,7 +27,8 @@ class BookingCreatedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database'];
+        // Email notifications disabled - only database notifications
+        return ['database'];
     }
 
     /**

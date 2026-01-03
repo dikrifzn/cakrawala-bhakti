@@ -49,6 +49,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->globalSearch(false)
             ->sidebarCollapsibleOnDesktop()
+            ->databaseNotifications()
             ->navigationGroups([
                 NavigationGroup::make()->label('Booking'),
                 NavigationGroup::make()->label('Publikasi'),
