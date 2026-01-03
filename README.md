@@ -31,6 +31,7 @@ Platform ini menyediakan solusi lengkap untuk:
 ---
 
 ## 🚀 Fitur Utama
+untuk membaca Manual Book/Buku Panduan penggunaan bisa ke [sini](manual-book/README.md)
 
 ### 🏠 Public Website
 
