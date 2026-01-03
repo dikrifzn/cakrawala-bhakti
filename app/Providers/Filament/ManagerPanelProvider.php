@@ -23,6 +23,8 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Filament\Support\Assets\Css;
+use Illuminate\Support\Facades\Vite;
 
 class ManagerPanelProvider extends PanelProvider
 {
@@ -31,6 +33,9 @@ class ManagerPanelProvider extends PanelProvider
         return $panel
             ->id('manager')
             ->path('manager')
+            ->assets([
+                Css::make('tailwind', Vite::asset('resources/css/app.css')),
+            ])
             ->login()
             ->brandName('Manager Panel - Cakrawala Bhakti')
             ->favicon(asset('img/single-logo.png'))

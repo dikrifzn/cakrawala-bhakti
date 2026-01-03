@@ -20,11 +20,11 @@ class AboutSectionSeeder extends Seeder
             'subtitle' => 'Event Planner & Organizer In Indonesia',
             'description' => 'Cakrawala adalah Event Organizer profesional yang berfokus pada menciptakan acara yang inspiratif dan berkesan. Kami percaya setiap acara memiliki cerita, dan tugas kami adalah memastikan cerita itu tersampaikan dengan sempurna. Dengan tim kreatif yang berpengalaman, kami menangani berbagai jenis event mulai dari corporate gathering, wedding, hingga festival komunitas dengan perencanaan yang matang dan hasil yang memuaskan.',
             'images' => [
-                'about/default-thumbnail.png',
-                'about/default-thumbnail.png',
-                'about/default-thumbnail.png',
-                'about/default-thumbnail.png',
-                'about/default-thumbnail.png',
+                "about/01KDZXDFNY3QVSW9V9S4G38DEQ.jpg",
+                "about/01KDZXDFP4PVRYZDPD3B1N7FQ3.jpg",
+                "about/01KDZXDFP8GMSAKQ6MH646ZREA.jpg",
+                "about/01KDZXDFPKJ034Y75C09SHPAXP.jpg",
+                "about/01KDZXDFPVYM8GAK2XFHN6BD0K.jpg"
             ],
         ]);
     }

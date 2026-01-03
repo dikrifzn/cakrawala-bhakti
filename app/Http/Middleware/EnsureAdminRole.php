@@ -10,12 +10,23 @@ class EnsureAdminRole
 {
     /**
      * Handle an incoming request.
+     * Only allows admin role to access admin panel.
      */
     public function handle(Request $request, Closure $next): mixed
     {
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        $user = Auth::user();
+
+        if (!$user || $user->role !== 'admin') {
             Auth::logout();
-            return redirect('/admin/login')->with('error', 'Akses ditolak. Hanya admin yang dapat mengakses panel ini.');
+            
+            $message = 'Akses ditolak. Panel admin hanya untuk admin.';
+            if ($user && $user->role === 'manager') {
+                $message = 'Anda adalah manager. Silakan gunakan panel manager di /manager';
+            } elseif ($user && $user->role === 'customer') {
+                $message = 'Customer tidak memiliki akses ke panel admin.';
+            }
+            
+            return redirect('/admin/login')->with('error', $message);
         }
 
         return $next($request);

@@ -221,8 +221,8 @@
                                 @endif
                                 <tr style="border-top:2px solid #10b981;">
                                     <td style="padding:12px 0 0 0; font-size:16px; color:#065f46; font-weight:700;">TOTAL PEMBAYARAN:</td>
-                                    <td style="padding:12px 0 0 0; font-size:18px; color:#047857; font-weight:700; text-align:right;">
-                                        Rp {{ number_format($booking->total_price, 0, ',', '.') }}
+                                        <td style="padding:12px 0 0 0; font-size:18px; color:#047857; font-weight:700; text-align:right;">
+                                            Rp {{ number_format($booking->details->sum('price') ?? 0, 0, ',', '.') }}
                                     </td>
                                 </tr>
                             </table>

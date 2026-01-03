@@ -14,19 +14,28 @@ class Booking extends Model
         'customer_name',
         'customer_email',
         'customer_phone',
+        'pic_contact',
+        'proposal_file',
+        'proposal_description',
+        'signature_file',
+        'approval_file',
+        'gantt_chart',
         'event_name',
-        'event_type_id',
         'start_date',
         'end_date',
-        'start_time',
-        'end_time',
-        'total_days',
         'location',
         'notes',
-        'total_price',
-        'status',
-        'include_permit',
-        'permit_price',
+        'admin_status',
+        'customer_status',
+        'approved_by',
+        'approved_at',
+        'approval_ip',
+    ];
+
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'approved_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
@@ -34,30 +43,19 @@ class Booking extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function eventType(): BelongsTo
-    {
-        return $this->belongsTo(EventType::class);
-    }
-
     public function bookingServices(): HasMany
     {
         return $this->hasMany(BookingService::class);
     }
 
-    public function services()
+    public function details(): HasMany
     {
-        return $this->belongsToMany(Service::class, 'booking_services')
-                    ->withPivot('price', 'quantity')
-                    ->withTimestamps();
+        return $this->hasMany(BookingDetail::class);
     }
 
-    protected function serviceNames(): Attribute
+    public function tasks(): HasMany
     {
-        return Attribute::make(
-            get: fn () => $this->bookingServices
-                ->map(fn ($bs) => $bs->service?->service_name ?? 'Unknown')
-                ->filter()
-                ->join(', ') ?: '-',
-        );
+        return $this->hasMany(BookingTask::class);
     }
+
 }

@@ -17,7 +17,7 @@ class LatestBookingsWidget extends BaseWidget
         return $table
             ->query(
                 Booking::query()
-                    ->with(['eventType', 'user'])
+                    ->with(['user'])
                     ->latest()
                     ->limit(5)
             )
@@ -25,29 +25,33 @@ class LatestBookingsWidget extends BaseWidget
                 Tables\Columns\TextColumn::make('customer_name')
                     ->label('Pemesan')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('eventType.name')
+                Tables\Columns\TextColumn::make('event_name')
                     ->label('Jenis Acara')
                     ->badge(),
                 Tables\Columns\TextColumn::make('start_date')
                     ->label('Tanggal')
                     ->date('d M Y'),
-                Tables\Columns\TextColumn::make('total_price')
+                Tables\Columns\TextColumn::make('price_total')
                     ->label('Total')
-                    ->money('IDR', locale: 'id'),
-                Tables\Columns\TextColumn::make('status')
+                    ->getStateUsing(fn ($record) => 'Rp ' . number_format($record->details->sum('price') ?? 0, 0, ',', '.')),
+                Tables\Columns\TextColumn::make('admin_status')
+                    ->label('Status Admin')
                     ->badge()
                     ->formatStateUsing(fn (string $state) => match ($state) {
-                        'pending' => 'Pending',
-                        'approved' => 'Approved',
-                        'rejected' => 'Rejected',
+                        'review' => 'Review',
+                        'detail_sent' => 'Detail Sent',
+                        'final_approved' => 'Approval Sent',
+                        'on_progress' => 'On Progress',
                         'finished' => 'Finished',
+                        'rejected' => 'Rejected',
                         default => $state,
                     })
                     ->colors([
-                        'warning' => 'pending',
-                        'success' => 'approved',
+                        'warning' => 'review',
+                        'info'    => 'detail_sent',
+                        'primary' => 'final_approved',
+                        'success' => ['on_progress', 'finished'],
                         'danger'  => 'rejected',
-                        'info'    => 'finished',
                     ]),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Dibuat')

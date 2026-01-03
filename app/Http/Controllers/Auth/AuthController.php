@@ -24,9 +24,7 @@ class AuthController extends Controller
             return redirect()->intended(route('home'))->with('success', 'Login berhasil!');
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ])->onlyInput('email');
+        return redirect()->intended(route('home'))->with('error', 'Login Gagal!');
     }
 
     public function register(Request $request)

@@ -21,7 +21,7 @@ class HeroBannerSeeder extends Seeder
             'subtitle' => 'Event Organizer Profesional untuk Corporate, Wedding, dan Community Event.',
             'button_text' => "Let's Collaborate",
             'button_link' => '/booking',
-            'background_image' => 'hero-banners/default-thumbnail.png',
+            'background_image' => 'hero-banners/01KDZXABVAK9P0SHEAY0E2YMQY.png',
         ]);
     }
 }

@@ -21,7 +21,7 @@ class CallToActionSeeder extends Seeder
             'title' => "<p>Let&#039;s Collaborate and Make</p><p>Your Event Super Special</p>",
             'highlight_text' => 'Your Event Super Special',
             'subtitle' => 'Kami siap menjadi mitra terbaik Anda dalam setiap momen penting. Hubungi kami dan wujudkan acara impian Anda bersama Cakrawala.',
-            'background_image' => 'cta/default-thumbnail.png',
+            'background_image' => 'cta/01KDZY02EFK385R1SE26CRPYTQ.png',
         ]);
     }
 }
