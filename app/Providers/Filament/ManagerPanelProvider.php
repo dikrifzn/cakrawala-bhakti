@@ -37,7 +37,7 @@ class ManagerPanelProvider extends PanelProvider
                 Css::make('tailwind', Vite::asset('resources/css/app.css')),
             ])
             ->login()
-            ->brandName('Manager Panel - Cakrawala Bhakti')
+            ->brandName('Direktur Panel - Cakrawala Bhakti')
             ->favicon(asset('img/single-logo.png'))
             ->breadcrumbs(false)
             ->colors([
