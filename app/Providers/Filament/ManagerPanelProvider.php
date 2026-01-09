@@ -6,6 +6,7 @@ use App\Http\Middleware\EnsureManagerRole;
 use App\Http\Middleware\RestrictManagerLogin;
 use App\Filament\Widgets\BookingStatsWidget;
 use App\Filament\Widgets\BookingChartWidget;
+use App\Filament\Widgets\RevenueChartWidget;
 use App\Filament\Widgets\LatestBookingsWidget;
 use App\Filament\Widgets\ContentStatsWidget;
 use App\Filament\Resources\Bookings\BookingResource;
@@ -37,7 +38,7 @@ class ManagerPanelProvider extends PanelProvider
                 Css::make('tailwind', Vite::asset('resources/css/app.css')),
             ])
             ->login()
-            ->brandName('Manager Panel - Cakrawala Bhakti')
+            ->brandName('Direktur Panel - Cakrawala Bhakti')
             ->favicon(asset('img/single-logo.png'))
             ->breadcrumbs(false)
             ->colors([
@@ -59,6 +60,7 @@ class ManagerPanelProvider extends PanelProvider
             ->widgets([
                 BookingStatsWidget::class,
                 BookingChartWidget::class,
+                RevenueChartWidget::class,
                 LatestBookingsWidget::class,
                 ContentStatsWidget::class,
             ])

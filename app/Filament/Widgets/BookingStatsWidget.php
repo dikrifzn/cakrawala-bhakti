@@ -8,6 +8,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class BookingStatsWidget extends BaseWidget
 {
+    protected static ?int $sort = 1;
     protected function getStats(): array
     {
         $totalBookings = Booking::count();
@@ -16,16 +17,14 @@ class BookingStatsWidget extends BaseWidget
         $finishedBookings = Booking::where('admin_status', 'finished')->count();
         
         $totalRevenue = Booking::where('customer_status', 'final_signed')
-            ->with('details')
-            ->get()
-            ->sum(fn ($b) => $b->details->sum('price'));
+            ->join('booking_details', 'bookings.id', '=', 'booking_details.booking_id')
+            ->sum('booking_details.price');
 
         $monthlyRevenue = Booking::where('customer_status', 'final_signed')
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->with('details')
-            ->get()
-            ->sum(fn ($b) => $b->details->sum('price'));
+            ->whereMonth('bookings.created_at', now()->month)
+            ->whereYear('bookings.created_at', now()->year)
+            ->join('booking_details', 'bookings.id', '=', 'booking_details.booking_id')
+            ->sum('booking_details.price');
 
         return [
             Stat::make('Total Booking', $totalBookings)

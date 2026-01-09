@@ -157,6 +157,7 @@ class BookingResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('customer_name')
                     ->label('👤 Pemesan')
@@ -206,9 +207,9 @@ class BookingResource extends Resource
                         default => 'secondary',
                     }),
 
-                TextColumn::make('price_total')
+                TextColumn::make('total_price')
                     ->label('Harga')
-                    ->getStateUsing(fn ($record) => 'Rp '.number_format($record->details->sum('price') ?? 0, 0, ',', '.')),
+                    ->getStateUsing(fn ($record) => 'Rp '.number_format($record->details?->sum('price') ?? 0, 0, ',', '.')),
 
                 TextColumn::make('created_at')
                     ->label('Dibuat')
