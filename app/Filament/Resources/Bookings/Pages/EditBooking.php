@@ -15,6 +15,13 @@ class EditBooking extends EditRecord
 
     protected ?string $heading = 'Kelola Booking Event';
 
+    public function mount($record): void
+    {
+        parent::mount($record);
+        // Eager load relations to avoid N+1 queries
+        $this->record->load(['details', 'tasks']);
+    }
+
     protected function getHeaderActions(): array
     {
         return [

@@ -21,7 +21,7 @@ class ListBookings extends ListRecords
 
     protected function getTableQuery(): Builder|Relation|null
     {
-        return parent::getTableQuery()?->with(['bookingServices.service']);
+        return parent::getTableQuery()?->with(['bookingServices.service', 'details']);
     }
 
     protected function getHeaderActions(): array

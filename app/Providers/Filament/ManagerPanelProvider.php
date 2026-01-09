@@ -6,6 +6,7 @@ use App\Http\Middleware\EnsureManagerRole;
 use App\Http\Middleware\RestrictManagerLogin;
 use App\Filament\Widgets\BookingStatsWidget;
 use App\Filament\Widgets\BookingChartWidget;
+use App\Filament\Widgets\RevenueChartWidget;
 use App\Filament\Widgets\LatestBookingsWidget;
 use App\Filament\Widgets\ContentStatsWidget;
 use App\Filament\Resources\Bookings\BookingResource;
@@ -59,6 +60,7 @@ class ManagerPanelProvider extends PanelProvider
             ->widgets([
                 BookingStatsWidget::class,
                 BookingChartWidget::class,
+                RevenueChartWidget::class,
                 LatestBookingsWidget::class,
                 ContentStatsWidget::class,
             ])

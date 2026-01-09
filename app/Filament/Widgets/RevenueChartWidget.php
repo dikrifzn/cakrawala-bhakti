@@ -5,38 +5,40 @@ namespace App\Filament\Widgets;
 use App\Models\Booking;
 use Filament\Widgets\ChartWidget;
 
-class BookingChartWidget extends ChartWidget
+class RevenueChartWidget extends ChartWidget
 {
-    protected static ?int $sort = 2;
-    
+    protected static ?int $sort = 3;
+
     public function getHeading(): ?string
     {
-        return 'Booking per Bulan';
+        return 'Pendapatan per Bulan';
     }
 
     protected function getData(): array
     {
-        $bookingsPerMonth = Booking::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-            ->whereYear('created_at', now()->year)
+        $revenuePerMonth = Booking::where('customer_status', 'final_signed')
+            ->join('booking_details', 'bookings.id', '=', 'booking_details.booking_id')
+            ->selectRaw('MONTH(bookings.created_at) as month, SUM(booking_details.price) as total')
+            ->whereYear('bookings.created_at', now()->year)
             ->groupBy('month')
             ->orderBy('month')
-            ->pluck('count', 'month')
+            ->pluck('total', 'month')
             ->toArray();
 
         $months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         $data = [];
 
         for ($i = 1; $i <= 12; $i++) {
-            $data[] = $bookingsPerMonth[$i] ?? 0;
+            $data[] = $revenuePerMonth[$i] ?? 0;
         }
 
         return [
             'datasets' => [
                 [
-                    'label' => 'Booking',
+                    'label' => 'Pendapatan (Rp)',
                     'data' => $data,
-                    'backgroundColor' => 'rgba(59, 130, 246, 0.5)',
-                    'borderColor' => 'rgb(59, 130, 246)',
+                    'backgroundColor' => 'rgba(34, 197, 94, 0.5)',
+                    'borderColor' => 'rgb(34, 197, 94)',
                 ],
             ],
             'labels' => $months,

@@ -121,11 +121,6 @@
             {{-- Progress Timeline Component --}}
             <x-booking.timeline :booking="$booking" />
 
-            {{-- Details Table Component --}}
-            @if($booking->details->count() > 0)
-                <x-booking.details-table :booking="$booking" />
-            @endif
-
             {{-- Jadwal Pengerjaan --}}
             @if($booking->tasks->count() > 0)
                 <div class="bg-white rounded-lg shadow p-6">
@@ -145,6 +140,11 @@
                     </div>
                 </div>
             @endif
+            {{-- Details Table Component --}}
+            @if($booking->details->count() > 0)
+                <x-booking.details-table :booking="$booking" />
+            @endif
+
 
             {{-- Approval (Stage 3) --}}
             @if($booking->admin_status === 'final_approved')

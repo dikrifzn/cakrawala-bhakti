@@ -22,6 +22,7 @@
                         <input
                             type="text"
                             name="customer_name"
+                            placeholder="Nama lengkap"
                             value="{{ old('customer_name') }}"
                             class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
                             required
@@ -36,6 +37,7 @@
                             <input
                                 type="email"
                                 name="customer_email"
+                                placeholder="Email aktif"
                                 value="{{ old('customer_email') }}"
                                 class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
                                 required
@@ -49,6 +51,7 @@
                             <input
                                 type="text"
                                 name="customer_phone"
+                                placeholder="Nomor WhatsApp"
                                 value="{{ old('customer_phone') }}"
                                 class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
                                 required
@@ -85,6 +88,7 @@
                         <input
                             type="text"
                             name="event_name"
+                            placeholder="Nama acara"
                             value="{{ old('event_name') }}"
                             class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
                             required
@@ -99,7 +103,7 @@
                             <input
                                 type="date"
                                 name="start_date"
-                                value="{{ old('start_date') }}"
+                                value="{{ old('start_date', now()->toDateString()) }}"
                                 class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
                                 required
                             />
@@ -112,7 +116,7 @@
                             <input
                                 type="date"
                                 name="end_date"
-                                value="{{ old('end_date') }}"
+                                value="{{ old('end_date', now()->toDateString()) }}"
                                 class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
                                 required
                             />
@@ -126,6 +130,7 @@
                         <input
                             type="text"
                             name="location"
+                            placeholder="Lokasi acara"
                             value="{{ old('location') }}"
                             class="border rounded-lg p-3 w-full focus:ring-2 focus:ring-yellow-400"
                             required
@@ -138,6 +143,7 @@
                         </label>
                         <textarea
                             name="notes"
+                            placeholder="Catatan tambahan (opsional)"
                             class="border rounded-lg p-3 w-full h-32 focus:ring-2 focus:ring-yellow-400"
                         >{{ old('notes') }}</textarea>
                     </div>

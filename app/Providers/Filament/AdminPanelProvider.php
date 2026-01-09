@@ -14,6 +14,7 @@ use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use App\Filament\Widgets\BookingStatsWidget;
 use App\Filament\Widgets\BookingChartWidget;
+use App\Filament\Widgets\RevenueChartWidget;
 use App\Filament\Widgets\LatestBookingsWidget;
 use App\Filament\Widgets\ContentStatsWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -64,6 +65,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 BookingStatsWidget::class,
                 BookingChartWidget::class,
+                RevenueChartWidget::class,
                 LatestBookingsWidget::class,
                 ContentStatsWidget::class,
             ])
