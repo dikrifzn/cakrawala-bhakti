@@ -31,22 +31,61 @@ class ReviewBooking extends Page
     public function mount($record): void
     {
         $this->record = $this->resolveRecord($record);
+        // Eager load relations to avoid N+1 queries
+        $this->record->load(['details', 'tasks', 'user']);
         $this->booking = $this->record;
     }
 
     protected function getHeaderActions(): array
     {
-        return [
-            $this->makeSendDetailsAction(),
-            $this->makeEditDetailsAction(),
-            $this->makeEditTasksAction(),
-            $this->makeUploadSignatureOfflineAction(),
-            $this->makeRejectAction(),
-            $this->makeSendApprovalAction(),
-            $this->makeRegenerateApprovalAction(),
-            $this->makeMarkOnProgressAction(),
-            $this->makeMarkFinishedAction(),
+        $primary = [];
+
+        switch ($this->record->admin_status) {
+            case 'review':
+                $primary = [
+                    $this->makeSendDetailsAction(),
+                    $this->makeEditDetailsAction(),
+                    $this->makeEditTasksAction(),
+                    $this->makeRejectAction(),
+                ];
+                break;
+            case 'detail_sent':
+                $primary = $this->record->customer_status === 'detail_approved'
+                    ? [
+                        $this->makeSendApprovalAction(),
+                        $this->makeEditDetailsAction(),
+                        $this->makeEditTasksAction(),
+                    ]
+                    : [
+                        $this->makeEditDetailsAction(),
+                        $this->makeEditTasksAction(),
+                        $this->makeRejectAction(),
+                    ];
+                break;
+            case 'final_approved':
+                $primary = [
+                    $this->makeUploadSignatureOfflineAction(),
+                    $this->makeMarkOnProgressAction(),
+                    $this->makeEditDetailsAction(),
+                    $this->makeEditTasksAction(),
+                ];
+                break;
+            case 'on_progress':
+                $primary = [
+                    $this->makeMarkFinishedAction(),
+                    $this->makeEditTasksAction(),
+                ];
+                break;
+            default:
+                $primary = [
+                    $this->makeEditDetailsAction(),
+                    $this->makeEditTasksAction(),
+                ];
+        }
+
+        $secondary = [
             $this->makeDownloadApprovalAction(),
+            $this->makeRegenerateApprovalAction(),
             Action::make('edit')
                 ->label('Edit Data')
                 ->icon('heroicon-o-pencil-square')
@@ -55,14 +94,19 @@ class ReviewBooking extends Page
                 ->openUrlInNewTab(),
             DeleteAction::make(),
         ];
+
+        return array_values(array_filter([
+            ...$primary,
+            ...$secondary,
+        ]));
     }
 
     protected function makeSendDetailsAction(): Action
     {
         return Action::make('send_details')
-            ->label('➤ Kirim Rincian')
+            ->label('Kirim rincian ke client')
             ->icon('heroicon-o-paper-airplane')
-            ->color('warning')
+            ->color('primary')
             ->visible(fn () => $this->record->admin_status === 'review')
             ->form([
                 Repeater::make('details')
@@ -134,9 +178,9 @@ class ReviewBooking extends Page
     protected function makeEditDetailsAction(): Action
     {
         return Action::make('edit_details')
-            ->label('✏️ Edit Jasa & Harga')
+            ->label('Edit rincian & harga')
             ->icon('heroicon-o-pencil')
-            ->color('info')
+            ->color('secondary')
             ->visible(fn () => in_array($this->record->admin_status, ['review', 'detail_sent', 'final_approved', 'on_progress']))
             ->fillForm(fn () => [
                 'details' => $this->record->details->toArray(),
@@ -174,7 +218,7 @@ class ReviewBooking extends Page
     protected function makeUploadSignatureOfflineAction(): Action
     {
         return Action::make('upload_signature_offline')
-            ->label('✍️ Upload Tanda Tangan Offline')
+            ->label('Upload tanda tangan')
             ->icon('heroicon-o-pencil-square')
             ->color('success')
             ->visible(fn () => in_array($this->record->admin_status, ['final_approved']) && $this->record->approval_file && !$this->record->signature_file)
@@ -214,7 +258,7 @@ class ReviewBooking extends Page
     protected function makeEditTasksAction(): Action
     {
         return Action::make('edit_tasks')
-            ->label('📅 Edit Jadwal')
+            ->label('Atur jadwal')
             ->icon('heroicon-o-calendar')
             ->color('success')
             ->visible(fn () => in_array($this->record->admin_status, ['review', 'detail_sent', 'final_approved', 'on_progress']))
@@ -260,9 +304,9 @@ class ReviewBooking extends Page
     protected function makeRegenerateApprovalAction(): Action
     {
         return Action::make('regenerate_approval')
-            ->label('🔄 Regenerasi Lembar Persetujuan')
+            ->label('Buat ulang approval')
             ->icon('heroicon-o-arrow-path')
-            ->color('warning')
+            ->color('gray')
             ->visible(fn () => in_array($this->record->admin_status, ['detail_sent', 'final_approved', 'on_progress', 'finished']) && !$this->record->approval_file)
             ->requiresConfirmation()
             ->action(function () {
@@ -289,7 +333,7 @@ class ReviewBooking extends Page
     protected function makeRejectAction(): Action
     {
         return Action::make('reject')
-            ->label('✗ Tolak')
+            ->label('Tolak booking')
             ->icon('heroicon-o-x-circle')
             ->color('danger')
             ->visible(fn () => in_array($this->record->admin_status, ['review', 'detail_sent']))
@@ -320,7 +364,7 @@ class ReviewBooking extends Page
     protected function makeSendApprovalAction(): Action
     {
         return Action::make('send_approval')
-            ->label('📄 Kirim Lembar Persetujuan')
+            ->label('Kirim lembar persetujuan')
             ->icon('heroicon-o-document-text')
             ->color('primary')
             ->visible(fn () => $this->record->admin_status === 'detail_sent' && $this->record->customer_status === 'detail_approved')
@@ -357,7 +401,7 @@ class ReviewBooking extends Page
     protected function makeMarkOnProgressAction(): Action
     {
         return Action::make('mark_on_progress')
-            ->label('🚧 Mulai Pengerjaan')
+            ->label('Mulai pengerjaan')
             ->icon('heroicon-o-briefcase')
             ->color('info')
             ->visible(fn () => $this->record->admin_status === 'final_approved' && $this->record->customer_status === 'final_signed')
@@ -376,7 +420,7 @@ class ReviewBooking extends Page
     protected function makeMarkFinishedAction(): Action
     {
         return Action::make('mark_finished')
-            ->label('🏁 Tandai Selesai')
+            ->label('Tandai selesai')
             ->icon('heroicon-o-flag')
             ->color('success')
             ->visible(fn () => $this->record->admin_status === 'on_progress')

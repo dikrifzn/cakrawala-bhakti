@@ -1,18 +1,17 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\BookingController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
+use Illuminate\Support\Facades\Route;
 
 // Auth Routes
 Route::get('/login', [HomeController::class, 'index']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
-Route::get('/customer/logout', [AuthController::class, 'logout'])->name('customer.logout')->middleware('auth');
 Route::post('/customer/logout', [AuthController::class, 'logout'])->name('customer.logout')->middleware('auth');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -29,7 +28,6 @@ Route::get('/article', [ArticleController::class, 'index'])->name('article.index
 Route::get('/article/search', [ArticleController::class, 'search'])->name('article.search');
 Route::get('/article/category/{slug}', [ArticleController::class, 'byCategory'])->name('article.category');
 Route::get('/article/{article}', [ArticleController::class, 'show'])->name('article.show');
-
 
 // Booking Event
 Route::get('/booking', [BookingController::class, 'index'])->name('booking.index')->middleware('auth');
@@ -78,6 +76,7 @@ Route::get('/booking/{booking}/download/{type}', [BookingController::class, 'dow
 
 Route::get('/emailnotification/status', function () {
     $booking = \App\Models\Booking::with(['eventType', 'services'])->first();
+
     return view('emails.booking.status-updated', ['booking' => $booking]);
 });
 

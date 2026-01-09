@@ -9,15 +9,16 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class LatestBookingsWidget extends BaseWidget
 {
-    protected static ?int $sort = 2;
-    protected int | string | array $columnSpan = 'full';
+    protected static ?int $sort = 4;
+
+    protected int|string|array $columnSpan = 'full';
 
     public function table(Table $table): Table
     {
         return $table
             ->query(
                 Booking::query()
-                    ->with(['user'])
+                    ->with(['user', 'details'])
                     ->latest()
                     ->limit(5)
             )
@@ -33,7 +34,7 @@ class LatestBookingsWidget extends BaseWidget
                     ->date('d M Y'),
                 Tables\Columns\TextColumn::make('price_total')
                     ->label('Total')
-                    ->getStateUsing(fn ($record) => 'Rp ' . number_format($record->details->sum('price') ?? 0, 0, ',', '.')),
+                    ->getStateUsing(fn ($record) => 'Rp '.number_format($record->details->sum('price') ?? 0, 0, ',', '.')),
                 Tables\Columns\TextColumn::make('admin_status')
                     ->label('Status Admin')
                     ->badge()
@@ -48,10 +49,10 @@ class LatestBookingsWidget extends BaseWidget
                     })
                     ->colors([
                         'warning' => 'review',
-                        'info'    => 'detail_sent',
+                        'info' => 'detail_sent',
                         'primary' => 'final_approved',
                         'success' => ['on_progress', 'finished'],
-                        'danger'  => 'rejected',
+                        'danger' => 'rejected',
                     ]),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Dibuat')
